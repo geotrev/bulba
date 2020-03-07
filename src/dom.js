@@ -144,7 +144,7 @@ const diffAttributes = (template, existing) => {
 
 export const diffDOM = (templateMap, domMap, element) => {
   // Remove missing children from map
-  const count = domMap.length - templateMap.length
+  let count = domMap.length - templateMap.length
   if (count > 0) {
     for (; count > 0; count--) {
       const child = domMap[domMap.length - count]
