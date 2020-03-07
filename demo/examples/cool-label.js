@@ -1,6 +1,6 @@
-import { BaseComponent } from "../../src/base-component.js/index.js"
+import { Rotom } from "../../src/rotom"
 
-class CoolLabel extends BaseComponent {
+class CoolLabel extends Rotom {
   // Setup and base component-dependent upgrades
   static get observedAttributes() {
     return ["first-name"]
