@@ -2,16 +2,16 @@
   "name": "basecomponent",
   "version": "0.0.1",
   "description": "A simple base class for using native web components",
-  "main": "lib/basecomponent.cjs.js",
-  "module": "lib/basecomponent.esm.js",
-  "browser": "lib/basecomponent.iife.js",
+  "main": "lib/base-component.cjs.js",
+  "module": "lib/base-component.esm.js",
+  "browser": "lib/base-component.js",
   "scripts": {
     "start": "rollup -c rollup.config.demo.js -w",
     "build": "rm -rf lib && rollup -c",
     "build:publish": "rm -rf lib && NODE_ENV='publish' rollup -c",
-    "lint": "npm run scss:lint && npm run js:lint",
-    "js:lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore"
+    "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore"
   },
+  "homepage": "https://github.com/geotrev/basecomponent",
   "author": "George Treviranus",
   "license": "MIT",
   "devDependencies": {
@@ -25,5 +25,28 @@
     "rollup-plugin-postcss": "^2.1.1",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=6.0.0"
+  },
+  "keywords": [
+    "javascript",
+    "js",
+    "frontend",
+    "web",
+    "components",
+    "web components"
+  ],
+  "files": [
+    "lib/**.{js,map}",
+    "src/*.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/basecomponent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geotrev/basecomponent/issues"
   }
 }

@@ -1,0 +1,26 @@
+# run to see file output:
+# npm publish --dry-run
+
+# logs
+npm-error.log*
+coverage/
+.sass-cache/
+
+# bin
+.bin/
+
+# tests
+src/__tests__/
+
+# demo
+demo/
+
+# configs
+.browserslistrc
+.eslintignore
+.eslintrc.js
+.prettierignore
+.prettierrc.js
+babel.config.js
+rollup.config.js
+rollup.config.demo.js

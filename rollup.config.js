@@ -5,7 +5,7 @@ import { terser } from "rollup-plugin-terser"
 
 const pkg = require("./package.json")
 const banner = require("./.bin/banner")
-const input = path.resolve(__dirname, "src/basecomponent.js")
+const input = path.resolve(__dirname, "src/base-component.js")
 const plugins = [resolve(), commonjs()]
 
 if (process.env.NODE_ENV === "publish") {
@@ -31,8 +31,19 @@ export default [
     plugins,
     output: {
       banner,
+      format: "iife",
+      file: path.resolve(__dirname, "lib/base-component.js"),
+      sourcemap: true,
+      name: pkg.name,
+    },
+  },
+  {
+    input,
+    plugins,
+    output: {
+      banner,
       format: "cjs",
-      file: path.resolve(__dirname, "lib/basecomponent.cjs.js"),
+      file: path.resolve(__dirname, "lib/base-component.cjs.js"),
       sourcemap: true,
       name: pkg.name,
     },
@@ -43,7 +54,7 @@ export default [
     output: {
       banner,
       format: "esm",
-      file: path.resolve(__dirname, "lib/basecomponent.esm.js"),
+      file: path.resolve(__dirname, "lib/base-component.esm.js"),
       sourcemap: true,
       name: pkg.name,
     },

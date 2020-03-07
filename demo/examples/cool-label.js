@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/base-component.js"
+import { BaseComponent } from "../../src/base-component.js/index.js"
 
 class CoolLabel extends BaseComponent {
   // Setup and base component-dependent upgrades
