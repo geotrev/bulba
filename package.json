@@ -1,5 +1,5 @@
 {
-  "name": "base-web-component",
+  "name": "rotom",
   "version": "0.0.1",
   "description": "A simple base class for using native web components",
   "main": "lib/base-component.cjs.js",
@@ -11,7 +11,7 @@
     "build:publish": "rm -rf lib && NODE_ENV='publish' rollup -c",
     "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore"
   },
-  "homepage": "https://github.com/geotrev/basecomponent",
+  "homepage": "https://github.com/geotrev/rotom",
   "author": "George Treviranus",
   "license": "MIT",
   "devDependencies": {
@@ -44,9 +44,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/basecomponent.git"
+    "url": "git+https://github.com/geotrev/rotom.git"
   },
   "bugs": {
-    "url": "https://github.com/geotrev/basecomponent/issues"
+    "url": "https://github.com/geotrev/rotom/issues"
   }
 }

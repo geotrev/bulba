@@ -4,7 +4,7 @@ import * as internal from "./internal"
 
 const COMPONENT_ROOT_CLASSNAME = "component-root"
 
-export class BaseComponent extends HTMLElement {
+export class Rotom extends HTMLElement {
   constructor() {
     super()
     this[internal.initialize]()

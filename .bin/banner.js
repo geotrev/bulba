@@ -7,7 +7,7 @@ const year = new Date().getFullYear()
 
 const banner = `/*!
   * @license MIT (https://github.com/geotrev/undernet/blob/master/LICENSE)
-  * BaseComponent v${pkg.version} (${pkg.homepage})
+  * Rotom v${pkg.version} (${pkg.homepage})
   * Copyright 2020
   */`
 
