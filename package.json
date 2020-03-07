@@ -1,5 +1,5 @@
 {
-  "name": "basecomponent",
+  "name": "base-web-component",
   "version": "0.0.1",
   "description": "A simple base class for using native web components",
   "main": "lib/base-component.cjs.js",
