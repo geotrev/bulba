@@ -1,6 +1,6 @@
-import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom.js"
-import { createUUID, toCamel, toKebab } from "./utilities.js"
-import * as internal from "./internal.js"
+import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
+import { createUUID, toKebab } from "./utilities"
+import * as internal from "./internal"
 
 const COMPONENT_ROOT_CLASSNAME = "component-root"
 
