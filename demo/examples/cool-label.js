@@ -50,7 +50,7 @@ class CoolLabel extends Rotom {
   }
 
   get getRandomBG() {
-    return ["mustard", "blue", "darkblue", "green", "purple"][Math.floor(Math.random() * 5)]
+    return ["darkorange", "blue", "darkblue", "green", "purple"][Math.floor(Math.random() * 5)]
   }
 
   get getRandomColor() {

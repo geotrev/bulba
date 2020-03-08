@@ -80,6 +80,8 @@ export class Rotom extends HTMLElement {
       this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
+
+    console.log("Rendered")
   }
 
   [internal.validateType](property, type, value) {
