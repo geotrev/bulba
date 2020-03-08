@@ -190,69 +190,65 @@ const diffAttributes = (template, existing) => {
   removeAttributes(existing.node, removedAttributes)
 }
 
+// Starting at the top level, recursively iterate through the new map
+// and update changes to the current one if there are differences.
+
+const syncTemplateToMap = (templateMap, domMap, element) => (node, index) => {
+  const existingChildNode = domMap[index]
+  const templateChildNode = templateMap[index]
+
+  // 1. Create and append new children
+  if (!existingChildNode) {
+    return element.appendChild(createNode(templateChildNode))
+  }
+
+  // 2. If element is not the same type, rebuild it
+  if (templateChildNode.type !== existingChildNode.type) {
+    return existingChildNode.node.parentNode.replaceChild(
+      createNode(templateChildNode),
+      existingChildNode.node
+    )
+  }
+
+  // 3. Update attributes
+  diffAttributes(templateChildNode, existingChildNode)
+
+  // 4. Update content
+  if (templateChildNode.content && templateChildNode.content !== existingChildNode.content) {
+    existingChildNode.node.textContent = templateChildNode.content
+  }
+
+  // 5a. Remove stale child nodes
+  if (existingChildNode.children.length > 0 && node.children.length < 1) {
+    return (existingChildNode.node.innerHTML = "")
+  }
+
+  // 5b. Rebuild elements that are empty but shouldn't be
+  //     Uses a document fragment to prevent unnecessary reflows
+  if (existingChildNode.children.length < 1 && node.children.length > 0) {
+    const fragment = document.createDocumentFragment()
+    diffDOM(node.children, existingChildNode.children, fragment)
+    return element.appendChild(fragment)
+  }
+
+  // 5c. Diff any children of the current node.
+  if (node.children.length > 0) {
+    diffDOM(node.children, existingChildNode.children, existingChildNode.node)
+  }
+}
+
 export const diffDOM = (templateMap, domMap, element) => {
   // Remove missing children from map
-  let count = domMap.length - templateMap.length
-  if (count > 0) {
-    for (; count > 0; count--) {
-      const child = domMap[domMap.length - count]
+  let delta = domMap.length - templateMap.length
+  if (delta > 0) {
+    for (; delta > 0; delta--) {
+      const child = domMap[domMap.length - delta]
       child.node.parentNode.removeChild(child.node)
     }
   }
 
-  templateMap.forEach((node, index) => {
-    const existingChildNode = domMap[index]
-    const templateChildNode = templateMap[index]
-
-    // Starting at the top (node) level, check that if the template
-    // node is different from the existing node.
-    // 1. Node: Add new node
-    // 2. Type: Replace node
-    // 3. Attributes: Patch the node
-    // 4. Content: Patch the node
-    // 5 a) Children: Remove deleted node
-    // 5 b) Children: Existing node has children the template does not, create them
-    // 5 c) Children: Add new child node from the template
-
-    // 1. Create or append any new children
-    if (!existingChildNode) {
-      return element.appendChild(createNode(templateChildNode))
-    }
-
-    // 2. If element is not the same type, replace it with the new element
-    if (templateChildNode.type !== existingChildNode.type) {
-      return existingChildNode.node.parentNode.replaceChild(
-        createNode(templateChildNode),
-        existingChildNode.node
-      )
-    }
-
-    // 3. Attributes
-    diffAttributes(templateChildNode, existingChildNode)
-
-    // 4. Content
-    if (templateChildNode.content && templateChildNode.content !== existingChildNode.content) {
-      return (existingChildNode.node.textContent = templateChildNode.content)
-    }
-
-    // 5a. Remove children
-    if (existingChildNode.children.length > 0 && node.children.length < 1) {
-      return (existingChildNode.node.innerHTML = "")
-    }
-
-    // 5b. If element is empty and shouldn't be, build it up
-    //     This uses a document fragment to minimize reflows
-    if (existingChildNode.children.length < 1 && node.children.length > 0) {
-      const fragment = document.createDocumentFragment()
-      diffDOM(node.children, existingChildNode.children, fragment)
-      return element.appendChild(fragment)
-    }
-
-    // 5c. Add children recursively
-    if (node.children.length > 0) {
-      return diffDOM(node.children, existingChildNode.children, existingChildNode.node)
-    }
-  })
+  // Diff it
+  templateMap.forEach(syncTemplateToMap(templateMap, domMap, element))
 }
 
 export const renderMapToDOM = (templateMap, root) => {

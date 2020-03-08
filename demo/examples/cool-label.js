@@ -10,7 +10,7 @@ class CoolLabel extends Rotom {
     return {
       firstName: {
         type: "string",
-        reflected: true, // Wouldn't this be nice? :(
+        reflected: true, // Replaces oA above... wouldn't that be nice? :(
         initialValue: "Kelso",
       },
       changeCount: {
