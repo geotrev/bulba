@@ -119,6 +119,12 @@ const removeAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       removeStyles(element, Array.prototype.slice.call(element.style))
     } else {
+      if (attribute.name in element) {
+        try {
+          element[attribute.name] = ""
+          // eslint-disable-next-line
+        } catch (e) {}
+      }
       element.removeAttribute(attribute.name)
     }
   })
@@ -133,8 +139,13 @@ const addAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       diffStyles(element, attribute.value)
     } else {
-      // A null attribute is still be valid; fallback to `true`.
-      element.setAttribute(attribute.name, attribute.value || true)
+      if (attribute.name in element) {
+        try {
+          element[attribute.name] = attribute.value || attribute.name
+          // eslint-disable-next-line
+        } catch (e) {}
+      }
+      element.setAttribute(attribute.name, attribute.value || "")
     }
   })
 }
@@ -226,7 +237,7 @@ export const diffDOM = (templateMap, domMap, element) => {
     diffAttributes(templateChildNode, existingChildNode)
 
     // 4. Content
-    if (templateChildNode.content !== existingChildNode.content) {
+    if (templateChildNode.content && templateChildNode.content !== existingChildNode.content) {
       return (existingChildNode.node.textContent = templateChildNode.content)
     }
 
