@@ -69,20 +69,18 @@ export const createDOMMap = (element, isSVG) => {
 }
 
 const getStyleMap = styles => {
-  return styles.split(";").reduce((map, style) => {
+  return styles.split(";").map(style => {
     const entry = style.trim()
 
     if (entry.indexOf(":") > 0) {
       const [name, value] = entry.split(":")
 
-      map.push({
+      return {
         name: name ? name.trim() : "",
         value: value ? value.trim() : "",
-      })
+      }
     }
-
-    return map
-  }, [])
+  })
 }
 
 const removeStyles = (element, styles) => {
@@ -119,11 +117,9 @@ const removeAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       removeStyles(element, Array.prototype.slice.call(element.style))
     } else {
+      // If the attribute is also a property, unset it
       if (attribute.name in element) {
-        try {
-          element[attribute.name] = ""
-          // eslint-disable-next-line
-        } catch (e) {}
+        element[attribute.name] = ""
       }
       element.removeAttribute(attribute.name)
     }
@@ -139,11 +135,9 @@ const addAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       diffStyles(element, attribute.value)
     } else {
+      // If the attribute is also a property, set it
       if (attribute.name in element) {
-        try {
-          element[attribute.name] = attribute.value || attribute.name
-          // eslint-disable-next-line
-        } catch (e) {}
+        element[attribute.name] = attribute.value || attribute.name
       }
       element.setAttribute(attribute.name, attribute.value || "")
     }
