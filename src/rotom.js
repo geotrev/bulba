@@ -44,11 +44,41 @@ export class Rotom extends HTMLElement {
 
   [internal.performUpgrade]() {
     const { properties } = this.constructor
+    if (!properties) return
 
-    if (properties && Object.keys(properties).length) {
-      for (let property in properties) {
+    const propNames = Object.keys(properties)
+
+    if (propNames.length) {
+      propNames.forEach(property => {
         this[internal.createProperty](property, properties[property])
-      }
+      })
+    }
+  }
+
+  [internal.renderStyles]() {
+    if (typeof this.styles !== "function") return
+    const styles = this.styles()
+    if (typeof styles !== "string") return
+
+    const styleTag = document.createElement("style")
+    styleTag.type = "text/css"
+    styleTag.textContent = styles
+    this[internal.shadowRoot].appendChild(styleTag)
+  }
+
+  [internal.renderDOM]() {
+    const domString = this[internal.getDOMString]()
+
+    if (this[internal.domRoot]) {
+      let templateMap = createDOMMap(stringToHTML(domString.trim()))
+      // If templateMap root node outerHTML equals domMap root node outerHTML, return
+      diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
+      templateMap = null
+    } else {
+      this[internal.domMap] = createDOMMap(stringToHTML(domString.trim()))
+      this[internal.domRoot] = document.createElement("div")
+      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
+      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
   }
 
@@ -63,7 +93,7 @@ export class Rotom extends HTMLElement {
     )
   }
 
-  [internal.createProperty](property, data) {
+  [internal.createProperty](property, data = {}) {
     const internalName = typeof property === "symbol" ? Symbol(property) : `__${property}__`
     const { initialValue, type } = data
     const attribute = toKebab(property)
@@ -86,13 +116,13 @@ export class Rotom extends HTMLElement {
         if (value) {
           this[internalName] = value
 
-          if (observedAttributes && observedAttributes.includes(attribute)) {
+          if (observedAttributes && observedAttributes.indexOf(attribute) > -1) {
             this.setAttribute(attribute, value)
           }
         } else {
           this[internalName] = undefined
 
-          if (observedAttributes && observedAttributes.includes(attribute)) {
+          if (observedAttributes && observedAttributes.indexOf(attribute) > -1) {
             this.removeAttribute(attribute)
           }
         }
@@ -119,31 +149,5 @@ export class Rotom extends HTMLElement {
       )
 
     return domString.trim()
-  }
-
-  [internal.renderStyles]() {
-    if (typeof this.styles !== "function") return
-    const styles = this.styles()
-    if (typeof styles !== "string") return
-
-    const styleTag = document.createElement("style")
-    styleTag.type = "text/css"
-    styleTag.textContent = styles
-    this[internal.shadowRoot].appendChild(styleTag)
-  }
-
-  [internal.renderDOM]() {
-    const domString = this[internal.getDOMString]()
-
-    if (this[internal.domRoot]) {
-      let templateMap = createDOMMap(stringToHTML(domString))
-      diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
-      templateMap = null
-    } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(domString))
-      this[internal.domRoot] = document.createElement("div")
-      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
-      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
-    }
   }
 }

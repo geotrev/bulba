@@ -1,21 +1,64 @@
+/**
+ * Credit for this reactive view approach goes to Chris Ferdinandi
+ * https://github.com/cferdinandi/reef
+ */
+
+const dynamicAttributes = [
+  "checked",
+  "disabled",
+  "hidden",
+  "lang",
+  "readonly",
+  "required",
+  "selected",
+  "value",
+]
+
 export const stringToHTML = domString => {
   const parser = new DOMParser()
   const doc = parser.parseFromString(domString, "text/html")
   return doc.body
 }
 
-const getAttributes = attributes => {
-  return Array.prototype.map.call(attributes, attribute => ({
-    name: attribute.name,
-    value: attribute.value,
-  }))
+const getAttribute = (name, value) => {
+  return {
+    name: name,
+    value: value,
+  }
+}
+
+const getDynamicAttributes = (node, attributes) => {
+  dynamicAttributes.forEach(prop => {
+    if (!node[prop]) return
+    attributes.push(getAttribute(prop, node[prop]))
+  })
+}
+
+const getBaseAttributes = node => {
+  return Array.prototype.reduce.call(
+    node.attributes,
+    (allAttributes, attribute) => {
+      if (dynamicAttributes.indexOf(attribute.name) < 0) {
+        allAttributes.push(getAttribute(attribute.name, attribute.value))
+      }
+      return allAttributes
+    },
+    []
+  )
+}
+
+const getAttributes = node => {
+  const attributes = getBaseAttributes(node)
+  getDynamicAttributes(node, attributes)
+
+  return attributes
 }
 
 export const createDOMMap = (element, isSVG) => {
   return Array.prototype.map.call(element.childNodes, node => {
     const type =
       node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getAttributes(node.attributes) : []
+    const attributes = node.nodeType === 1 ? getAttributes(node) : []
     const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
     const details = { node, content, attributes, type }
 
@@ -26,20 +69,18 @@ export const createDOMMap = (element, isSVG) => {
 }
 
 const getStyleMap = styles => {
-  return styles.split(";").reduce((map, style) => {
+  return styles.split(";").map(style => {
     const entry = style.trim()
 
     if (entry.indexOf(":") > 0) {
       const [name, value] = entry.split(":")
 
-      map.push({
+      return {
         name: name ? name.trim() : "",
         value: value ? value.trim() : "",
-      })
+      }
     }
-
-    return map
-  }, [])
+  })
 }
 
 const removeStyles = (element, styles) => {
@@ -76,6 +117,10 @@ const removeAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       removeStyles(element, Array.prototype.slice.call(element.style))
     } else {
+      // If the attribute is also a property, unset it
+      if (attribute.name in element) {
+        element[attribute.name] = ""
+      }
       element.removeAttribute(attribute.name)
     }
   })
@@ -90,8 +135,11 @@ const addAttributes = (element, attributes) => {
     } else if (attribute.name === "style") {
       diffStyles(element, attribute.value)
     } else {
-      // A null attribute is still be valid; fallback to `true`.
-      element.setAttribute(attribute.name, attribute.value || true)
+      // If the attribute is also a property, set it
+      if (attribute.name in element) {
+        element[attribute.name] = attribute.value || attribute.name
+      }
+      element.setAttribute(attribute.name, attribute.value || "")
     }
   })
 }
@@ -122,24 +170,24 @@ const createNode = element => {
 }
 
 const diffAttributes = (template, existing) => {
-  const getRemovedAttributes = existing.attributes.filter(attribute => {
+  const removedAttributes = existing.attributes.filter(attribute => {
     const newAttributes = template.attributes.find(newAttribute => {
       return attribute.name === newAttribute.name
     })
 
-    return newAttributes === undefined
+    return newAttributes === null
   })
 
-  const getChangingAttributes = template.attributes.filter(attribute => {
+  const changedAttributes = template.attributes.filter(attribute => {
     const newAttributes = find(existing.attributes, existingAttribute => {
       return attribute.name === existingAttribute.name
     })
 
-    return newAttributes === undefined || newAttributes.value !== attribute.value
+    return newAttributes === null || newAttributes.value !== attribute.value
   })
 
-  addAttributes(existing.node, getChangingAttributes)
-  removeAttributes(existing.node, getRemovedAttributes)
+  addAttributes(existing.node, changedAttributes)
+  removeAttributes(existing.node, removedAttributes)
 }
 
 export const diffDOM = (templateMap, domMap, element) => {
@@ -183,7 +231,7 @@ export const diffDOM = (templateMap, domMap, element) => {
     diffAttributes(templateChildNode, existingChildNode)
 
     // 4. Content
-    if (templateChildNode.content !== existingChildNode.content) {
+    if (templateChildNode.content && templateChildNode.content !== existingChildNode.content) {
       return (existingChildNode.node.textContent = templateChildNode.content)
     }
 
