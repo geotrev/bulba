@@ -8,8 +8,15 @@ class CoolLabel extends Rotom {
 
   static get properties() {
     return {
-      firstName: { type: "string", initialValue: "Kelso" },
-      changeCount: { type: "number", initialValue: 0 },
+      firstName: {
+        type: "string",
+        reflected: true, // Wouldn't this be nice? :(
+        initialValue: "Kelso",
+      },
+      changeCount: {
+        type: "number",
+        initialValue: 0,
+      },
     }
   }
 
