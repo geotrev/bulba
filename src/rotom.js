@@ -136,11 +136,12 @@ export class Rotom extends HTMLElement {
     const domString = this[internal.getDOMString]()
 
     if (this[internal.domRoot]) {
-      let templateMap = createDOMMap(stringToHTML(domString))
+      let templateMap = createDOMMap(stringToHTML(domString.trim()))
+      // If templateMap root node outerHTML equals domMap root node outerHTML, return
       diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
       templateMap = null
     } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(domString))
+      this[internal.domMap] = createDOMMap(stringToHTML(domString.trim()))
       this[internal.domRoot] = document.createElement("div")
       this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
