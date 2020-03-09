@@ -1,8 +1,9 @@
 import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
-import { createUUID, toKebab, loadScheduler } from "./utilities"
+import { createUUID, toKebab, isPlainObject, isEmptyObject } from "./utilities"
+import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
 
-const COMPONENT_ROOT_CLASSNAME = "component-root"
+const COMPONENT_ROOT_ID = "component-root"
 
 export class Rotom extends HTMLElement {
   constructor() {
@@ -12,31 +13,37 @@ export class Rotom extends HTMLElement {
 
   // Public
 
+  // Retrieve defined properties from the constructor instance
+  // (ideally, not Rotom itself, but its extender)
   static get observedAttributes() {
     let attributes = []
 
-    if (typeof this.properties === "object" && Object.keys(this.properties).length) {
-      Object.keys(this.properties).forEach(property => {
-        if (property.reflected) attributes.push(toKebab(property))
-      })
-    }
+    if (isEmptyObject(this.properties)) return []
+
+    Object.keys(this.properties).forEach(property => {
+      if (this.properties[property].reflected) attributes.push(toKebab(property))
+    })
 
     return attributes
   }
 
   // Keep these around in case they become useful later.
   // Consumers will need to call super(), in the mean time.
+
   attributeChangedCallback() {}
   adoptedCallback() {}
   connectedCallback() {}
-  disconnectedCallback() {}
+
+  disconnectedCallback() {
+    // unset domRoot, domMap, and other detached DOM data
+  }
 
   get componentId() {
     return this[internal.componentId]
   }
 
   requestRender() {
-    window.schedule(this[internal.renderDOM])
+    window.rotomSchedule(this[internal.renderDOM])
   }
 
   // Private
@@ -61,15 +68,11 @@ export class Rotom extends HTMLElement {
 
   [internal.performUpgrade]() {
     const { properties } = this.constructor
-    if (!properties) return
+    if (isEmptyObject(properties)) return
 
-    const propNames = Object.keys(properties)
-
-    if (propNames.length) {
-      propNames.forEach(property => {
-        this[internal.createProperty](property, properties[property])
-      })
-    }
+    Object.keys(properties).forEach(property => {
+      this[internal.createProperty](property, properties[property])
+    })
   }
 
   [internal.renderStyles]() {
@@ -84,6 +87,8 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderDOM]() {
+    // Consider re-mapping for each render. It takes <1ms to run the diff!
+
     if (this[internal.domRoot]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
 
@@ -93,14 +98,62 @@ export class Rotom extends HTMLElement {
     } else {
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       this[internal.domRoot] = document.createElement("div")
-      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
+      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_ID)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
     console.log("Rendered")
   }
 
-  [internal.validateType](property, type, value) {
+  [internal.createProperty](property, data = {}) {
+    const privateName = typeof property === "symbol" ? Symbol(property) : `__${property}__`
+    const { initialValue, type } = data
+    const attribute = toKebab(property)
+    const { properties } = this.constructor
+    let isReflected
+
+    // Get reflected properties. `observedAttributes` is not available yet, so
+    // a similar check happens here.
+    if (!isEmptyObject(properties)) {
+      const entry = properties[property]
+
+      if (isPlainObject(entry) && entry.reflected) {
+        isReflected = true
+      }
+    }
+
+    // Apply the internal property value before its getter/setter
+    // is created. This is necessary because:
+    // 1. Pre-setting prevents unnecessary re-renders.
+    // 2. The `value` in `Object.defineProperty` can't be set along with accessors.
+    if (typeof initialValue !== "undefined") {
+      this[internal.validateType](property, type, initialValue)
+      this[privateName] = initialValue
+    }
+
+    Object.defineProperty(this, property, {
+      configurable: true,
+      enumerable: true,
+      get() {
+        return this[privateName]
+      },
+      set(value) {
+        this[internal.validateType](property, value, type)
+
+        if (value) {
+          this[privateName] = value
+          if (isReflected) this.setAttribute(attribute, value)
+        } else {
+          this[privateName] = undefined
+          if (isReflected) this.removeAttribute(attribute)
+        }
+
+        window.rotomSchedule(this[internal.renderDOM])
+      },
+    })
+  }
+
+  [internal.validateType](property, value, type) {
     if (!type) return
     if (typeof value === type) return
 
@@ -109,48 +162,6 @@ export class Rotom extends HTMLElement {
         this.constructor.name
       }.`
     )
-  }
-
-  [internal.createProperty](property, data = {}) {
-    const internalName = typeof property === "symbol" ? Symbol(property) : `__${property}__`
-    const { initialValue, type } = data
-    const attribute = toKebab(property)
-    const observedAttributes = this.constructor.observedAttributes
-
-    if (typeof initialValue !== "undefined") {
-      this[internal.validateType](property, type, initialValue)
-      this[internalName] = initialValue
-    }
-
-    Object.defineProperty(this, property, {
-      configurable: true,
-      enumerable: true,
-      get() {
-        return this[internalName]
-      },
-      set(value) {
-        this[internal.validateType](property, type, value)
-
-        if (value) {
-          this[internalName] = value
-
-          if (observedAttributes && observedAttributes.indexOf(attribute) > -1) {
-            this.setAttribute(attribute, value)
-          }
-        } else {
-          this[internalName] = undefined
-
-          if (observedAttributes && observedAttributes.indexOf(attribute) > -1) {
-            this.removeAttribute(attribute)
-          }
-        }
-
-        // NOTE: Because the renderer is synchronous, it can cause serious
-        // DOM thrashing. Therefore setTimeout is merely a way to spreadout DOM updates
-        // across frames, preventing complex layouts from freezing up.
-        window.schedule(this[internal.renderDOM])
-      },
-    })
   }
 
   [internal.getDOMString]() {
