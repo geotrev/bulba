@@ -1,6 +1,11 @@
 import { Rotom } from "../../src/rotom"
 
 class CoolLabel extends Rotom {
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
+
   // Rotom component stuff
   static get properties() {
     return {
@@ -22,9 +27,13 @@ class CoolLabel extends Rotom {
 
   componentDidMount() {
     console.log("Mounted")
-    this.handleClick = this.handleClick.bind(this)
-    const button = this.shadowRoot.querySelector("#update-btn")
-    button.addEventListener("click", this.handleClick)
+    this.button = this.shadowRoot.querySelector("#update-btn")
+    this.button.addEventListener("click", this.handleClick)
+  }
+
+  componentWillUnmount() {
+    console.log("Unmounting")
+    this.button.removeEventListener("click", this.hnadleClick)
   }
 
   styles() {

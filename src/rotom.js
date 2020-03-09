@@ -1,9 +1,16 @@
 import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
-import { createUUID, toKebab, isPlainObject, isEmptyObject } from "./utilities"
+import {
+  createUUID,
+  toKebab,
+  isPlainObject,
+  isEmptyObject,
+  isString,
+  isFunction,
+  isUndefined,
+  isSymbol,
+} from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
-
-const COMPONENT_ROOT_ID = "component-root"
 
 export class Rotom extends HTMLElement {
   constructor() {
@@ -41,6 +48,10 @@ export class Rotom extends HTMLElement {
   }
 
   disconnectedCallback() {
+    if (isFunction(this.componentWillUnmount)) {
+      this.componentWillUnmount()
+    }
+
     this[internal.domRoot] = null
     this[internal.domMap] = null
   }
@@ -80,9 +91,9 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderStyles]() {
-    if (typeof this.styles !== "function") return
+    if (!isFunction(this.styles)) return
     const styles = this.styles()
-    if (typeof styles !== "string") return
+    if (!isString(styles)) return
 
     const styleTag = document.createElement("style")
     styleTag.type = "text/css"
@@ -106,22 +117,25 @@ export class Rotom extends HTMLElement {
     } else {
       firstRender = true
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      // NOTE: This div is not appended to the shadow root. Only its children
+      //       are attached. Alternatively, it might be more performant to remove
+      //       the detached node and re-query the shadowRoot for all non-style
+      //       tags and re-append to a new div element before diffing, above.
       this[internal.domRoot] = document.createElement("div")
-      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_ID)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
-    if (!firstRender && typeof this.componentDidUpdate === "function") {
+    if (!firstRender && isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate()
     }
 
-    if (firstRender && typeof this.componentDidMount === "function") {
+    if (firstRender && isFunction(this.componentDidMount)) {
       this.componentDidMount()
     }
   }
 
   [internal.createProperty](property, data = {}) {
-    const privateName = typeof property === "symbol" ? Symbol(property) : `__${property}__`
+    const privateName = isSymbol(property) ? Symbol(property) : `__${property}__`
     const { initialValue, type } = data
     const attribute = toKebab(property)
     const { properties } = this.constructor
@@ -139,8 +153,8 @@ export class Rotom extends HTMLElement {
     // Apply the internal property value before its getter/setter
     // is created. This is necessary because:
     // 1. Pre-setting prevents unnecessary re-renders.
-    // 2. The `value` in `Object.defineProperty` can't be set along with accessors.
-    if (typeof initialValue !== "undefined") {
+    // 2. The value descriptor in `Object.defineProperty` can't be set along with accessors.
+    if (!isUndefined(initialValue)) {
       this[internal.validateType](property, initialValue, type)
       this[privateName] = initialValue
     }
@@ -181,7 +195,7 @@ export class Rotom extends HTMLElement {
   [internal.getDOMString]() {
     let domString
 
-    if (typeof this.render === "function") {
+    if (isFunction(this.render)) {
       domString = this.render()
     } else {
       throw new Error(
@@ -189,7 +203,7 @@ export class Rotom extends HTMLElement {
       )
     }
 
-    if (typeof domString !== "string")
+    if (!isString(domString))
       throw new Error(
         `You attempted to render a non-string template. Check ${this.constructor.name}.render.`
       )
