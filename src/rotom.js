@@ -34,11 +34,15 @@ export class Rotom extends HTMLElement {
     return attributes
   }
 
-  // Keep these around in case they become useful later.
-  // Consumers will need to call super(), in the mean time.
-
-  attributeChangedCallback() {}
+  // Keep adoptedCallback around in case it becomes useful later.
+  // Consumers will need to call super() to remain compatible, in the mean time.
   adoptedCallback() {}
+
+  attributeChangedCallback(attribute, oldValue, newValue) {
+    if (isFunction(this.componentAttributeChanged) && oldValue !== newValue) {
+      this.componentAttributeChanged(attribute, oldValue, newValue)
+    }
+  }
 
   connectedCallback() {
     if (this.isConnected) {
@@ -135,7 +139,7 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.createProperty](property, data = {}) {
-    const privateName = isSymbol(property) ? Symbol(property) : `__${property}__`
+    const privateName = isSymbol(property) ? Symbol(property) : `__private_${property}__`
     const { initialValue, type } = data
     const attribute = toKebab(property)
     const { properties } = this.constructor
@@ -166,14 +170,26 @@ export class Rotom extends HTMLElement {
         return this[privateName]
       },
       set(value) {
+        // Don't set if the value is the same to prevent unnecessary re-renders.
+        if (value === this[privateName]) return
         this[internal.validateType](property, value, type)
+
+        const oldValue = this[privateName]
 
         if (value) {
           this[privateName] = value
           if (isReflected) this.setAttribute(attribute, value)
+
+          if (isFunction(this.componentPropertyChanged)) {
+            this.componentPropertyChanged(property, oldValue, value)
+          }
         } else {
           this[privateName] = undefined
           if (isReflected) this.removeAttribute(attribute)
+
+          if (isFunction(this.componentPropertyChanged)) {
+            this.componentPropertyChanged(property, oldValue, null)
+          }
         }
 
         window.rotomSchedule(this[internal.renderDOM])
@@ -182,8 +198,7 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.validateType](property, value, type) {
-    if (!type) return
-    if (typeof value === type) return
+    if (type === undefined || typeof value === type) return
 
     return console.warn(
       `Property '${property}' assigned unsupported type: '${typeof value}'. Expected '${type}'. Check ${

@@ -1,12 +1,11 @@
 import { Rotom } from "../../src/rotom"
 
-class CoolLabel extends Rotom {
+export class CoolLabel extends Rotom {
   constructor() {
     super()
     this.handleClick = this.handleClick.bind(this)
   }
 
-  // Rotom component stuff
   static get properties() {
     return {
       firstName: {
@@ -21,18 +20,12 @@ class CoolLabel extends Rotom {
     }
   }
 
-  componentDidUpdate() {
-    console.log("Updated")
-  }
-
   componentDidMount() {
-    console.log("Mounted")
     this.button = this.shadowRoot.querySelector("#update-btn")
     this.button.addEventListener("click", this.handleClick)
   }
 
   componentWillUnmount() {
-    console.log("Unmounting")
     this.button.removeEventListener("click", this.hnadleClick)
   }
 
