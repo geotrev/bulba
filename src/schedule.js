@@ -26,7 +26,7 @@ export const loadScheduler = () => {
       event.stopPropagation()
       if (queue.length > 0) {
         const fn = queue.shift()
-        fn()
+        requestAnimationFrame(fn)
       }
     }
   }

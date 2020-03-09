@@ -87,7 +87,9 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderDOM]() {
-    // Consider re-mapping for each render. It takes <1ms to run the diff!
+    // Consider re-mapping for each render. It takes <1ms to run the diff
+    // - Unset domMap on each render
+    // - Re-assign domMap before running diffDOM
 
     if (this[internal.domRoot]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
@@ -116,7 +118,6 @@ export class Rotom extends HTMLElement {
     // a similar check happens here.
     if (!isEmptyObject(properties)) {
       const entry = properties[property]
-
       if (isPlainObject(entry) && entry.reflected) {
         isReflected = true
       }
@@ -127,7 +128,7 @@ export class Rotom extends HTMLElement {
     // 1. Pre-setting prevents unnecessary re-renders.
     // 2. The `value` in `Object.defineProperty` can't be set along with accessors.
     if (typeof initialValue !== "undefined") {
-      this[internal.validateType](property, type, initialValue)
+      this[internal.validateType](property, initialValue, type)
       this[privateName] = initialValue
     }
 
