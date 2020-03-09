@@ -32,10 +32,17 @@ export class Rotom extends HTMLElement {
 
   attributeChangedCallback() {}
   adoptedCallback() {}
-  connectedCallback() {}
+
+  connectedCallback() {
+    if (this.isConnected) {
+      this[internal.renderStyles]()
+      this[internal.renderDOM]()
+    }
+  }
 
   disconnectedCallback() {
-    // unset domRoot, domMap, and other detached DOM data
+    this[internal.domRoot] = null
+    this[internal.domMap] = null
   }
 
   get componentId() {
@@ -61,9 +68,6 @@ export class Rotom extends HTMLElement {
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
 
     this[internal.performUpgrade]()
-
-    this[internal.renderStyles]()
-    this[internal.renderDOM]()
   }
 
   [internal.performUpgrade]() {
@@ -91,6 +95,8 @@ export class Rotom extends HTMLElement {
     // - Unset domMap on each render
     // - Re-assign domMap before running diffDOM
 
+    let firstRender
+
     if (this[internal.domRoot]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
 
@@ -98,13 +104,20 @@ export class Rotom extends HTMLElement {
       diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
       templateMap = null
     } else {
+      firstRender = true
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       this[internal.domRoot] = document.createElement("div")
       this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_ID)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
-    console.log("Rendered")
+    if (!firstRender && typeof this.componentDidUpdate === "function") {
+      this.componentDidUpdate()
+    }
+
+    if (firstRender && typeof this.componentDidMount === "function") {
+      this.componentDidMount()
+    }
   }
 
   [internal.createProperty](property, data = {}) {

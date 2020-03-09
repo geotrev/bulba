@@ -16,14 +16,15 @@ class CoolLabel extends Rotom {
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback()
+  componentDidUpdate() {
+    console.log("Updated")
+  }
 
-    if (this.isConnected) {
-      this.handleClick = this.handleClick.bind(this)
-      const button = this.shadowRoot.querySelector("#update-btn")
-      button.addEventListener("click", this.handleClick)
-    }
+  componentDidMount() {
+    console.log("Mounted")
+    this.handleClick = this.handleClick.bind(this)
+    const button = this.shadowRoot.querySelector("#update-btn")
+    button.addEventListener("click", this.handleClick)
   }
 
   styles() {
