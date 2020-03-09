@@ -1,5 +1,5 @@
 import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
-import { createUUID, toKebab } from "./utilities"
+import { createUUID, toKebab, loadScheduler } from "./utilities"
 import * as internal from "./internal"
 
 const COMPONENT_ROOT_CLASSNAME = "component-root"
@@ -12,29 +12,46 @@ export class Rotom extends HTMLElement {
 
   // Public
 
-  // Keep these around in case they become useful later
-  // Consumers should call super on these always
+  static get observedAttributes() {
+    let attributes = []
+
+    if (typeof this.properties === "object" && Object.keys(this.properties).length) {
+      Object.keys(this.properties).forEach(property => {
+        if (property.reflected) attributes.push(toKebab(property))
+      })
+    }
+
+    return attributes
+  }
+
+  // Keep these around in case they become useful later.
+  // Consumers will need to call super(), in the mean time.
   attributeChangedCallback() {}
   adoptedCallback() {}
   connectedCallback() {}
+  disconnectedCallback() {}
 
   get componentId() {
     return this[internal.componentId]
   }
 
   requestRender() {
-    this[internal.renderDOM]()
+    window.schedule(this[internal.renderDOM])
   }
 
   // Private
 
   [internal.initialize]() {
+    // Append scheduler to the window
+    loadScheduler()
+
     // Internal properties and metadata
     this[internal.domRoot] = null
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.componentId] = createUUID()
     this.setAttribute("component-id", this.componentId)
+    this[internal.renderDOM] = this[internal.renderDOM].bind(this)
 
     this[internal.performUpgrade]()
 
@@ -69,7 +86,8 @@ export class Rotom extends HTMLElement {
   [internal.renderDOM]() {
     if (this[internal.domRoot]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      // If templateMap root node outerHTML equals domMap root node outerHTML, return
+
+      // TODO: If templateMap root node outerHTML equals domMap root node outerHTML, return
       diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
       templateMap = null
     } else {
@@ -127,9 +145,10 @@ export class Rotom extends HTMLElement {
           }
         }
 
-        // This is risky as it delays sequential prop updates as they stack in high-complexity DOM states
-        setTimeout(() => this[internal.renderDOM](), 0)
-        // this[internal.renderDOM]()
+        // NOTE: Because the renderer is synchronous, it can cause serious
+        // DOM thrashing. Therefore setTimeout is merely a way to spreadout DOM updates
+        // across frames, preventing complex layouts from freezing up.
+        window.schedule(this[internal.renderDOM])
       },
     })
   }
