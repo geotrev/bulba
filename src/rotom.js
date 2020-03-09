@@ -67,15 +67,13 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderDOM]() {
-    const domString = this[internal.getDOMString]()
-
     if (this[internal.domRoot]) {
-      let templateMap = createDOMMap(stringToHTML(domString.trim()))
+      let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       // If templateMap root node outerHTML equals domMap root node outerHTML, return
       diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
       templateMap = null
     } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(domString.trim()))
+      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       this[internal.domRoot] = document.createElement("div")
       this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_CLASSNAME)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
@@ -129,7 +127,9 @@ export class Rotom extends HTMLElement {
           }
         }
 
-        this[internal.renderDOM]()
+        // This is risky as it delays sequential prop updates as they stack in high-complexity DOM states
+        setTimeout(() => this[internal.renderDOM](), 0)
+        // this[internal.renderDOM]()
       },
     })
   }

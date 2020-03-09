@@ -68,4 +68,4 @@ class CoolLabel extends Rotom {
   }
 }
 
-customElements.define("cool-label", CoolLabel)
+if (!customElements.get("cool-label")) customElements.define("cool-label", CoolLabel)
