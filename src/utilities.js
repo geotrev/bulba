@@ -19,4 +19,8 @@ export const toKebab = value => {
 export const isPlainObject = value =>
   typeof value === "object" && value !== null && !Array.isArray(value)
 
-export const isEmptyObject = value => isPlainObject(value) && Object.keys(value).length === 0
+export const isEmptyObject = value => !isPlainObject(value) || !Object.keys(value).length
+export const isFunction = value => typeof value === "function"
+export const isString = value => typeof value === "string"
+export const isUndefined = value => typeof value === "undefined"
+export const isSymbol = value => typeof value === "symbol"

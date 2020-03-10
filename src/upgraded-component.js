@@ -1,11 +1,17 @@
 import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
-import { createUUID, toKebab, isPlainObject, isEmptyObject } from "./utilities"
+import {
+  createUUID,
+  toKebab,
+  isEmptyObject,
+  isString,
+  isFunction,
+  isUndefined,
+  isSymbol,
+} from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
 
-const COMPONENT_ROOT_ID = "component-root"
-
-export class Rotom extends HTMLElement {
+export class UpgradedComponent extends HTMLElement {
   constructor() {
     super()
     this[internal.initialize]()
@@ -14,11 +20,13 @@ export class Rotom extends HTMLElement {
   // Public
 
   // Retrieve defined properties from the constructor instance
-  // (ideally, not Rotom itself, but its extender)
+  // (ideally, not UpgradedComponent itself, but its constructor class)
   static get observedAttributes() {
     let attributes = []
 
-    if (isEmptyObject(this.properties)) return []
+    if (isEmptyObject(this.properties)) {
+      return attributes
+    }
 
     Object.keys(this.properties).forEach(property => {
       if (this.properties[property].reflected) attributes.push(toKebab(property))
@@ -27,20 +35,32 @@ export class Rotom extends HTMLElement {
     return attributes
   }
 
-  // Keep these around in case they become useful later.
-  // Consumers will need to call super(), in the mean time.
-
-  attributeChangedCallback() {}
+  // Keep adoptedCallback around in case it becomes useful later.
+  // Consumers will need to call super() to remain compatible, in the mean time.
   adoptedCallback() {}
+
+  attributeChangedCallback(attribute, oldValue, newValue) {
+    if (isFunction(this.componentAttributeChanged) && oldValue !== newValue) {
+      this.componentAttributeChanged(attribute, oldValue, newValue)
+    }
+  }
 
   connectedCallback() {
     if (this.isConnected) {
+      if (isFunction(this.componentDidConnect)) {
+        this.componentDidConnect()
+      }
+
       this[internal.renderStyles]()
       this[internal.renderDOM]()
     }
   }
 
   disconnectedCallback() {
+    if (isFunction(this.componentWillUnmount)) {
+      this.componentWillUnmount()
+    }
+
     this[internal.domRoot] = null
     this[internal.domMap] = null
   }
@@ -50,7 +70,7 @@ export class Rotom extends HTMLElement {
   }
 
   requestRender() {
-    window.rotomSchedule(this[internal.renderDOM])
+    window.scheduleUpgrade(this[internal.renderDOM])
   }
 
   // Private
@@ -80,10 +100,9 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderStyles]() {
-    if (typeof this.styles !== "function") return
-    const styles = this.styles()
-    if (typeof styles !== "string") return
+    if (!isString(this.constructor.styles)) return
 
+    const { styles } = this.constructor
     const styleTag = document.createElement("style")
     styleTag.type = "text/css"
     styleTag.textContent = styles
@@ -106,44 +125,51 @@ export class Rotom extends HTMLElement {
     } else {
       firstRender = true
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      // NOTE: This div is not appended to the shadow root. Only its children
+      //       are attached. Alternatively, it might be more performant to remove
+      //       the detached node and re-query the shadowRoot for all non-style
+      //       tags and re-append to a new div element before diffing, above.
       this[internal.domRoot] = document.createElement("div")
-      this[internal.domRoot].setAttribute("id", COMPONENT_ROOT_ID)
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
-    if (!firstRender && typeof this.componentDidUpdate === "function") {
+    // Apply update lifecycle, if it exists
+    if (!firstRender && isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate()
     }
 
-    if (firstRender && typeof this.componentDidMount === "function") {
+    // Apply mount lifecycle, if it exists
+    if (firstRender && isFunction(this.componentDidMount)) {
       this.componentDidMount()
     }
   }
 
   [internal.createProperty](property, data = {}) {
-    const privateName = typeof property === "symbol" ? Symbol(property) : `__${property}__`
-    const { initialValue, type } = data
-    const attribute = toKebab(property)
-    const { properties } = this.constructor
-    let isReflected
+    // The the constructor class is using its own setter/getter, bail
+    if (this.constructor[property]) return
 
-    // Get reflected properties. `observedAttributes` is not available yet, so
-    // a similar check happens here.
-    if (!isEmptyObject(properties)) {
-      const entry = properties[property]
-      if (isPlainObject(entry) && entry.reflected) {
-        isReflected = true
-      }
+    const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
+    const { default: defaultValue, type } = data
+    const { properties } = this.constructor
+
+    // Check if the property is reflected
+
+    let isReflected = false
+    const entry = properties[property]
+    if (!isEmptyObject(entry) && entry.reflected) {
+      isReflected = true
     }
 
-    // Apply the internal property value before its getter/setter
-    // is created. This is necessary because:
-    // 1. Pre-setting prevents unnecessary re-renders.
-    // 2. The `value` in `Object.defineProperty` can't be set along with accessors.
-    if (typeof initialValue !== "undefined") {
+    // Validate the property's default value type, if given
+    // Initialize the private property
+
+    let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
+    if (!isUndefined(initialValue)) {
       this[internal.validateType](property, initialValue, type)
       this[privateName] = initialValue
     }
+
+    // Finally, declare its accessors
 
     Object.defineProperty(this, property, {
       configurable: true,
@@ -152,27 +178,39 @@ export class Rotom extends HTMLElement {
         return this[privateName]
       },
       set(value) {
+        // Don't set if the value is the same to prevent unnecessary re-renders.
+        if (value === this[privateName]) return
         this[internal.validateType](property, value, type)
+
+        const attribute = toKebab(property)
+        const oldValue = this[privateName]
 
         if (value) {
           this[privateName] = value
           if (isReflected) this.setAttribute(attribute, value)
+
+          if (isFunction(this.componentPropertyChanged)) {
+            this.componentPropertyChanged(property, oldValue, value)
+          }
         } else {
           this[privateName] = undefined
           if (isReflected) this.removeAttribute(attribute)
+
+          if (isFunction(this.componentPropertyChanged)) {
+            this.componentPropertyChanged(property, oldValue, null)
+          }
         }
 
-        window.rotomSchedule(this[internal.renderDOM])
+        window.scheduleUpgrade(this[internal.renderDOM])
       },
     })
   }
 
   [internal.validateType](property, value, type) {
-    if (!type) return
-    if (typeof value === type) return
+    if (type === undefined || typeof value === type) return
 
     return console.warn(
-      `Property '${property}' assigned unsupported type: '${typeof value}'. Expected '${type}'. Check ${
+      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
         this.constructor.name
       }.`
     )
@@ -181,7 +219,7 @@ export class Rotom extends HTMLElement {
   [internal.getDOMString]() {
     let domString
 
-    if (typeof this.render === "function") {
+    if (isFunction(this.render)) {
       domString = this.render()
     } else {
       throw new Error(
@@ -189,7 +227,7 @@ export class Rotom extends HTMLElement {
       )
     }
 
-    if (typeof domString !== "string")
+    if (!isString(domString))
       throw new Error(
         `You attempted to render a non-string template. Check ${this.constructor.name}.render.`
       )

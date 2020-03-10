@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Rotom demo</title>
+    <title>UpgradedComponent demo</title>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   </head>
   <body style="max-width: 800px">
-    <cool-label first-name="Knuckles"></cool-label>
+    <simple-comp-test></simple-comp-test>
+    <cool-label first-name="Silver" description="This is my favorite group of people."></cool-label>
+    <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
 
     <br />
-    <!-- <button class="delete">Remove element ^</button> -->
+    <button class="delete">Remove element ^</button>
     <script src="bundle.js"></script>
     <!-- Test cleanup: -->
-    <!-- <script>
+    <script>
       document.querySelector(".delete").addEventListener("click", () => {
-        const label = document.querySelector("cool-label")
-        label.parentNode.removeChild(label)
+        const testElement = document.querySelector("lifecycle-test")
+        testElement.parentNode.removeChild(testElement)
       })
-    </script> -->
+    </script>
   </body>
 </html>

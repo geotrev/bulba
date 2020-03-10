@@ -3,9 +3,8 @@ import commonjs from "@rollup/plugin-commonjs"
 import resolve from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
 
-const pkg = require("./package.json")
 const banner = require("./.bin/banner")
-const input = path.resolve(__dirname, "src/rotom.js")
+const input = path.resolve(__dirname, "src/upgraded-component.js")
 const plugins = [resolve(), commonjs()]
 
 if (process.env.NODE_ENV === "publish") {
@@ -20,7 +19,7 @@ if (process.env.NODE_ENV === "publish") {
           }
         },
       },
-      mangle: { reserved: ["Rotom"] },
+      mangle: { reserved: ["UpgradedComponent"] },
     })
   )
 }
@@ -32,9 +31,9 @@ export default [
     output: {
       banner,
       format: "iife",
-      file: path.resolve(__dirname, "lib/rotom.js"),
+      file: path.resolve(__dirname, "lib/upgraded-component.js"),
       sourcemap: true,
-      name: pkg.name,
+      name: "UpgradedComponent",
     },
   },
   {
@@ -43,9 +42,9 @@ export default [
     output: {
       banner,
       format: "cjs",
-      file: path.resolve(__dirname, "lib/rotom.cjs.js"),
+      file: path.resolve(__dirname, "lib/upgraded-component.cjs.js"),
       sourcemap: true,
-      name: pkg.name,
+      name: "UpgradedComponent",
     },
   },
   {
@@ -54,9 +53,9 @@ export default [
     output: {
       banner,
       format: "esm",
-      file: path.resolve(__dirname, "lib/rotom.esm.js"),
+      file: path.resolve(__dirname, "lib/upgraded-component.esm.js"),
       sourcemap: true,
-      name: pkg.name,
+      name: "UpgradedComponent",
     },
   },
 ]

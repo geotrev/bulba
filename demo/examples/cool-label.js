@@ -1,34 +1,36 @@
-import { Rotom } from "../../src/rotom"
+import { UpgradedComponent } from "../../src/upgraded-component"
 
-class CoolLabel extends Rotom {
-  // Rotom component stuff
+export class CoolLabel extends UpgradedComponent {
   static get properties() {
     return {
       firstName: {
         type: "string",
+        default: element => element.getAttribute("first-name"),
         reflected: true,
-        initialValue: "Kelso",
       },
       changeCount: {
         type: "number",
-        initialValue: 0,
+        default: 0,
       },
     }
   }
 
-  componentDidUpdate() {
-    console.log("Updated")
+  static get styles() {
+    return `:host { display: block; } .compliments { font-weight: bold; }`
+  }
+
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidMount() {
-    console.log("Mounted")
-    this.handleClick = this.handleClick.bind(this)
-    const button = this.shadowRoot.querySelector("#update-btn")
-    button.addEventListener("click", this.handleClick)
+    this.button = this.shadowRoot.querySelector("#update-btn")
+    this.button.addEventListener("click", this.handleClick)
   }
 
-  styles() {
-    return `:host { display: block; } .compliments { font-weight: bold; }`
+  componentWillUnmount() {
+    this.button.removeEventListener("click", this.hnadleClick)
   }
 
   render() {
@@ -37,17 +39,15 @@ class CoolLabel extends Rotom {
         You've changed names ${this.changeCount} times
       </p>
       <p class="compliments" data-select="${this.firstName}">You're awesome, ${this.firstName}!</p>
+      <p>${this.getAttribute("description")}</p>
       <button id="update-btn">Change Name</button>
     `
   }
 
-  // cool-label methods
-
   getNewName() {
-    const names = ["Perry", "JD", "Elliot", "Chris", "Carla"]
+    const names = ["Sonic", "Knuckles", "Tails", "Eggman", "Shadow"]
     const newName = names[Math.floor(Math.random() * names.length)]
     if (newName === this.firstName) return this.getNewName()
-
     return newName
   }
 

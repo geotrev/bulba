@@ -7,7 +7,7 @@
  */
 
 export const loadScheduler = () => {
-  if (typeof window.rotomSchedule === "function") return
+  if (typeof window.scheduleUpgrade === "function") return
 
   const queue = []
   const EVENT_TYPE = "message"
@@ -34,7 +34,7 @@ export const loadScheduler = () => {
   window.addEventListener(EVENT_TYPE, handleMessageEvent, true)
 
   // Add as readonly property - you shall not pass!
-  Object.defineProperty(window, "rotomSchedule", {
+  Object.defineProperty(window, "scheduleUpgrade", {
     configurable: false,
     writable: false,
     value: schedule,

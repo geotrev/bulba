@@ -1,17 +1,18 @@
 {
-  "name": "rotom",
-  "version": "0.0.1",
+  "name": "upgraded-component",
+  "version": "0.0.3",
   "description": "A simple base class for using native web components",
-  "main": "lib/base-component.cjs.js",
-  "module": "lib/base-component.esm.js",
-  "browser": "lib/base-component.js",
+  "main": "lib/upgraded-component.cjs.js",
+  "module": "lib/upgraded-component.esm.js",
+  "browser": "lib/upgraded-component.js",
   "scripts": {
     "start": "rollup -c rollup.config.demo.js -w",
     "build": "rm -rf lib && rollup -c",
     "build:publish": "rm -rf lib && NODE_ENV='publish' rollup -c",
-    "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore"
+    "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore",
+    "prepublish": "npm run build:publish"
   },
-  "homepage": "https://github.com/geotrev/rotom",
+  "homepage": "https://github.com/geotrev/upgraded-component",
   "author": "George Treviranus",
   "license": "MIT",
   "devDependencies": {
@@ -45,9 +46,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/upgraded-component.git"
   },
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/upgraded-component/issues"
   }
 }
