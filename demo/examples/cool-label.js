@@ -14,6 +14,7 @@ export class CoolLabel extends Rotom {
       },
     }
   }
+
   static get styles() {
     return `:host { display: block; } .compliments { font-weight: bold; }`
   }
@@ -23,14 +24,10 @@ export class CoolLabel extends Rotom {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  componentDidConnect() {}
-
   componentDidMount() {
     this.button = this.shadowRoot.querySelector("#update-btn")
     this.button.addEventListener("click", this.handleClick)
   }
-
-  componentDidUpdate() {}
 
   componentWillUnmount() {
     this.button.removeEventListener("click", this.hnadleClick)

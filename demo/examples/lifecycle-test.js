@@ -4,9 +4,9 @@ class LifecycleTest extends CoolLabel {
   /**
    * Two types of properties: `generated` and `handled`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
-   *   is 'generated' with lifecycle accessors internally.
+   *   is 'generated' with lifecycle-connected accessors internally.
    * - A 'handled' property is custom. If you 'handle` your property with a custom getter and/or setter
-   *   at the component level, Rotom skips accessor generation. As a result, the `default` and `reflected`
+   *   at the component level, Rotom skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
    *
    * Properties that are generated have these options:
@@ -36,12 +36,42 @@ class LifecycleTest extends CoolLabel {
   }
 
   /**
+   * Use `connectedCallback` directly to control if connect setup occurs before or after DOM setup.
+   */
+
+  connectedCallback() {
+    console.log("connectedCallback, before parent callback")
+    super.connectedCallback()
+    console.log("connectedCallback, after parent callback")
+  }
+
+  /**
+   * Use `disconnectedCallback` directly to control if disconnect teardown occurs before or after DOM teardown.
+   */
+
+  disconnectedCallback() {
+    console.log("disconnectedCallback, before parent callback")
+    super.disconnectedCallback()
+    console.log("disconnectedCallback, after parent callback")
+  }
+
+  /**
+   * Use `attributeChangedCallback` directly to control additional callback logic.
+   */
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    console.log("attributeChangedCallback, before parent callback")
+    super.attributeChangedCallback(name, oldValue, newValue)
+    console.log("attributeChangedCallback, after parent callback")
+  }
+
+  /**
    * Triggers every time a generated property is changed. Handled property setters that manually
    * call this method will trigger it, as well.
    */
 
   componentPropertyChanged(property, oldValue, newValue) {
-    console.log("Property changed:", property, oldValue, newValue)
+    console.log("componentPropertyChanged", property, oldValue, newValue)
   }
 
   /**
@@ -50,7 +80,7 @@ class LifecycleTest extends CoolLabel {
    */
 
   componentAttributeChanged(attribute, oldValue, newValue) {
-    console.log("Attribute changed:", attribute, oldValue, newValue)
+    console.log("componentAttributeChanged", attribute, oldValue, newValue)
   }
 
   /**
@@ -58,7 +88,7 @@ class LifecycleTest extends CoolLabel {
    */
 
   componentDidConnect() {
-    console.log("Connected, not rendered")
+    console.log("componentDidConnect")
   }
 
   /**
@@ -66,7 +96,7 @@ class LifecycleTest extends CoolLabel {
    */
 
   componentDidUpdate() {
-    console.log("Updated")
+    console.log("componentDidUpdate")
   }
 
   /**
@@ -76,7 +106,7 @@ class LifecycleTest extends CoolLabel {
 
   componentDidMount() {
     super.componentDidMount()
-    console.log("Mounted")
+    console.log("componentDidMount")
   }
 
   /**
@@ -86,7 +116,7 @@ class LifecycleTest extends CoolLabel {
 
   componentWillUnmount() {
     super.componentWillUnmount()
-    console.log("Unmounting")
+    console.log("componentWillUnmount")
   }
 
   /**
@@ -94,7 +124,7 @@ class LifecycleTest extends CoolLabel {
    */
 
   render() {
-    console.log("Rendered to DOM")
+    console.log("render")
     return super.render()
   }
 }

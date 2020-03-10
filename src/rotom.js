@@ -24,7 +24,9 @@ export class Rotom extends HTMLElement {
   static get observedAttributes() {
     let attributes = []
 
-    if (isEmptyObject(this.properties)) return []
+    if (isEmptyObject(this.properties)) {
+      return attributes
+    }
 
     Object.keys(this.properties).forEach(property => {
       if (this.properties[property].reflected) attributes.push(toKebab(property))
