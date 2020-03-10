@@ -11,7 +11,7 @@ import {
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
 
-export class Rotom extends HTMLElement {
+export class UpgradedComponent extends HTMLElement {
   constructor() {
     super()
     this[internal.initialize]()
@@ -20,7 +20,7 @@ export class Rotom extends HTMLElement {
   // Public
 
   // Retrieve defined properties from the constructor instance
-  // (ideally, not Rotom itself, but its constructor class)
+  // (ideally, not UpgradedComponent itself, but its constructor class)
   static get observedAttributes() {
     let attributes = []
 
@@ -70,7 +70,7 @@ export class Rotom extends HTMLElement {
   }
 
   requestRender() {
-    window.rotomSchedule(this[internal.renderDOM])
+    window.scheduleUpgrade(this[internal.renderDOM])
   }
 
   // Private
@@ -201,7 +201,7 @@ export class Rotom extends HTMLElement {
           }
         }
 
-        window.rotomSchedule(this[internal.renderDOM])
+        window.scheduleUpgrade(this[internal.renderDOM])
       },
     })
   }

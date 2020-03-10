@@ -1,6 +1,6 @@
-import { Rotom } from "../../src/rotom"
+import { UpgradedComponent } from "../../src/upgraded-component"
 
-export class CoolLabel extends Rotom {
+export class CoolLabel extends UpgradedComponent {
   static get properties() {
     return {
       firstName: {

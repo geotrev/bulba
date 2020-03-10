@@ -6,7 +6,7 @@ class LifecycleTest extends CoolLabel {
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
    *   is 'generated' with lifecycle-connected accessors internally.
    * - A 'handled' property is custom. If you 'handle` your property with a custom getter and/or setter
-   *   at the component level, Rotom skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
+   *   at the component level, UpgradedComponent skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
    *
    * Properties that are generated have these options:

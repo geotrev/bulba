@@ -1,6 +1,6 @@
-import { Rotom } from "../../src/rotom"
+import { UpgradedComponent } from "../../src/upgraded-component"
 
-class SimpleCompTest extends Rotom {
+class SimpleCompTest extends UpgradedComponent {
   render() {
     return `<h1>I'm a simple component, nothing special.</h1>`
   }
