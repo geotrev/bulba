@@ -2,7 +2,6 @@ import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
 import {
   createUUID,
   toKebab,
-  isPlainObject,
   isEmptyObject,
   isString,
   isFunction,
@@ -21,7 +20,7 @@ export class Rotom extends HTMLElement {
   // Public
 
   // Retrieve defined properties from the constructor instance
-  // (ideally, not Rotom itself, but its extender)
+  // (ideally, not Rotom itself, but its constructor class)
   static get observedAttributes() {
     let attributes = []
 
@@ -46,6 +45,10 @@ export class Rotom extends HTMLElement {
 
   connectedCallback() {
     if (this.isConnected) {
+      if (isFunction(this.componentDidConnect)) {
+        this.componentDidConnect()
+      }
+
       this[internal.renderStyles]()
       this[internal.renderDOM]()
     }
@@ -95,10 +98,9 @@ export class Rotom extends HTMLElement {
   }
 
   [internal.renderStyles]() {
-    if (!isFunction(this.styles)) return
-    const styles = this.styles()
-    if (!isString(styles)) return
+    if (!isString(this.constructor.styles)) return
 
+    const { styles } = this.constructor
     const styleTag = document.createElement("style")
     styleTag.type = "text/css"
     styleTag.textContent = styles
@@ -129,39 +131,43 @@ export class Rotom extends HTMLElement {
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
+    // Apply update lifecycle, if it exists
     if (!firstRender && isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate()
     }
 
+    // Apply mount lifecycle, if it exists
     if (firstRender && isFunction(this.componentDidMount)) {
       this.componentDidMount()
     }
   }
 
   [internal.createProperty](property, data = {}) {
-    const privateName = isSymbol(property) ? Symbol(property) : `__private_${property}__`
-    const { initialValue, type } = data
-    const attribute = toKebab(property)
-    const { properties } = this.constructor
-    let isReflected
+    // The the constructor class is using its own setter/getter, bail
+    if (this.constructor[property]) return
 
-    // Get reflected properties. `observedAttributes` is not available yet, so
-    // a similar check happens here.
-    if (!isEmptyObject(properties)) {
-      const entry = properties[property]
-      if (isPlainObject(entry) && entry.reflected) {
-        isReflected = true
-      }
+    const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
+    const { default: defaultValue, type } = data
+    const { properties } = this.constructor
+
+    // Check if the property is reflected
+
+    let isReflected = false
+    const entry = properties[property]
+    if (!isEmptyObject(entry) && entry.reflected) {
+      isReflected = true
     }
 
-    // Apply the internal property value before its getter/setter
-    // is created. This is necessary because:
-    // 1. Pre-setting prevents unnecessary re-renders.
-    // 2. The value descriptor in `Object.defineProperty` can't be set along with accessors.
+    // Validate the property's default value type, if given
+    // Initialize the private property
+
+    let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
     if (!isUndefined(initialValue)) {
       this[internal.validateType](property, initialValue, type)
       this[privateName] = initialValue
     }
+
+    // Finally, declare its accessors
 
     Object.defineProperty(this, property, {
       configurable: true,
@@ -174,6 +180,7 @@ export class Rotom extends HTMLElement {
         if (value === this[privateName]) return
         this[internal.validateType](property, value, type)
 
+        const attribute = toKebab(property)
         const oldValue = this[privateName]
 
         if (value) {
@@ -201,7 +208,7 @@ export class Rotom extends HTMLElement {
     if (type === undefined || typeof value === type) return
 
     return console.warn(
-      `Property '${property}' assigned unsupported type: '${typeof value}'. Expected '${type}'. Check ${
+      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
         this.constructor.name
       }.`
     )

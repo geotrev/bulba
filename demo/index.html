@@ -8,8 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   </head>
   <body style="max-width: 800px">
-    <cool-label first-name="Knuckles"></cool-label>
-    <lifecycle-test first-name="Banjo"></lifecycle-test>
+    <cool-label first-name="Silver" description="This is my favorite group of people."></cool-label>
+    <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
 
     <br />
     <button class="delete">Remove element ^</button>
@@ -17,8 +17,8 @@
     <!-- Test cleanup: -->
     <script>
       document.querySelector(".delete").addEventListener("click", () => {
-        const label = document.querySelector("cool-label")
-        label.parentNode.removeChild(label)
+        const testElement = document.querySelector("lifecycle-test")
+        testElement.parentNode.removeChild(testElement)
       })
     </script>
   </body>

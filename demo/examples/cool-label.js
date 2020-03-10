@@ -1,36 +1,39 @@
 import { Rotom } from "../../src/rotom"
 
 export class CoolLabel extends Rotom {
+  static get properties() {
+    return {
+      firstName: {
+        type: "string",
+        default: element => element.getAttribute("first-name"),
+        reflected: true,
+      },
+      changeCount: {
+        type: "number",
+        default: 0,
+      },
+    }
+  }
+  static get styles() {
+    return `:host { display: block; } .compliments { font-weight: bold; }`
+  }
+
   constructor() {
     super()
     this.handleClick = this.handleClick.bind(this)
   }
 
-  static get properties() {
-    return {
-      firstName: {
-        type: "string",
-        reflected: true,
-        initialValue: "Kelso",
-      },
-      changeCount: {
-        type: "number",
-        initialValue: 0,
-      },
-    }
-  }
+  componentDidConnect() {}
 
   componentDidMount() {
     this.button = this.shadowRoot.querySelector("#update-btn")
     this.button.addEventListener("click", this.handleClick)
   }
 
+  componentDidUpdate() {}
+
   componentWillUnmount() {
     this.button.removeEventListener("click", this.hnadleClick)
-  }
-
-  styles() {
-    return `:host { display: block; } .compliments { font-weight: bold; }`
   }
 
   render() {
@@ -39,17 +42,15 @@ export class CoolLabel extends Rotom {
         You've changed names ${this.changeCount} times
       </p>
       <p class="compliments" data-select="${this.firstName}">You're awesome, ${this.firstName}!</p>
+      <p>${this.getAttribute("description")}</p>
       <button id="update-btn">Change Name</button>
     `
   }
 
-  // cool-label methods
-
   getNewName() {
-    const names = ["Perry", "JD", "Elliot", "Chris", "Carla"]
+    const names = ["Sonic", "Knuckles", "Tails", "Eggman", "Shadow"]
     const newName = names[Math.floor(Math.random() * names.length)]
     if (newName === this.firstName) return this.getNewName()
-
     return newName
   }
 
