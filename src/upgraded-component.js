@@ -79,13 +79,13 @@ export class UpgradedComponent extends HTMLElement {
     loadScheduler()
 
     // Internal properties and metadata
+    this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.firstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.componentId] = createUUID()
-    this.setAttribute("component-id", this.componentId)
-    this[internal.renderDOM] = this[internal.renderDOM].bind(this)
 
+    this.setAttribute("component-id", this.componentId)
     this[internal.performUpgrade]()
   }
 
@@ -110,8 +110,6 @@ export class UpgradedComponent extends HTMLElement {
 
   [internal.renderDOM]() {
     if (!this[internal.firstRender]) {
-      // TODO: If templateMap root node outerHTML equals domMap root node outerHTML, bail
-
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
       templateMap = null
