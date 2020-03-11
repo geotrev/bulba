@@ -2,10 +2,10 @@ import { CoolLabel } from "./cool-label"
 
 class LifecyclePrinter extends CoolLabel {
   /**
-   * Two types of properties: `generated` and `handled`.
+   * Two types of properties: `generated` and `managed`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
    *   is 'generated' with lifecycle-connected accessors internally.
-   * - A 'handled' property is custom. If you 'handle` your property with a custom getter and/or setter
+   * - A 'managed' property is custom. If you 'handle` your property with a custom getter and/or setter
    *   at the component level, UpgradedComponent skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
    *   NOTE: Hook into renders with `this.requestRender()`.
@@ -67,8 +67,8 @@ class LifecyclePrinter extends CoolLabel {
   }
 
   /**
-   * Triggers every time a generated property is changed. Handled property setters that manually
-   * call this method will trigger it, as well.
+   * Triggers every time a generated property is changed. Managed property setters need
+   * to call this method manually.
    */
 
   componentPropertyChanged(property, oldValue, newValue) {
@@ -85,7 +85,8 @@ class LifecyclePrinter extends CoolLabel {
   }
 
   /**
-   * Triggered as soon as the component is connected, but before styles or real DOM have been patched.
+   * Triggered as soon as the component is connected, but before styles or real DOM
+   * have been patched.
    */
 
   componentDidConnect() {

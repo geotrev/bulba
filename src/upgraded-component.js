@@ -100,19 +100,10 @@ export class UpgradedComponent extends HTMLElement {
 
   [internal.createProperty](property, data = {}) {
     // If the constructor class is using its own setter/getter, bail
-    if (!isUndefined(this.constructor[property])) return
+    if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property)) return
 
     const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
-    const { default: defaultValue, type } = data
-    const { properties } = this.constructor
-
-    // Check if the property is reflected
-
-    let isReflected = false
-    const entry = properties[property]
-    if (!isEmptyObject(entry) && entry.reflected) {
-      isReflected = true
-    }
+    const { default: defaultValue, type, reflected = false } = data
 
     // Validate the property's default value type, if given
     // Initialize the private property
@@ -141,14 +132,14 @@ export class UpgradedComponent extends HTMLElement {
 
         if (value) {
           this[privateName] = value
-          if (isReflected) this.setAttribute(attribute, value)
+          if (reflected) this.setAttribute(attribute, value)
 
           if (isFunction(this.componentPropertyChanged)) {
             this.componentPropertyChanged(property, oldValue, value)
           }
         } else {
           this[privateName] = undefined
-          if (isReflected) this.removeAttribute(attribute)
+          if (reflected) this.removeAttribute(attribute)
 
           if (isFunction(this.componentPropertyChanged)) {
             this.componentPropertyChanged(property, oldValue, null)
