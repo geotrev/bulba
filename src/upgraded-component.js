@@ -98,39 +98,6 @@ export class UpgradedComponent extends HTMLElement {
     })
   }
 
-  [internal.renderStyles]() {
-    if (!isString(this.constructor.styles)) return
-
-    const { styles } = this.constructor
-    const styleTag = document.createElement("style")
-    styleTag.type = "text/css"
-    styleTag.textContent = styles
-    this[internal.shadowRoot].appendChild(styleTag)
-  }
-
-  [internal.renderDOM]() {
-    if (!this[internal.firstRender]) {
-      let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
-      templateMap = null
-    } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
-    }
-
-    // Apply update lifecycle, if it exists
-    if (!this[internal.firstRender] && isFunction(this.componentDidUpdate)) {
-      this.componentDidUpdate()
-    }
-
-    // Apply mount lifecycle, if it exists
-    if (this[internal.firstRender] && isFunction(this.componentDidMount)) {
-      this.componentDidMount()
-    }
-
-    this[internal.firstRender] = false
-  }
-
   [internal.createProperty](property, data = {}) {
     // The the constructor class is using its own setter/getter, bail
     if (this.constructor[property]) return
@@ -220,5 +187,38 @@ export class UpgradedComponent extends HTMLElement {
       )
 
     return domString.trim()
+  }
+
+  [internal.renderStyles]() {
+    if (!isString(this.constructor.styles)) return
+
+    const { styles } = this.constructor
+    const styleTag = document.createElement("style")
+    styleTag.type = "text/css"
+    styleTag.textContent = styles
+    this[internal.shadowRoot].appendChild(styleTag)
+  }
+
+  [internal.renderDOM]() {
+    if (!this[internal.firstRender]) {
+      let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
+      templateMap = null
+    } else {
+      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
+    }
+
+    // Apply update lifecycle, if it exists
+    if (!this[internal.firstRender] && isFunction(this.componentDidUpdate)) {
+      this.componentDidUpdate()
+    }
+
+    // Apply mount lifecycle, if it exists
+    if (this[internal.firstRender] && isFunction(this.componentDidMount)) {
+      this.componentDidMount()
+    }
+
+    this[internal.firstRender] = false
   }
 }

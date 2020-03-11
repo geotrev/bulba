@@ -8,6 +8,7 @@ class LifecycleTest extends CoolLabel {
    * - A 'handled' property is custom. If you 'handle` your property with a custom getter and/or setter
    *   at the component level, UpgradedComponent skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
+   *   NOTE: Hook into renders with `this.requestRender()`.
    *
    * Properties that are generated have these options:
    * 1. `type`: Performs a simple `typeof` check on the value. If it there's a mismatch, a warning is logged
