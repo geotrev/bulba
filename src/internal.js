@@ -1,3 +1,4 @@
+export const firstRender = Symbol("#firstRender")
 export const initialize = Symbol("#initialize")
 export const shadowRoot = Symbol("#shadowRoot")
 export const performUpgrade = Symbol("#performUpgrade")

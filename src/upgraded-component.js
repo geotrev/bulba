@@ -61,7 +61,6 @@ export class UpgradedComponent extends HTMLElement {
       this.componentWillUnmount()
     }
 
-    this[internal.domRoot] = null
     this[internal.domMap] = null
   }
 
@@ -80,7 +79,7 @@ export class UpgradedComponent extends HTMLElement {
     loadScheduler()
 
     // Internal properties and metadata
-    this[internal.domRoot] = null
+    this[internal.firstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.componentId] = createUUID()
@@ -110,38 +109,28 @@ export class UpgradedComponent extends HTMLElement {
   }
 
   [internal.renderDOM]() {
-    // Consider re-mapping for each render. It takes <1ms to run the diff
-    // - Unset domMap on each render
-    // - Re-assign domMap before running diffDOM
+    if (!this[internal.firstRender]) {
+      // TODO: If templateMap root node outerHTML equals domMap root node outerHTML, bail
 
-    let firstRender
-
-    if (this[internal.domRoot]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-
-      // TODO: If templateMap root node outerHTML equals domMap root node outerHTML, return
-      diffDOM(templateMap, this[internal.domMap], this[internal.domRoot])
+      diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
       templateMap = null
     } else {
-      firstRender = true
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      // NOTE: This div is not appended to the shadow root. Only its children
-      //       are attached. Alternatively, it might be more performant to remove
-      //       the detached node and re-query the shadowRoot for all non-style
-      //       tags and re-append to a new div element before diffing, above.
-      this[internal.domRoot] = document.createElement("div")
       renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
     }
 
     // Apply update lifecycle, if it exists
-    if (!firstRender && isFunction(this.componentDidUpdate)) {
+    if (!this[internal.firstRender] && isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate()
     }
 
     // Apply mount lifecycle, if it exists
-    if (firstRender && isFunction(this.componentDidMount)) {
+    if (this[internal.firstRender] && isFunction(this.componentDidMount)) {
       this.componentDidMount()
     }
+
+    this[internal.firstRender] = false
   }
 
   [internal.createProperty](property, data = {}) {
