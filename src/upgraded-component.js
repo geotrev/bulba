@@ -99,8 +99,8 @@ export class UpgradedComponent extends HTMLElement {
   }
 
   [internal.createProperty](property, data = {}) {
-    // The the constructor class is using its own setter/getter, bail
-    if (this.constructor[property]) return
+    // If the constructor class is using its own setter/getter, bail
+    if (!isUndefined(this.constructor[property])) return
 
     const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
     const { default: defaultValue, type } = data
