@@ -1,3 +1,4 @@
 import "./examples/cool-label"
-import "./examples/lifecycle-test"
-import "./examples/simple-comp-test"
+import "./examples/lifecycle-printer"
+import "./examples/simple-header"
+import "./examples/custom-accessor-button"

@@ -1,13 +1,14 @@
 import { CoolLabel } from "./cool-label"
 
-class LifecycleTest extends CoolLabel {
+class LifecyclePrinter extends CoolLabel {
   /**
-   * Two types of properties: `generated` and `handled`.
+   * Two types of properties: `generated` and `managed`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
    *   is 'generated' with lifecycle-connected accessors internally.
-   * - A 'handled' property is custom. If you 'handle` your property with a custom getter and/or setter
+   * - A 'managed' property is custom. If you 'handle` your property with a custom getter and/or setter
    *   at the component level, UpgradedComponent skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
+   *   NOTE: Hook into renders with `this.requestRender()`.
    *
    * Properties that are generated have these options:
    * 1. `type`: Performs a simple `typeof` check on the value. If it there's a mismatch, a warning is logged
@@ -40,9 +41,9 @@ class LifecycleTest extends CoolLabel {
    */
 
   connectedCallback() {
-    console.log("connectedCallback, before parent callback")
+    console.log("connectedCallback, before UpgradedComponent callback")
     super.connectedCallback()
-    console.log("connectedCallback, after parent callback")
+    console.log("connectedCallback, after UpgradedComponent callback")
   }
 
   /**
@@ -50,9 +51,9 @@ class LifecycleTest extends CoolLabel {
    */
 
   disconnectedCallback() {
-    console.log("disconnectedCallback, before parent callback")
+    console.log("disconnectedCallback, before UpgradedComponent callback")
     super.disconnectedCallback()
-    console.log("disconnectedCallback, after parent callback")
+    console.log("disconnectedCallback, after UpgradedComponent callback")
   }
 
   /**
@@ -60,14 +61,14 @@ class LifecycleTest extends CoolLabel {
    */
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log("attributeChangedCallback, before parent callback")
+    console.log("attributeChangedCallback, before UpgradedComponent callback")
     super.attributeChangedCallback(name, oldValue, newValue)
-    console.log("attributeChangedCallback, after parent callback")
+    console.log("attributeChangedCallback, after UpgradedComponent callback")
   }
 
   /**
-   * Triggers every time a generated property is changed. Handled property setters that manually
-   * call this method will trigger it, as well.
+   * Triggers every time a generated property is changed. Managed property setters need
+   * to call this method manually.
    */
 
   componentPropertyChanged(property, oldValue, newValue) {
@@ -84,7 +85,8 @@ class LifecycleTest extends CoolLabel {
   }
 
   /**
-   * Triggered as soon as the component is connected, but before styles or real DOM have been patched.
+   * Triggered as soon as the component is connected, but before styles or real DOM
+   * have been patched.
    */
 
   componentDidConnect() {
@@ -129,4 +131,5 @@ class LifecycleTest extends CoolLabel {
   }
 }
 
-if (!customElements.get("lifecycle-test")) customElements.define("lifecycle-test", LifecycleTest)
+if (!customElements.get("lifecycle-printer"))
+  customElements.define("lifecycle-printer", LifecyclePrinter)
