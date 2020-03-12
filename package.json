@@ -1,6 +1,6 @@
 {
   "name": "upgraded-component",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A simple base class for using native web components",
   "main": "lib/upgraded-component.cjs.js",
   "module": "lib/upgraded-component.esm.js",
