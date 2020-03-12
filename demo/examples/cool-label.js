@@ -1,4 +1,4 @@
-import { UpgradedComponent } from "../../src/upgraded-component"
+import { UpgradedComponent, register } from "../../src/upgraded-component"
 
 export class CoolLabel extends UpgradedComponent {
   static get properties() {
@@ -65,4 +65,4 @@ export class CoolLabel extends UpgradedComponent {
   }
 }
 
-if (!customElements.get("cool-label")) customElements.define("cool-label", CoolLabel)
+register("cool-label", CoolLabel)

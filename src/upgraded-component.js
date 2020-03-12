@@ -1,7 +1,7 @@
 import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
 import {
   createUUID,
-  toKebab,
+  toKebabCase,
   isEmptyObject,
   isString,
   isFunction,
@@ -10,6 +10,12 @@ import {
 } from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
+
+export const register = (tag, Constructor) => {
+  if (!customElements.get(tag)) {
+    customElements.define(tag, Constructor)
+  }
+}
 
 export class UpgradedComponent extends HTMLElement {
   constructor() {
@@ -29,7 +35,7 @@ export class UpgradedComponent extends HTMLElement {
     }
 
     Object.keys(this.properties).forEach(property => {
-      if (this.properties[property].reflected) attributes.push(toKebab(property))
+      if (this.properties[property].reflected) attributes.push(toKebabCase(property))
     })
 
     return attributes
@@ -138,7 +144,7 @@ export class UpgradedComponent extends HTMLElement {
         if (value === this[privateName]) return
         if (type) this.validateType(property, value, type)
 
-        const attribute = toKebab(property)
+        const attribute = toKebabCase(property)
         const oldValue = this[privateName]
 
         if (value) {

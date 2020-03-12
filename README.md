@@ -1,6 +1,6 @@
 # \<upgraded-component\>
 
-`UpgradedComponent` is a simple and accessible base class enabling intuitive use of web components with no dependencies.
+`UpgradedComponent` is a simple and accessible base class enabling the use of native web components. It has no dependencies.
 
 The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
 
@@ -19,7 +19,7 @@ Additionally, `UpgradedComponent` implements the same light-weight virtual dom u
    - [Lifecycle](#lifecycle)
      - [Methods](#methods)
      - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
-   - [Static Properties and Hooks](#static-properties-and-hooks)
+   - [Internal Methods and Hooks](#internal-methods-and-hooks)
    - [DOM Events](#dom-events)
 4. [Browser Support](#browser-support)
 5. [Under the Hood](#under-the-hood)
@@ -33,7 +33,7 @@ Creating a new component is easy. Once you've [installed](#install) the package,
 ```js
 // fancy-header.js
 
-import { UpgradedComponent } from "./upgraded-component" // include `.js` for native modules
+import { UpgradedComponent, register } from "./upgraded-component" // include `.js` for native modules
 
 class FancyHeader extends UpgradedComponent {
   static get styles() {
@@ -52,10 +52,7 @@ class FancyHeader extends UpgradedComponent {
 
 // No need to export anything as custom elements aren't modules.
 
-const TAG_NAME = "fancy-header"
-if (!customElements.get(TAG_NAME)) {
-  customElements.define(TAG_NAME, FancyHeader)
-}
+register("fancy-header", FancyHeader)
 ```
 
 Import or link to your component file, then use it:
@@ -94,7 +91,7 @@ $ npm i upgraded-component
 $ yarn i upgraded-component
 ```
 
-Then import and create your new component, per [Getting Started](#getting-started) above.
+Then import the package and create your new component, per [Getting Started](#getting-started) above. 🎉
 
 **Source**
 
@@ -103,10 +100,12 @@ Then import and create your new component, per [Getting Started](#getting-starte
 Import directly:
 
 ```js
-import { UpgradedComponent } from "./upgraded-component.js"
+// fancy-header.js
+
+import { UpgradedComponent, register } from "./upgraded-component.js"
 ```
 
-Then link to your script/module:
+Then link to your script or module:
 
 ```html
 <script type="module" defer src="path/to/fancy-header.js"></script>
@@ -116,7 +115,7 @@ Then link to your script/module:
 
 `UpgradedComponent` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
 
-Of course, it also extends `HTMLElement`, enabling native lifecycle callbacks for all extenders, if you need that. Note that you should call `super` to continue receiving custom lifecycle events if you go that direction. For more details, see [Lifecycle methods](#lifecycle) below.
+Of course, it also extends `HTMLElement`, enabling native lifecycle callbacks for all extenders. Be sure to read about the caveats in [the native callbacks section](#using-native-lifecycle-callbacks) below.
 
 ### Render
 
@@ -151,7 +150,7 @@ static get styles() {
 
 Properties are integral to `UpgradedComponent`. Think of them as informants to your component's render state, similar to how state works in React.
 
-To add properties, create a static getter called `properties` that returns an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
+To add properties, create a static getter called `properties` that returns an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCased`.
 
 Example:
 
@@ -173,7 +172,9 @@ static get properties() {
 
 #### Configuration Options
 
-Each option in the configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
+The configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
+
+If you wish to enumerate the property with more detail, these are the options currently available:
 
 - `default` (string|function): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (accessed via `this.constructor`).
 - `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
@@ -183,7 +184,7 @@ By default, all entries to `properties` will be upgraded with internal accessors
 
 #### Managed Properties
 
-There's also the option to skip accessor upgrading if you decide you'd rather control that logic yourself. This is referred to as a 'managed' property in this guide.
+There's also the option to skip accessor upgrading if you decide you'd rather control that logic yourself. This is referred to as a 'managed' property.
 
 Here's a quick example:
 
@@ -197,18 +198,22 @@ static get properties() {
 
 constructor() {
   super()
+
+  // provide a default value for the internal property
   this._cardHeadingText = "My cool heading"
 }
+
+// Define accessors
 
 set cardHeadingText(value) {
   if (!value || value === this.cardHeadingText) return
 
   this.validateType(value)
 
-  const oldValue = this._cardHeadingText
+  const oldValue = this.cardHeadingText
   this._cardHeadingText = value
 
-  this.componentPropertyChanged("_cardHeadingText", oldValue, value)
+  this.componentPropertyChanged("cardHeadingText", oldValue, value)
   this.setAttribute("card-heading-text", value)
   this.requestRender()
 }
@@ -220,7 +225,7 @@ get cardHeadingText() {
 
 Worth noting is that setting your managed property via `properties` won't do anything so long as you've declared your own accessors, as indicated above.
 
-As shown above, you can tap into the lifecycle methods too, including when and how they are called. Note that `requestRender` is asynchronous.
+Because the property is managed, you can optionally then tap into internal methods to re-create some or all of the logic included in upgraded properties. Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below.
 
 ### Lifecycle
 
@@ -258,27 +263,70 @@ Here's a quick reference for which lifecycle methods are dependent on the native
 - 🏳 `attributeChangedCallback`
   - Calls `componentAttributeChanged`
 - 🏳 `adoptedCallback`
-  - Doesn't call a method.
+  - TBD, no methods called.
 - 🚨 `disconnectedCallback`: **`super` required**
   - Calls `componentWillUnmount`
 
-All that having been said, calling `super` is a safe bet to maintain backwards compatibility, including the yet-to-be-integrated `adoptedCallback`. 🙂
+Calling `super` is a safe bet to maintain backwards compatibility, including the yet-to-be-integrated `adoptedCallback`. 🙂
 
-### Static Properties and Hooks
+### Internal Methods and Hooks
 
-<!-- TBD -->
+Because of the escape hatches taht exist with having managed properties and calling the native lifecycle callbacks directly, it's necessary to provide hooks for manually rendering your component in some cases.
+
+#### `requestRender`
+
+Manually schedules a render. Note that it will be asynchronous.
+
+If you need to track the result of your manual `requestRender` call, you can set an internal property and checking its value via `componentDidUpdate` like so:
 
 ```js
-// this.requestRender
-// this.componentId
+componentDidUpdate() {
+  if (this._renderRequested) {
+    this._renderRequested = false
+    doSomeOtherStuff()
+  }
+}
+
+someCallbackMethod() {
+  this.doSomeStuff()
+  this._renderRequested = true
+  this.requestRender()
+}
 ```
+
+#### `componentId`
+
+This is an internal accessor that returns a unique identifier. E.g., `252u296xs51k7p6ph6v`.
+
+### `validateType`
+
+The internal method which compares your property type. If you have a managed property that is reflected to the host, it's possible that the attribute can be set from the outside too. You can use this to validate the computed result (e.g., `parseInt` on the value, if you expect the type to be a `"number"`).
 
 ### DOM Events
 
-Like binding events in any ES6 class, you should do so in your component's `constructor`. Then you can register events using `addEventListener` in your `componentDidMount` lifecycle method, and likewise, deregister events using `removeEventListener` in your `componentWillUnmount` lifecycle.
+To add event listeners, it's like you would do in any ES6 class. First, bind the callback in your component's `constructor`.
 
 ```js
-// example
+constructor() {
+  this.handleClick = this.handleClick.bind(this)
+}
+```
+
+Then you can register events using `addEventListener` in your `componentDidMount` lifecycle method, and likewise, deregister events using `removeEventListener` in your `componentWillUnmount` lifecycle.
+
+```js
+handleClick() {
+  // bound handler
+}
+
+componentDidMount() {
+  this.button = this.shadowRoot.querySelector(".my-button")
+  this.button.addEventListener("click", this.handleClick)
+}
+
+componentWillUnmount() {
+  this.button.removeEventListener("click", this.handleClick)
+}
 ```
 
 ## Browser Support

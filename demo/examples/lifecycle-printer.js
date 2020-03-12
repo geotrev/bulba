@@ -1,3 +1,4 @@
+import { register } from "../../src/upgraded-component"
 import { CoolLabel } from "./cool-label"
 
 class LifecyclePrinter extends CoolLabel {
@@ -131,5 +132,4 @@ class LifecyclePrinter extends CoolLabel {
   }
 }
 
-if (!customElements.get("lifecycle-printer"))
-  customElements.define("lifecycle-printer", LifecyclePrinter)
+register("lifecycle-printer", LifecyclePrinter)

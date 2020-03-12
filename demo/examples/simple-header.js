@@ -1,4 +1,4 @@
-import { UpgradedComponent } from "../../src/upgraded-component"
+import { UpgradedComponent, register } from "../../src/upgraded-component"
 
 class SimpleHeader extends UpgradedComponent {
   static get styles() {
@@ -10,4 +10,4 @@ class SimpleHeader extends UpgradedComponent {
   }
 }
 
-if (!customElements.get("simple-header")) customElements.define("simple-header", SimpleHeader)
+register("simple-header", SimpleHeader)
