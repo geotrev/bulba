@@ -10,7 +10,7 @@ class CustomAccessorButton extends UpgradedComponent {
   set text(value) {
     this._text = value
 
-    // Uncomment to get the setter to work
+    // Uncomment to get the setter to update view
     // this.requestRender()
   }
 
