@@ -72,6 +72,16 @@ export class UpgradedComponent extends HTMLElement {
     window.scheduleUpgrade(this[internal.renderDOM])
   }
 
+  validateType(property, value, type) {
+    if (type === undefined || typeof value === type) return
+
+    return console.warn(
+      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
+        this.constructor.name
+      }.`
+    )
+  }
+
   // Private
 
   [internal.initialize]() {
@@ -110,7 +120,7 @@ export class UpgradedComponent extends HTMLElement {
 
     let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
     if (!isUndefined(initialValue)) {
-      this[internal.validateType](property, initialValue, type)
+      this.validateType(property, initialValue, type)
       this[privateName] = initialValue
     }
 
@@ -125,7 +135,7 @@ export class UpgradedComponent extends HTMLElement {
       set(value) {
         // Don't set if the value is the same to prevent unnecessary re-renders.
         if (value === this[privateName]) return
-        this[internal.validateType](property, value, type)
+        this.validateType(property, value, type)
 
         const attribute = toKebab(property)
         const oldValue = this[privateName]
@@ -149,16 +159,6 @@ export class UpgradedComponent extends HTMLElement {
         window.scheduleUpgrade(this[internal.renderDOM])
       },
     })
-  }
-
-  [internal.validateType](property, value, type) {
-    if (type === undefined || typeof value === type) return
-
-    return console.warn(
-      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
-        this.constructor.name
-      }.`
-    )
   }
 
   [internal.getDOMString]() {

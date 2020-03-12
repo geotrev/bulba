@@ -1,54 +1,80 @@
 # <upgraded-component>
 
-Use native web components with as little boilerplate as possible.
+`UpgradedComponent` is a simple and accessible base class enabling the use of native web components with no dependencies.
 
-`UpgradedComponent` is an accessible base class for using native web components.
+The class brings various features to make these components useful and maintainable. Encapsulate your HTML and styles, manage state using properties, and more.
 
-From string to HTML, it uses a virtual-dom implementation similar to what's in [reef](https://github.com/cferdinandi/reef) by Chris Ferdinandi. These means blazing fast rendering (a fraction of a millisecond)!
+`UpgradedComponent` uses a virtual dom implementation nearly identical to what's in [reef](https://github.com/cferdinandi/reef) by Chris Ferdinandi, with less than 3KB in size (gzipped) and blazing fast rendering (a fraction of a millisecond)!
 
-1. [Install](#install)
-2. [Getting Started](#getting-started)
-3. [API](#api)
+**Table of Contents**
+
+1. [Getting Started](#getting-started)
+2. [Install](#install)
+3. [Support](#support)
+4. [API](#api)
+   - [Render](#render)
    - [Styles](#styles)
    - [Properties](#properties)
-     - [Generated](#generated)
+     - [Configuration]()
      - [Managed](#managed)
    - [Lifecycle](#lifecycle)
    - [Methods](#methods)
 
-## Install
+## Getting Started
 
-You can install either by grabbing `lib/upgraded-component.js` (for browsers) or via npm.
-
-**Source**
-
-Put the file in your codebase somewhere and import it:
-
-```html
-<fancy-header>So cool!</fancy-header>
-```
+Creating a new component is easy. Once you've [installed](#install) the package or downloaded the source code, create your first component:
 
 ```js
 // fancy-header.js
 
-import { UpgradedComponent } from "./upgraded-component.js"
+import { UpgradedComponent } from "./upgraded-component" // include `.js` for native modules
 
 class FancyHeader extends UpgradedComponent {
   static get styles() {
-    return ".is-fancy { font-family: Baskerville; color: fuchsia; }"
+    return `
+      .is-fancy {
+        font-family: Baskerville; 
+        color: fuchsia; 
+      }
+    `
   }
 
   render() {
-    return "<h1 class='is-fancy'><slot/></h1>"
+    return "<h1 class='is-fancy'><slot></slot></h1>"
   }
+}
+
+// No need to export anything as custom elements aren't modules.
+
+const TAG_NAME = "fancy-header"
+if (!customElements.get(TAG_NAME)) {
+  customElements.define(TAG_NAME, FancyHeader)
 }
 ```
 
-Then link to it:
+Import the file and use your new element. You can even use it in React:
 
 ```js
-<script type="module" defer src="path/to/fancy-header.js"></script>
+import React from "react"
+import "./fancy-header"
+
+const SiteBanner = props => (
+  <div class="site-banner">
+    <img src={props.src} alt="banner" />
+    <fancy-header>{props.heading}</fancy-header>
+  </div>
+)
 ```
+
+... or in plain ol' HTML:
+
+```html
+<fancy-header>Do you like my style?</fancy-header>
+```
+
+## Install
+
+You can install either by grabbing the source file or with npm/yarn.
 
 **NPM or Yarn**
 
@@ -58,17 +84,35 @@ Install it like you would any other package:
 $ npm i upgraded-component
 ```
 
-Then import it same as the above.
+```sh
+$ yarn i upgraded-component
+```
 
-If you need IE11 support, you'll need to add polyfills. At the very least, `@babel/preset-env` and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
+Then import and create your new component, per [Getting Started](#getting-started) above.
 
-## Getting Started
+**Source**
 
-Creating a component is easy.
+[IIFE](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.js) (browsers) / [ES Module](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.esm.js) / [CommonJS](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.cjs.js)
+
+Import directly:
+
+```js
+import { UpgradedComponent } from "./upgraded-component.js"
+```
+
+Then link to your script/module:
+
+```html
+<script type="module" defer src="path/to/fancy-header.js"></script>
+```
+
+## Support
+
+If you need IE11 support, you'll need to add polyfills. This package uses symbols, template strings, and of course, ES6 classes. Babel polyfill, preset-env, and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs) should get you all the way across the finish line.
 
 ## API
 
-`UpgradedComponent` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state with class properties.
+`UpgradedComponent` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
 
 Of course, it also extends `HTMLElement`, enabling native lifecycle methods for all extenders, if you need that. Note that you should call `super` to continue receiving custom lifecycle events if you go that direction. For more details, see [properties](#properties) below.
 
@@ -103,9 +147,9 @@ static get styles() {
 
 ### Properties
 
-Properties are integral to `UpgradedComponent`. Think of them as a tool that informs your component's rendered state, similar to state in React.
+Properties are integral to `UpgradedComponent`. Think of them as informants to your component's render state, similar to how state works in React.
 
-To add properties, create a static getter called `properties` that returns an object, where each entry is the property name as the key, and the property configuration is the value:
+To add properties, create a static getter called `properties` that returns an object, where each entry is the property name (key) and the property configuration (value). The name should always be `camelCase`.
 
 ```js
 static get properties() {
@@ -123,19 +167,57 @@ static get properties() {
 }
 ```
 
-By default, all entries to `properties` will be upgraded with custom-generated accessors, of which the setter will trigger re-renders, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
+By default, all entries to `properties` will be upgraded with internal accessors, of which the setter will trigger a re-render, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
 
-You can choose to override these default accessors by [managing them yourself](#managed-properties), too.
+You can choose to opt-out of internal accessors by [managing properties yourself](#managed), too.
 
-#### Property Configuration
+#### Configuration
 
 A property entry to `properties` can have the following options:
 
-- `type` (string): If given, compares to the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked.
-- `default` (string|function): Can be a primitive or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods off your component's prototype.
-- `reflected` (boolean): Indicates if the property should reflect onto the host. If `true`, the property key is reflected in kebab-case. E.g., `myProp` becomes `my-prop`.
+- `default` (string|function): Can be a primitive or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (called with `this.constructor`).
+- `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
+- `reflected` (boolean): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
 
-### Managed Properties
+#### Managed
+
+`UpgradedComponent` will skip accessor upgrading if you decide to declare your own. This is referred to as a 'managed property'.
+
+Here's a quick example:
+
+```js
+static get properties() {
+  return {
+    // NOTE: This will be ignored!
+    cardHeadingText: { type: "string", default: "Some default" }
+  }
+}
+
+constructor() {
+  super()
+  this._cardHeadingText = "My cool heading"
+}
+
+set cardHeadingText(value) {
+  if (!value || value === this.cardHeadingText) return
+
+  this.validateType(value)
+
+  const oldValue = this._cardHeadingText
+  this._cardHeadingText = value
+
+  this.componentPropertyChanged("_cardHeadingText", oldValue, value)
+  this.requestRender()
+}
+
+get cardHeadingText() {
+  return this._cardHeadingText
+}
+```
+
+Worth noting about managed properties is that setting them in `properties` won't do anything, as indicated above. The provided configuration will be skipped.
+
+Similarly, you will need to call `componentPropertyChanged`, `setAttribute` (if you want to reflect), and/or `requestRender`, if any of those are desired.
 
 ### Lifecycle
 

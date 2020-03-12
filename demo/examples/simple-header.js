@@ -6,7 +6,7 @@ class SimpleHeader extends UpgradedComponent {
   }
 
   render() {
-    return `<slot name="heading"></slot>`
+    return `<h1><slot></slot></h1>`
   }
 }
 
