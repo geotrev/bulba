@@ -70,7 +70,7 @@ export class UpgradedComponent extends HTMLElement {
   }
 
   requestRender() {
-    window.scheduleUpgrade(this[internal.renderDOM])
+    window.scheduleComponentUpdate(this[internal.renderDOM])
   }
 
   validateType(property, value, type) {
@@ -157,7 +157,7 @@ export class UpgradedComponent extends HTMLElement {
           }
         }
 
-        window.scheduleUpgrade(this[internal.renderDOM])
+        window.scheduleComponentUpdate(this[internal.renderDOM])
       },
     })
   }

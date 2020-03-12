@@ -94,7 +94,7 @@ class LifecyclePrinter extends CoolLabel {
   }
 
   /**
-   * Triggered after every re-render.
+   * Triggered after every render, excluding initial mount
    */
 
   componentDidUpdate() {

@@ -1,12 +1,12 @@
 # \<upgraded-component\>
 
-`UpgradedComponent` is a simple and accessible base class enabling the use of native web components with no dependencies.
+`UpgradedComponent` is a simple and accessible base class enabling intuitive use of web components with no dependencies.
 
-The class brings various features to make your components useful and maintainable. Encapsulate your HTML and styles, manage state using properties, tap into lifecycle methods, and more.
+The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
 
-`UpgradedComponent` uses a virtual dom implementation nearly identical to what's in [reef](https://github.com/cferdinandi/reef) by Chris Ferdinandi, with less than 3KB in size (gzipped) and blazing fast renders (a fraction of a millisecond)!
+Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef), built by Chris Ferdinandi. The result is DOM rendering in lightning fast render times (under a millisecond)! ⚡⚡⚡
 
-**Table of Contents**
+🕹 **Table of Contents**
 
 1. [Getting Started](#getting-started)
 2. [Install](#install)
@@ -15,10 +15,12 @@ The class brings various features to make your components useful and maintainabl
    - [Styles](#styles)
    - [Properties](#properties)
      - [Configuration]()
-     - [Managed](#managed)
+     - [Managed Properties](#managed-properties)
    - [Lifecycle](#lifecycle)
-   - [Internal Methods & ID](#internal-methods-and-id)
-   - [Handling Events](#handling-events)
+     - [Methods](#methods)
+     - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
+   - [Static Properties and Hooks](#static-properties-and-hooks)
+   - [DOM Events](#dom-events)
 4. [Browser Support](#browser-support)
 5. [Under the Hood](#under-the-hood)
    - [Requirements](#requirements)
@@ -179,7 +181,7 @@ Each option in the configuration is optional. Simply setting the property config
 
 By default, all entries to `properties` will be upgraded with internal accessors, of which the setter will trigger a render, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
 
-#### Managed
+#### Managed Properties
 
 There's also the option to skip accessor upgrading if you decide you'd rather control that logic yourself. This is referred to as a 'managed' property in this guide.
 
@@ -222,11 +224,29 @@ As shown above, you can tap into the lifecycle methods too, including when and h
 
 ### Lifecycle
 
-As mentioned previously, `UpgradedComponent` provides its own custom lifecycle methods, but also gives you the option to use the [native callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#native-lifecycle-callbacks) to using the native callbacks, though.
+As mentioned previously, `UpgradedComponent` provides its own custom lifecycle methods, but also gives you the option to use the [native callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-native-lifecycle-callbacks) to using the native callbacks, though.
 
-####
+The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle. See [using native lifecycle callbacks](#using-native-lifecycle-callbacks) for more details.
 
-#### Native Lifecycle Callbacks
+#### Methods
+
+- `componentDidConnect`: Called at the beginning of `connectedCallback`, when the component has been attached to the DOM, but before the shadow root and component HTML/styles have been rendered. Ideal for initializing any internal properties or data that need to be ready before the first render.
+
+- `componentDidMount`: Called at the end of `connectedCallback`, once the shadow root / DOM is ready. Ideal for registering DOM events or performing other DOM-sensitive actions.
+
+- `componentDidUpdate`: Called on each render after `componentDidMount`. This includes: when an upgraded property has been set or `requestRender` was called.
+
+- `componentPropertyChanged(name, oldValue, newValue)`: Called each time a property gets changed. Provides the property name (as a string), the old value, and the new value. If the old value matched the new value, this method is not triggered.
+
+- `componentAttributeChanged(name, oldValue, newValue)`: Called by `attributeChangedCallback` each time an attribute is changed. If the old value matched the new value, this method is not triggered.
+
+- `componentWillDisconnect`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
+
+**Q:** "Why does `UpgradedComponent` use lifecycle methods which seemingly duplicate the existing native callbacks?"
+
+**A:** The primary purpose, as mentioned above, is adding more fidelity to the component render/update lifecycle in general. Another reason is for naming consistency and familiarity. As a developer who uses React extensively, I love the API and thought it made sense to mimic (in no subtle terms) the patterns established by the library authors.
+
+#### Using Native Lifecycle Callbacks
 
 `UpgradedComponent` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render of any given component and DOM cleanup steps, respectively.**
 
@@ -237,10 +257,14 @@ Here's a quick reference for which lifecycle methods are dependent on the native
   - Calls `componentDidMount`
 - 🏳 `attributeChangedCallback`
   - Calls `componentAttributeChanged`
+- 🏳 `adoptedCallback`
+  - Doesn't call a method.
 - 🚨 `disconnectedCallback`: **`super` required**
   - Calls `componentWillUnmount`
 
-### Internal Methods and ID
+All that having been said, calling `super` is a safe bet to maintain backwards compatibility, including the yet-to-be-integrated `adoptedCallback`. 🙂
+
+### Static Properties and Hooks
 
 <!-- TBD -->
 
@@ -249,9 +273,9 @@ Here's a quick reference for which lifecycle methods are dependent on the native
 // this.componentId
 ```
 
-### Handling Events
+### DOM Events
 
-You can easily create events by binding handlers in your component's `constructor`, then using `addEventListener` in the `componentDidMount` lifecycle, and likewise, `removeEventListener` in the `componentWillUnmount` lifecycle.
+Like binding events in any ES6 class, you should do so in your component's `constructor`. Then you can register events using `addEventListener` in your `componentDidMount` lifecycle method, and likewise, deregister events using `removeEventListener` in your `componentWillUnmount` lifecycle.
 
 ```js
 // example
