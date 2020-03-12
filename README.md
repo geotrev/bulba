@@ -4,7 +4,7 @@
 
 The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
 
-Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef), built by Chris Ferdinandi. The result is DOM rendering in lightning fast render times (under a millisecond)! ⚡⚡⚡
+Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef), built by Chris Ferdinandi. The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 🕹 **Table of Contents**
 
@@ -14,7 +14,7 @@ Additionally, `UpgradedComponent` implements the same light-weight virtual dom u
    - [Render](#render)
    - [Styles](#styles)
    - [Properties](#properties)
-     - [Configuration]()
+     - [Configuration Options](#configuration-options)
      - [Managed Properties](#managed-properties)
    - [Lifecycle](#lifecycle)
      - [Methods](#methods)
@@ -23,7 +23,7 @@ Additionally, `UpgradedComponent` implements the same light-weight virtual dom u
    - [DOM Events](#dom-events)
 4. [Browser Support](#browser-support)
 5. [Under the Hood](#under-the-hood)
-   - [Requirements](#requirements)
+   - [Technical Design](#technical-design)
    - [Rendering](#rendering)
 
 ## Getting Started
@@ -58,7 +58,13 @@ if (!customElements.get(TAG_NAME)) {
 }
 ```
 
-Import the file and use your new element. You can even use it in React:
+Import or link to your component file, then use it:
+
+```html
+<fancy-header>Do you like my style?</fancy-header>
+```
+
+You can even use it in React:
 
 ```js
 import React from "react"
@@ -70,12 +76,6 @@ const SiteBanner = props => (
     <fancy-header>{props.heading}</fancy-header>
   </div>
 )
-```
-
-... or in plain ol' HTML:
-
-```html
-<fancy-header>Do you like my style?</fancy-header>
 ```
 
 ## Install
@@ -120,7 +120,7 @@ Of course, it also extends `HTMLElement`, enabling native lifecycle callbacks fo
 
 ### Render
 
-In the case of creating HTML for your component, it will always be encapsulated within a `shadowRoot`. Create a method called `render` that returns stringified HTML (it can also be a template string):
+You can render HTML into your component shadow root by creating the method `render`, which should return stringified HTML (it can also be a template string):
 
 ```js
 render() {
@@ -240,7 +240,7 @@ The purpose of these is to add more developer fidelity to the existing callbacks
 
 - `componentAttributeChanged(name, oldValue, newValue)`: Called by `attributeChangedCallback` each time an attribute is changed. If the old value matched the new value, this method is not triggered.
 
-- `componentWillDisconnect`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
+- `componentWillUnmount`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
 
 **Q:** "Why does `UpgradedComponent` use lifecycle methods which seemingly duplicate the existing native callbacks?"
 
@@ -283,17 +283,35 @@ Like binding events in any ES6 class, you should do so in your component's `cons
 
 ## Browser Support
 
-If you need IE11 support, you'll need to add polyfills. This package uses symbols, template strings, and of course, ES6 classes. Babel polyfill, preset-env, and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs) should get you all the way across the finish line.
+This package uses symbols, template strings, ES6 classes, and of course, the various pieces of the web component standard. The decision to not polyfill or transpile is deliberate in order to get the performance boost of browsers which support these newer features.
+
+To get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs). For more details on support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks down the separate features that make up the web component standard.
+
+**Enabling transpiling & processing:** If you use a bundler like webpack, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
+
+```js
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      // ...
+      {
+        test: /\.js$/,
+        exclude: /node_modules\/(?!upgraded-component)/,
+        loader: "babel-loader",
+      },
+    ],
+  },
+}
+```
 
 ## Under the Hood
 
 A few quick points on the design of `UpgradedComponent`:
 
-### Requirements
+### Technical Design
 
-If you use `UpgradedComponent` out of the box, you get the support matrix as described on [caniuse](https://caniuse.com/#search=components) for web components. For everything else, you need to transpile/polyfill. See [Support](#browser-support) for more information.
-
-`UpgradedComponent` is designed to be as accessible as possible. To that end, its goal is to simply get out of the way and enable you to write custom elements with as few external dependencies as possible.
+The goal of `UpgradedComponent` is not to add special features. Rather, it's goal is to enable you to use web components with the tools that already exist in the browser. This means: no decorators, no special syntax, and no magic. Those would be considered pluggable features akin to webpack-contrib.
 
 ### Rendering
 
