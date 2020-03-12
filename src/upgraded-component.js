@@ -61,6 +61,7 @@ export class UpgradedComponent extends HTMLElement {
       this.componentWillUnmount()
     }
 
+    // Clean up detached nodes and data.
     this[internal.domMap] = null
   }
 
@@ -120,7 +121,7 @@ export class UpgradedComponent extends HTMLElement {
 
     let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
     if (!isUndefined(initialValue)) {
-      this.validateType(property, initialValue, type)
+      if (type) this.validateType(property, initialValue, type)
       this[privateName] = initialValue
     }
 
@@ -135,7 +136,7 @@ export class UpgradedComponent extends HTMLElement {
       set(value) {
         // Don't set if the value is the same to prevent unnecessary re-renders.
         if (value === this[privateName]) return
-        this.validateType(property, value, type)
+        if (type) this.validateType(property, value, type)
 
         const attribute = toKebab(property)
         const oldValue = this[privateName]
@@ -167,14 +168,12 @@ export class UpgradedComponent extends HTMLElement {
     if (isFunction(this.render)) {
       domString = this.render()
     } else {
-      throw new Error(
-        `You must include a render method in your component. Component: ${this.constructor.name}`
-      )
+      throw new Error(`You must include a render method in component: ${this.constructor.name}`)
     }
 
     if (!isString(domString))
       throw new Error(
-        `You attempted to render a non-string template. Check ${this.constructor.name}.render.`
+        `You attempted to render a non-string template in component: ${this.constructor.name}.`
       )
 
     return domString.trim()
