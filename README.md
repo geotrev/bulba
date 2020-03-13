@@ -170,6 +170,8 @@ static get properties() {
 }
 ```
 
+By default, all entries to `properties` will be upgraded with internal accessors, of which the setter will trigger a render, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
+
 #### Configuration Options
 
 The configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
@@ -179,8 +181,6 @@ If you wish to enumerate the property with more detail, these are the options cu
 - `default` (string|function): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (accessed via `this.constructor`).
 - `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
 - `reflected` (boolean): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
-
-By default, all entries to `properties` will be upgraded with internal accessors, of which the setter will trigger a render, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
 
 #### Managed Properties
 
@@ -271,7 +271,7 @@ Calling `super` is a safe bet to maintain backwards compatibility, including the
 
 ### Internal Methods and Hooks
 
-Because of the escape hatches taht exist with having managed properties and calling the native lifecycle callbacks directly, it's necessary to provide hooks to access the methods which handle renders, type checking, and the like.
+Because of the escape hatches that exist with managed properties and native lifecycle callbacks, it's necessary to provide hooks to access the methods which handle renders, type checking, and the like.
 
 #### `requestRender`
 
