@@ -4,7 +4,7 @@
 
 The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
 
-Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
+Additionally, `UpgradedComponent` implements the same light-weight dom rendering mechanism used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 🕹 **Table of Contents**
 
