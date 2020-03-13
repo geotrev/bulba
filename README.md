@@ -4,7 +4,7 @@
 
 The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
 
-Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef), built by Chris Ferdinandi. The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
+Additionally, `UpgradedComponent` implements the same light-weight virtual dom used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 🕹 **Table of Contents**
 
@@ -271,7 +271,7 @@ Calling `super` is a safe bet to maintain backwards compatibility, including the
 
 ### Internal Methods and Hooks
 
-Because of the escape hatches taht exist with having managed properties and calling the native lifecycle callbacks directly, it's necessary to provide hooks for manually rendering your component in some cases.
+Because of the escape hatches taht exist with having managed properties and calling the native lifecycle callbacks directly, it's necessary to provide hooks to access the methods which handle renders, type checking, and the like.
 
 #### `requestRender`
 
@@ -298,7 +298,7 @@ someCallbackMethod() {
 
 This is an internal accessor that returns a unique identifier. E.g., `252u296xs51k7p6ph6v`.
 
-#### `validateType`
+#### `validateType(value)`
 
 The internal method which compares your property type. If you have a managed property that is reflected to the host, it's possible that the attribute can be set from the outside too. You can use this to validate the computed result (e.g., `parseInt` on the value, if you expect the type to be a `"number"`).
 

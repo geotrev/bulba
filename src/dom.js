@@ -1,5 +1,6 @@
 /**
- * Credit for this reactive view approach goes to Chris Ferdinandi
+ * Credit for this approach goes to Chris Ferdinandi.
+ * Minor changes added here and there.
  * https://github.com/cferdinandi/reef
  */
 
@@ -16,8 +17,8 @@ const dynamicAttributes = [
 
 export const stringToHTML = domString => {
   const parser = new DOMParser()
-  const doc = parser.parseFromString(domString, "text/html")
-  return doc.body
+  const context = parser.parseFromString(domString, "text/html")
+  return context.body
 }
 
 const getAttribute = (name, value) => {
