@@ -97,6 +97,7 @@ export class UpgradedComponent extends HTMLElement {
 
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
+    this[internal.renderStyles] = this[internal.renderStyles].bind(this)
     this[internal.firstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
