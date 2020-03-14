@@ -1,9 +1,9 @@
 /**
- * Credit to David Baron for this zero-timeout workaround
+ * Credit to David Baron for this zero-timeout scheduling solution
  * https://dbaron.org/log/20100309-faster-timeouts
  *
- * This is necessary because the renderer is synchronous (for now) and
- * can cause a lot of DOM thrashing.
+ * This is necessary because the renderer shouldn't block
+ * other operations while updating.
  */
 
 export const loadScheduler = () => {
