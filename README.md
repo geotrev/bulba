@@ -1,10 +1,14 @@
 # \<upgraded-component\>
 
-`UpgradedComponent` is a simple and accessible base class enabling the use of native web components. It has no dependencies.
+`UpgradedComponent` is an accessible base class bringing modern component authoring capabilities to native web components.
 
-The class brings various features to make your components predictable and maintainable. Encapsulate your HTML and styles in a shadow root, manage state using properties, tap into lifecycle methods, and more.
+Features:
+- Encapsulated HTML and styles in shadow root
+- State management using upgraded properties
+- Lifecycle methods (including the native callbacks)
+- Zero dependencies
 
-Additionally, `UpgradedComponent` implements the same light-weight dom rendering mechanism used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
+The package implements the same light-weight dynamic dom rendering mechanism used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 🕹 **Table of Contents**
 
@@ -119,7 +123,7 @@ Of course, it also extends `HTMLElement`, enabling native lifecycle callbacks fo
 
 ### Render
 
-You can render HTML into your component shadow root by creating the method `render`, which should return stringified HTML (it can also be a template string):
+Use the `render` method and return stringified HTML (it can also be a template string):
 
 ```js
 render() {
@@ -130,7 +134,7 @@ render() {
 
 ### Styles
 
-Similar to above, to add encapsulated styles, all you need to do is create a static getter called `styles` that returns your stringified stylesheet:
+Use the static getter `styles` and return your stringified stylesheet:
 
 ```js
 static get styles() {
@@ -148,9 +152,9 @@ static get styles() {
 
 ### Properties
 
-Properties are integral to `UpgradedComponent`. Think of them as informants to your component's render state, similar to how state works in React.
+Properties are integral to `UpgradedComponent`. By default, they behave as a function to your component's render state, similar to how state works in React.
 
-To add properties, create a static getter called `properties` that returns an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCased`.
+Use the static getter `properties` and return an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
 
 Example:
 
@@ -176,7 +180,7 @@ By default, all entries to `properties` will be upgraded with internal accessors
 
 The configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
 
-If you wish to enumerate the property with more detail, these are the options currently available:
+Enumerate the property with metadata to enable useful behaviors:
 
 - `default` (string|function): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (accessed via `this.constructor`).
 - `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
