@@ -15,9 +15,6 @@ export const loadScheduler = () => {
   const EVENT_TYPE = "message"
   const UPDATED_COMPONENT_EVENT = "__UPDATED_COMPONENT_SCHEDULED__"
 
-  // Like setTimeout, but only takes a function argument.  There's
-  // no time argument (always zero) and no arguments (you have to
-  // use a closure).
   function scheduleUpdate(fn) {
     queue.push(fn)
     window.postMessage(UPDATED_COMPONENT_EVENT, "*")
