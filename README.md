@@ -8,7 +8,7 @@ Features:
 - Lifecycle methods (including the native callbacks)
 - Zero dependencies
 
-The package implements the same light-weight dynamic dom rendering mechanism used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
+The package implements the same light-weight dom model used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 🕹 **Table of Contents**
 
