@@ -1,4 +1,4 @@
-export const componentId = Symbol("#componentId")
+export const elementId = Symbol("#elementId")
 export const shadowRoot = Symbol("#shadowRoot")
 export const domMap = Symbol("#domMap")
 export const isFirstRender = Symbol("#isFirstRender")

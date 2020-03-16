@@ -1,18 +1,18 @@
 # \<upgraded-element\>
 
-`UpgradedElement` is an accessible base class bringing modern component authoring capabilities to custom elements. There are no dependencies.
+`UpgradedElement` is a base class bringing modern component authoring features to custom elements with no dependencies.
 
 It extends `HTMLElement` to give you [native component callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), but with the added benefits of:
 
-1. Automatically encapsulating styles/HTML in a shadow root
-2. Providing state management via [upgraded properties](#properties)
+1. Encapsulated styles/HTML in a shadow root
+2. State management via [upgraded properties](#properties)
 3. Predictable lifecycle methods
 
-The package implements the same light-weight DOM mapping engine used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM patching and lightning fast render times (under a millisecond)! ⚡⚡⚡
+The package implements the same light-weight DOM mapping engine used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 **Table of Contents**
 
-- 🎢 [Getting Started](#getting-started)
+- 📜 [Getting Started](#getting-started)
 - 📥 [Install](#install)
 - 🎮 [API](#api)
   - [Render](#render)
@@ -23,17 +23,18 @@ The package implements the same light-weight DOM mapping engine used in [reef](h
     - [Updating a Property](#updating-a-property)
   - [Lifecycle](#lifecycle)
     - [Methods](#methods)
-    - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
+    - [Using Custom Element Lifecycle Callbacks](#using-custom-element-lifecycle-callbacks)
   - [Internal Methods and Hooks](#internal-methods-and-hooks)
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
 - 🔎 [Under the Hood](#under-the-hood)
   - [Technical Design](#technical-design)
   - [Rendering](#rendering)
+- 🤝 [Contribute](#contribute)
 
 ## Getting Started
 
-Creating a new component is easy. Once you've [installed](#install) the package, extend `UpgradedElement`:
+Creating a new element is easy. Once you've [installed](#install) the package, extend `UpgradedElement`:
 
 ```js
 // fancy-header.js
@@ -60,9 +61,9 @@ class FancyHeader extends UpgradedElement {
 register("fancy-header", FancyHeader)
 ```
 
-**Tip:** You can use all the features of web components here, including the `:host` CSS selector and slots (as shown above)!
+**Tip:** You can use all the expected features of web components here, including the `:host` CSS selector and slots (as shown above)!
 
-Import or link to your component file, then use it:
+Import or link to your element file, then use it:
 
 ```html
 <fancy-header>Do you like my style?</fancy-header>
@@ -98,7 +99,7 @@ $ npm i upgraded-element
 $ yarn i upgraded-element
 ```
 
-Then import the package and create your new component, per [Getting Started](#getting-started) above. 🎉
+Then import the package and create your new element, per [Getting Started](#getting-started) above. 🎉
 
 **Source**
 
@@ -122,7 +123,7 @@ Then link to your script or module:
 
 `UpgradedElement` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
 
-As mentioned in the beginning, the class extends `HTMLElement`, enabling access to native lifecycle callbacks. Be sure to read [the native callbacks section](#using-native-lifecycle-callbacks) first, as functionality piggy backs off of a few in particular.
+As mentioned in the beginning, the class extends `HTMLElement`, enabling access to custom element lifecycle callbacks. Be sure to read [notes on how to use them](#using-custom-element-lifecycle-callbacks) first, as `UpgradedElement` functionality piggy backs off of a few in particular.
 
 ### Render
 
@@ -183,9 +184,9 @@ Configuration is optional. Simply setting the property configuration to an empty
 
 Here are the properties accepted in the configuration object:
 
-- `default` (string|function): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (accessed via `this.constructor`).
-- `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
-- `reflected` (boolean): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
+- **default** (`string` or `function`): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, or the HTML element itself. Useful for computing from attributes or other methods on your element constructor (accessed with `this.constructor`).
+- **type** (`string`): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
+- **reflected** (`boolean`): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
 
 #### Updating a Property
 
@@ -193,8 +194,8 @@ A property in `UpgradedElement` is like any instance property on a JavaScript cl
 
 Every time an upgraded property changes it will trigger the following steps (in order):
 
-1. `componentAttributeChanged` lifecycle (if reflected; see [configuration options](#configuration-options) below)
-2. `componentPropertyChanged` lifecycle
+1. `elementAttributeChanged` lifecycle (if reflected; see [configuration options](#configuration-options) below)
+2. `elementPropertyChanged` lifecycle
 3. Re-render to reflect the new property / attribute changes into the shadow root.
 
 See [lifecycle](#lifecycle) methods below.
@@ -247,51 +248,51 @@ Using the previous example of `isOpen`, we'll add the following to the end of th
 
 ```js
 this.setAttribute("card-heading-text", value)
-this.componentPropertyChanged("isOpen", oldValue, value)
+this.elementPropertyChanged("isOpen", oldValue, value)
 this.requestRender()
 ```
 
-Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `componentDidUpdate`.
+Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `elementDidUpdate`.
 
 ### Lifecycle
 
-As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [native callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-native-lifecycle-callbacks) to using the native callbacks, though.
+As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [built-in callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-custom-element-lifecycle-callbacks) to using the native callbacks, though.
 
-The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle. See [using native lifecycle callbacks](#using-native-lifecycle-callbacks) for more details.
+The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle.
 
 #### Methods
 
-- `componentDidConnect`: Called at the beginning of `connectedCallback`, when the component has been attached to the DOM, but before the shadow root and component HTML/styles have been rendered. Ideal for initializing any internal properties or data that need to be ready before the first render.
+- `elementDidConnect`: Called at the beginning of `connectedCallback`, when the element has been attached to the DOM, but before the shadow root's HTML/styles have been rendered. Ideal for initializing any internal properties or data that need to be ready before the first render.
 
-- `componentDidMount`: Called at the end of `connectedCallback`, once the shadow root / DOM is ready. Ideal for registering DOM events or performing other DOM-sensitive actions.
+- `elementDidMount`: Called at the end of `connectedCallback`, once the shadow root / DOM is ready. Ideal for registering DOM events or performing other DOM-sensitive actions.
 
-- `componentDidUpdate`: Called on each render after `componentDidMount`. This includes: when an upgraded property has been set or `requestRender` was called.
+- `elementDidUpdate`: Called on each render after `elementDidMount`. This includes: when an upgraded property has been set or `requestRender` was called.
 
-- `componentPropertyChanged(name, oldValue, newValue)`: Called each time a property gets changed. Provides the property name (as a string), the old value, and the new value. If the old value matched the new value, this method is not triggered.
+- `elementPropertyChanged(name, oldValue, newValue)`: Called each time a property gets changed. Provides the property name (as a string), the old value, and the new value. If the old value matches the new value, this method is not triggered. Create a [managed property](#managed-properties) to customize this behavior.
 
-- `componentAttributeChanged(name, oldValue, newValue)`: Called by `attributeChangedCallback` each time an attribute is changed. If the old value matched the new value, this method is not triggered.
+- `elementAttributeChanged(name, oldValue, newValue)`: Called each time an attribute is changed. If the old value matches the new value, this method is not triggered. Call `attributeChangedCallback` directly to customize this behavior.
 
-- `componentWillUnmount`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
+- `elementWillUnmount`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
 
 **Q:** "Why does `UpgradedElement` use lifecycle methods which seemingly duplicate the existing native callbacks?"
 
-**A:** The primary purpose, as mentioned above, is adding more fidelity to the component render/update lifecycle in general. Another reason is for naming consistency and familiarity. As a developer who uses React extensively, I love the API and thought it made sense to mimic (in no subtle terms) the patterns established by the library authors.
+**A:** The primary purpose, as mentioned above, is adding more fidelity to the element render/update lifecycle in general. Another reason is for naming consistency and familiarity. As a developer who uses React extensively, I love the API and thought it made sense to mimic (in no subtle terms) the patterns established by the library authors.
 
-#### Using Native Lifecycle Callbacks
+#### Using Custom Element Lifecycle Callbacks
 
-`UpgradedElement` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render of any given component and DOM cleanup steps, respectively.**
+`UpgradedElement` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render and DOM cleanup steps, respectively.**
 
 Here's a quick reference for which lifecycle methods are dependent on the native callbacks:
 
 - 🚨 `connectedCallback`: **`super` required**
-  - Calls `componentDidConnect`
-  - Calls `componentDidMount`
-- 🏳 `attributeChangedCallback`
-  - Calls `componentAttributeChanged`
+  - Calls `elementDidConnect`
+  - Calls `elementDidMount`
+- 🏳 `attributeChangedCallback`: `super` optional
+  - Calls `elementAttributeChanged`
 - 🏳 `adoptedCallback`
-  - TBD, no methods called.
+  - TBD, no methods called
 - 🚨 `disconnectedCallback`: **`super` required**
-  - Calls `componentWillUnmount`
+  - Calls `elementWillUnmount`
 
 Calling `super` is a safe bet to maintain backwards compatibility, including the yet-to-be-integrated `adoptedCallback`. 🙂
 
@@ -303,10 +304,10 @@ Because of the escape hatches that exist with managed properties and native life
 
 Manually schedules a render. Note that it will be asynchronous.
 
-If you need to track the result of your manual `requestRender` call, you can set an internal property and checking its value via `componentDidUpdate` like so:
+If you need to track the result of your manual `requestRender` call, you can set an internal property and checking its value via `elementDidUpdate` like so:
 
 ```js
-componentDidUpdate() {
+elementDidUpdate() {
   if (this._renderRequested) {
     this._renderRequested = false
     doSomeOtherStuff()
@@ -320,9 +321,11 @@ someCallbackMethod() {
 }
 ```
 
-#### `componentId`
+#### `elementId`
 
 This is an internal accessor that returns a unique identifier. E.g., `252u296xs51k7p6ph6v`.
+
+You can access the id using the `element-id` attribute attached to any upgraded element.
 
 #### `validateType(value)`
 
@@ -330,7 +333,7 @@ The internal method which compares your property type. If you have a managed pro
 
 ### DOM Events
 
-To add event listeners, it's like you would do in any ES6 class. First, bind the callback in your component's `constructor`.
+To add event listeners, it's like you would do in any ES6 class. First, bind the callback in your element's `constructor`.
 
 ```js
 constructor() {
@@ -338,30 +341,32 @@ constructor() {
 }
 ```
 
-Then you can register events using `addEventListener` in your `componentDidMount` lifecycle method, and likewise, deregister events using `removeEventListener` in your `componentWillUnmount` lifecycle.
+Then you can register events using `addEventListener` in your `elementDidMount` lifecycle method, and likewise, deregister events using `removeEventListener` in your `elementWillUnmount` lifecycle.
 
 ```js
 handleClick() {
   // bound handler
 }
 
-componentDidMount() {
+elementDidMount() {
   this.button = this.shadowRoot.querySelector(".my-button")
   this.button.addEventListener("click", this.handleClick)
 }
 
-componentWillUnmount() {
+elementWillUnmount() {
   this.button.removeEventListener("click", this.handleClick)
 }
 ```
 
 ## Browser Support
 
-This package uses symbols, template strings, ES6 classes, and of course, the various pieces of the web component standard. The decision to not polyfill or transpile is deliberate in order to get the performance boost of browsers which support these newer features.
+`UpgradedElement` uses symbols, ES6 classes, and the various features within the web component standard. The decision to not polyfill or transpile is deliberate in order to get the performance boost of browsers, which _by default_, support the newer features. Custom distributions will be made soon.
 
-To get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs). For more details on support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks down the separate features that make up the web component standard.
+In the mean time, to get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and/or a comprehensive [custom element polyfill solution](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
 
-**Transpiling & processing:** If you use a bundler like webpack, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
+For more details on current web component spec support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks support by sub-feature.
+
+**Transpiling & Bundling:** If you use a bundler like webpack with `babel-loader`, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
 
 ```js
 module.exports = {
@@ -371,7 +376,7 @@ module.exports = {
       // ...
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?!upgraded-element)/,
+        exclude: /node_modules\/(?!upgraded-element)/, // <-- exclude this package
         loader: "babel-loader",
       },
     ],
@@ -385,18 +390,18 @@ A few quick points on the design of `UpgradedElement`:
 
 ### Technical Design
 
-The goal of `UpgradedElement` is not to add special features. Rather, it's goal is to enable you to use web components with the tools that already exist in the browser. This means: no decorators, no special syntax, and no magic. Those would be considered pluggable features akin to webpack-contrib.
+The goal of `UpgradedElement` is not to add special features. Rather, it's goal is to enable you to use custom elements with the tools that already exist in the browser. In other words, the whole package is vanilla JavaScript. Extras such as decorators, typescript support, and the like, could be future plugins.
 
 ### Rendering
 
-Rendering for `UpgradedElement` is a multi-step process.
+1. **DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef). The main reasoning here is to reduce package size and make rendering cheap and fast.
 
-1. **DOM:** Rendering is handled using a small virtual DOM (VDOM) implementation, almost identical to the one used in [reef](https://github.com/cferdinandi/reef). The main reasoning here is to reduce package size and make rendering cheap. Initial rendering typically takes a millisecond or less, with subsequent re-renders taking a fraction of that.
+2. **Scheduling:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
 
-2. **Scheduling:** All renders, with the exception of first render, are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. Read more about those [here](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) and [here](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+### TODOS
 
-**TODO:** Batching multiple property changes into a single render. Unfortunately, every single property change triggers a re-render. This isn't _horrible_ right now since re-renders are cheap, but it would improve performance in more complex cases.
+- [ ] **Batch property changes into a single render.** Unfortunately, every single property change triggers a re-render. This isn't _horrible_ right now since re-renders are decently cheap, but it would improve performance in more complex cases.
 
----
+## Contribute
 
-If you like the project or find issues, feel free to contribute or open issues! <3
+If you like the project or find issues, feel free to contribute!

@@ -72,8 +72,8 @@ class LifecyclePrinter extends CoolLabel {
    * to call this method manually.
    */
 
-  componentPropertyChanged(property, oldValue, newValue) {
-    console.log("componentPropertyChanged", property, oldValue, newValue)
+  elementPropertyChanged(property, oldValue, newValue) {
+    console.log("elementPropertyChanged", property, oldValue, newValue)
   }
 
   /**
@@ -81,8 +81,8 @@ class LifecyclePrinter extends CoolLabel {
    * equal to the new value.
    */
 
-  componentAttributeChanged(attribute, oldValue, newValue) {
-    console.log("componentAttributeChanged", attribute, oldValue, newValue)
+  elementAttributeChanged(attribute, oldValue, newValue) {
+    console.log("elementAttributeChanged", attribute, oldValue, newValue)
   }
 
   /**
@@ -90,16 +90,16 @@ class LifecyclePrinter extends CoolLabel {
    * have been patched.
    */
 
-  componentDidConnect() {
-    console.log("componentDidConnect")
+  elementDidConnect() {
+    console.log("elementDidConnect")
   }
 
   /**
    * Triggered after every render, excluding initial mount
    */
 
-  componentDidUpdate() {
-    console.log("componentDidUpdate")
+  elementDidUpdate() {
+    console.log("elementDidUpdate")
   }
 
   /**
@@ -107,9 +107,9 @@ class LifecyclePrinter extends CoolLabel {
    * Attributes are available and handlers can be registered.
    */
 
-  componentDidMount() {
-    super.componentDidMount()
-    console.log("componentDidMount")
+  elementDidMount() {
+    super.elementDidMount()
+    console.log("elementDidMount")
   }
 
   /**
@@ -117,9 +117,9 @@ class LifecyclePrinter extends CoolLabel {
    * Handlers can be deregistered and timers can be cleared.
    */
 
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    console.log("componentWillUnmount")
+  elementWillUnmount() {
+    super.elementWillUnmount()
+    console.log("elementWillUnmount")
   }
 
   /**

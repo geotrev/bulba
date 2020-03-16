@@ -23,13 +23,13 @@ class CustomAccessorButton extends UpgradedElement {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  componentDidMount() {
+  elementDidMount() {
     this.text = "Cool"
     this.button = this.shadowRoot.querySelector("button")
     this.button.addEventListener("click", this.handleClick)
   }
 
-  componentWillUnmount() {
+  elementWillUnmount() {
     this.button.removeEventListener("click", this.handleClick)
   }
 

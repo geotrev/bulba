@@ -10,6 +10,7 @@ import {
 } from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
+import * as external from "./external"
 
 export const register = (tag, UpgradedInstance) => {
   if (!customElements.get(tag)) {
@@ -45,15 +46,15 @@ export class UpgradedElement extends HTMLElement {
   adoptedCallback() {}
 
   attributeChangedCallback(attribute, oldValue, newValue) {
-    if (isFunction(this.componentAttributeChanged) && oldValue !== newValue) {
-      this.componentAttributeChanged(attribute, oldValue, newValue)
+    if (isFunction(this[external.elementAttributeChanged]) && oldValue !== newValue) {
+      this[external.elementAttributeChanged](attribute, oldValue, newValue)
     }
   }
 
   connectedCallback() {
     if (this.isConnected) {
-      if (isFunction(this.componentDidConnect)) {
-        this.componentDidConnect()
+      if (isFunction(this[external.elementDidConnect])) {
+        this[external.elementDidConnect]()
       }
 
       this[internal.renderStyles]()
@@ -62,16 +63,16 @@ export class UpgradedElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (isFunction(this.componentWillUnmount)) {
-      this.componentWillUnmount()
+    if (isFunction(this[external.elementWillUnmount])) {
+      this[external.elementWillUnmount]()
     }
 
     // Clean up detached nodes and data.
     this[internal.domMap] = null
   }
 
-  get componentId() {
-    return this[internal.componentId]
+  get [external.elementIdProperty]() {
+    return this[internal.elementId]
   }
 
   requestRender() {
@@ -99,9 +100,9 @@ export class UpgradedElement extends HTMLElement {
     this[internal.isFirstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
-    this[internal.componentId] = createUUID()
+    this[internal.elementId] = createUUID()
 
-    this.setAttribute("component-id", this.componentId)
+    this.setAttribute(external.elementIdAttribute, this[external.elementIdProperty])
     this[internal.performUpgrade]()
   }
 
@@ -150,15 +151,15 @@ export class UpgradedElement extends HTMLElement {
           this[privateName] = value
           if (reflected) this.setAttribute(attribute, value)
 
-          if (isFunction(this.componentPropertyChanged)) {
-            this.componentPropertyChanged(property, oldValue, value)
+          if (isFunction(this[external.elementPropertyChanged])) {
+            this[external.elementPropertyChanged](property, oldValue, value)
           }
         } else {
           this[privateName] = undefined
           if (reflected) this.removeAttribute(attribute)
 
-          if (isFunction(this.componentPropertyChanged)) {
-            this.componentPropertyChanged(property, oldValue, null)
+          if (isFunction(this[external.elementPropertyChanged])) {
+            this[external.elementPropertyChanged](property, oldValue, null)
           }
         }
 
@@ -205,13 +206,13 @@ export class UpgradedElement extends HTMLElement {
     }
 
     // Apply update lifecycle, if it exists
-    if (!this[internal.isFirstRender] && isFunction(this.componentDidUpdate)) {
-      this.componentDidUpdate()
+    if (!this[internal.isFirstRender] && isFunction(this[external.elementDidUpdate])) {
+      this[external.elementDidUpdate]()
     }
 
     // Apply mount lifecycle, if it exists
-    if (this[internal.isFirstRender] && isFunction(this.componentDidMount)) {
-      this.componentDidMount()
+    if (this[internal.isFirstRender] && isFunction(this[external.elementDidMount])) {
+      this[external.elementDidMount]()
     }
 
     this[internal.isFirstRender] = false
