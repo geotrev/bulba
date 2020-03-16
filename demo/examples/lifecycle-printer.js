@@ -1,3 +1,4 @@
+import { register } from "../../src/upgraded-element"
 import { CoolLabel } from "./cool-label"
 
 class LifecyclePrinter extends CoolLabel {
@@ -6,7 +7,7 @@ class LifecyclePrinter extends CoolLabel {
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
    *   is 'generated' with lifecycle-connected accessors internally.
    * - A 'managed' property is custom. If you 'handle` your property with a custom getter and/or setter
-   *   at the component level, UpgradedComponent skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
+   *   at the component level, UpgradedElement skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
    *   logic needs to be custom-specified as well.
    *   NOTE: Hook into renders with `this.requestRender()`.
    *
@@ -41,9 +42,9 @@ class LifecyclePrinter extends CoolLabel {
    */
 
   connectedCallback() {
-    console.log("connectedCallback, before UpgradedComponent callback")
+    console.log("connectedCallback, before UpgradedElement callback")
     super.connectedCallback()
-    console.log("connectedCallback, after UpgradedComponent callback")
+    console.log("connectedCallback, after UpgradedElement callback")
   }
 
   /**
@@ -51,9 +52,9 @@ class LifecyclePrinter extends CoolLabel {
    */
 
   disconnectedCallback() {
-    console.log("disconnectedCallback, before UpgradedComponent callback")
+    console.log("disconnectedCallback, before UpgradedElement callback")
     super.disconnectedCallback()
-    console.log("disconnectedCallback, after UpgradedComponent callback")
+    console.log("disconnectedCallback, after UpgradedElement callback")
   }
 
   /**
@@ -61,9 +62,9 @@ class LifecyclePrinter extends CoolLabel {
    */
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log("attributeChangedCallback, before UpgradedComponent callback")
+    console.log("attributeChangedCallback, before UpgradedElement callback")
     super.attributeChangedCallback(name, oldValue, newValue)
-    console.log("attributeChangedCallback, after UpgradedComponent callback")
+    console.log("attributeChangedCallback, after UpgradedElement callback")
   }
 
   /**
@@ -94,7 +95,7 @@ class LifecyclePrinter extends CoolLabel {
   }
 
   /**
-   * Triggered after every re-render.
+   * Triggered after every render, excluding initial mount
    */
 
   componentDidUpdate() {
@@ -131,5 +132,4 @@ class LifecyclePrinter extends CoolLabel {
   }
 }
 
-if (!customElements.get("lifecycle-printer"))
-  customElements.define("lifecycle-printer", LifecyclePrinter)
+register("lifecycle-printer", LifecyclePrinter)

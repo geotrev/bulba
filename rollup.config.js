@@ -4,7 +4,7 @@ import resolve from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
 
 const banner = require("./.bin/banner")
-const input = path.resolve(__dirname, "src/upgraded-component.js")
+const input = path.resolve(__dirname, "src/upgraded-element.js")
 const plugins = [resolve(), commonjs()]
 
 if (process.env.NODE_ENV === "publish") {
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "publish") {
           }
         },
       },
-      mangle: { reserved: ["UpgradedComponent"] },
+      mangle: { reserved: ["UpgradedElement"] },
     })
   )
 }
@@ -31,9 +31,9 @@ export default [
     output: {
       banner,
       format: "iife",
-      file: path.resolve(__dirname, "lib/upgraded-component.js"),
+      file: path.resolve(__dirname, "lib/upgraded-element.js"),
       sourcemap: true,
-      name: "UpgradedComponent",
+      name: "UpgradedElement",
     },
   },
   {
@@ -42,9 +42,9 @@ export default [
     output: {
       banner,
       format: "cjs",
-      file: path.resolve(__dirname, "lib/upgraded-component.cjs.js"),
+      file: path.resolve(__dirname, "lib/upgraded-element.cjs.js"),
       sourcemap: true,
-      name: "UpgradedComponent",
+      name: "UpgradedElement",
     },
   },
   {
@@ -53,9 +53,9 @@ export default [
     output: {
       banner,
       format: "esm",
-      file: path.resolve(__dirname, "lib/upgraded-component.esm.js"),
+      file: path.resolve(__dirname, "lib/upgraded-element.esm.js"),
       sourcemap: true,
-      name: "UpgradedComponent",
+      name: "UpgradedElement",
     },
   },
 ]

@@ -1,32 +1,38 @@
 /**
- * Credit to David Baron for this zero-timeout workaround
+ * Credit to David Baron for this zero-timeout scheduling solution
  * https://dbaron.org/log/20100309-faster-timeouts
  *
- * This is necessary because the renderer is synchronous (for now) and
- * can cause a lot of DOM thrashing.
+ * This is necessary because the renderer shouldn't block
+ * other operations while updating.
  */
 
 export const loadScheduler = () => {
-  if (typeof window.scheduleUpgrade === "function") return
+  if (typeof window.scheduleComponentUpdate === "function") return
 
+  const setTimeout = window.setTimeout
+  const requestAnimationFrame = window.requestAnimationFrame
   const queue = []
   const EVENT_TYPE = "message"
-  const ROTOM_EVENT = "__ROTOM_EVENT__"
+  const UPDATED_COMPONENT_EVENT = "__UPDATED_COMPONENT_SCHEDULED__"
 
-  // Like setTimeout, but only takes a function argument.  There's
-  // no time argument (always zero) and no arguments (you have to
-  // use a closure).
-  function schedule(fn) {
+  function scheduleUpdate(fn) {
     queue.push(fn)
-    window.postMessage(ROTOM_EVENT, "*")
+    window.postMessage(UPDATED_COMPONENT_EVENT, "*")
   }
 
   function handleMessageEvent(event) {
-    if (event.source == window && event.data == ROTOM_EVENT) {
+    if (event.source == window && event.data == UPDATED_COMPONENT_EVENT) {
       event.stopPropagation()
       if (queue.length > 0) {
         const fn = queue.shift()
-        requestAnimationFrame(fn)
+
+        if (typeof requestAnimationFrame === "function") {
+          requestAnimationFrame(fn)
+        } else if (typeof setTimeout === "function") {
+          setTimeout(fn, 0)
+        } else {
+          fn()
+        }
       }
     }
   }
@@ -34,9 +40,9 @@ export const loadScheduler = () => {
   window.addEventListener(EVENT_TYPE, handleMessageEvent, true)
 
   // Add as readonly property - you shall not pass!
-  Object.defineProperty(window, "scheduleUpgrade", {
+  Object.defineProperty(window, "scheduleComponentUpdate", {
     configurable: false,
     writable: false,
-    value: schedule,
+    value: scheduleUpdate,
   })
 }

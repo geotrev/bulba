@@ -1,6 +1,6 @@
-import { UpgradedComponent } from "../../src/upgraded-component"
+import { UpgradedElement, register } from "../../src/upgraded-element"
 
-class SimpleHeader extends UpgradedComponent {
+class SimpleHeader extends UpgradedElement {
   static get styles() {
     return "::slotted(*) { font-weight: normal; font-family: sans-serif; }"
   }
@@ -10,4 +10,4 @@ class SimpleHeader extends UpgradedComponent {
   }
 }
 
-if (!customElements.get("simple-header")) customElements.define("simple-header", SimpleHeader)
+register("simple-header", SimpleHeader)
