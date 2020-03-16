@@ -11,9 +11,9 @@ import {
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
 
-export const register = (tag, Constructor) => {
+export const register = (tag, UpgradedInstance) => {
   if (!customElements.get(tag)) {
-    customElements.define(tag, Constructor)
+    customElements.define(tag, UpgradedInstance)
   }
 }
 
@@ -25,8 +25,7 @@ export class UpgradedElement extends HTMLElement {
 
   // Public
 
-  // Retrieve defined properties from the constructor instance
-  // (ideally, not UpgradedElement itself, but its constructor class)
+  // Retrieve defined properties from the extender.
   static get observedAttributes() {
     let attributes = []
 
@@ -97,7 +96,7 @@ export class UpgradedElement extends HTMLElement {
 
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
-    this[internal.firstRender] = true
+    this[internal.isFirstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.componentId] = createUUID()
@@ -196,7 +195,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.renderDOM]() {
-    if (!this[internal.firstRender]) {
+    if (!this[internal.isFirstRender]) {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
       templateMap = null
@@ -206,15 +205,15 @@ export class UpgradedElement extends HTMLElement {
     }
 
     // Apply update lifecycle, if it exists
-    if (!this[internal.firstRender] && isFunction(this.componentDidUpdate)) {
+    if (!this[internal.isFirstRender] && isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate()
     }
 
     // Apply mount lifecycle, if it exists
-    if (this[internal.firstRender] && isFunction(this.componentDidMount)) {
+    if (this[internal.isFirstRender] && isFunction(this.componentDidMount)) {
       this.componentDidMount()
     }
 
-    this[internal.firstRender] = false
+    this[internal.isFirstRender] = false
   }
 }

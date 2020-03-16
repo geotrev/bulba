@@ -1,31 +1,35 @@
 # \<upgraded-element\>
 
-`UpgradedElement` is an accessible base class bringing modern component authoring capabilities to native web components (WCs).
+`UpgradedElement` is an accessible base class bringing modern component authoring capabilities to custom elements. There are no dependencies.
 
-It extends `HTMLElement` to give you the raw power of WCs, but with the added benefits of automatically encapsulating styles/HTML, state management via [upgraded properties](#properties), lifecycle methods, and all with zero dependencies.
+It extends `HTMLElement` to give you [native component callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), but with the added benefits of:
 
-The package implements the same light-weight dom model used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
+1. Automatically encapsulating styles/HTML in a shadow root
+2. Providing state management via [upgraded properties](#properties)
+3. Predictable lifecycle methods
 
-🕹 **Table of Contents**
+The package implements the same light-weight DOM mapping engine used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM patching and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
-1. [Getting Started](#getting-started)
-2. [Install](#install)
-3. [API](#api)
-   - [Render](#render)
-   - [Styles](#styles)
-   - [Properties](#properties)
-     - [Configuration Options](#configuration-options)
-     - [Managed Properties](#managed-properties)
-     - [Updating a Property](#updating-a-property)
-   - [Lifecycle](#lifecycle)
-     - [Methods](#methods)
-     - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
-   - [Internal Methods and Hooks](#internal-methods-and-hooks)
-   - [DOM Events](#dom-events)
-4. [Browser Support](#browser-support)
-5. [Under the Hood](#under-the-hood)
-   - [Technical Design](#technical-design)
-   - [Rendering](#rendering)
+**Table of Contents**
+
+- 🎢 [Getting Started](#getting-started)
+- 📥 [Install](#install)
+- 🎮 [API](#api)
+  - [Render](#render)
+  - [Styles](#styles)
+  - [Properties](#properties)
+    - [Configuration Options](#configuration-options)
+    - [Managed Properties](#managed-properties)
+    - [Updating a Property](#updating-a-property)
+  - [Lifecycle](#lifecycle)
+    - [Methods](#methods)
+    - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
+  - [Internal Methods and Hooks](#internal-methods-and-hooks)
+  - [DOM Events](#dom-events)
+- 🌍 [Browser Support](#browser-support)
+- 🔎 [Under the Hood](#under-the-hood)
+  - [Technical Design](#technical-design)
+  - [Rendering](#rendering)
 
 ## Getting Started
 
