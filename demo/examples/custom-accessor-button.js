@@ -1,6 +1,6 @@
-import { UpgradedComponent, register } from "../../src/upgraded-component"
+import { UpgradedElement, register } from "../../src/upgraded-element"
 
-class CustomAccessorButton extends UpgradedComponent {
+class CustomAccessorButton extends UpgradedElement {
   static get properties() {
     return {
       text: { type: "string" },

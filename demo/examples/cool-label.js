@@ -1,6 +1,6 @@
-import { UpgradedComponent, register } from "../../src/upgraded-component"
+import { UpgradedElement, register } from "../../src/upgraded-element"
 
-export class CoolLabel extends UpgradedComponent {
+export class CoolLabel extends UpgradedElement {
   static get properties() {
     return {
       firstName: {

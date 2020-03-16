@@ -1,12 +1,8 @@
-# \<upgraded-component\>
+# \<upgraded-element\>
 
-`UpgradedComponent` is an accessible base class bringing modern component authoring capabilities to native web components.
+`UpgradedElement` is an accessible base class bringing modern component authoring capabilities to native web components (WCs).
 
-Features:
-- Encapsulated HTML and styles in shadow root
-- State management using upgraded properties
-- Lifecycle methods (including the native callbacks)
-- Zero dependencies
+It extends `HTMLElement` to give you the raw power of WCs, but with the added benefits of automatically encapsulating styles/HTML, state management via [upgraded properties](#properties), lifecycle methods, and all with zero dependencies.
 
 The package implements the same light-weight dom model used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is lightning fast render times (under a millisecond)! ⚡⚡⚡
 
@@ -20,6 +16,7 @@ The package implements the same light-weight dom model used in [reef](https://gi
    - [Properties](#properties)
      - [Configuration Options](#configuration-options)
      - [Managed Properties](#managed-properties)
+     - [Updating a Property](#updating-a-property)
    - [Lifecycle](#lifecycle)
      - [Methods](#methods)
      - [Using Native Lifecycle Callbacks](#using-native-lifecycle-callbacks)
@@ -32,14 +29,14 @@ The package implements the same light-weight dom model used in [reef](https://gi
 
 ## Getting Started
 
-Creating a new component is easy. Once you've [installed](#install) the package, create your first component:
+Creating a new component is easy. Once you've [installed](#install) the package, extend `UpgradedElement`:
 
 ```js
 // fancy-header.js
 
-import { UpgradedComponent, register } from "./upgraded-component" // include `.js` for native modules
+import { UpgradedElement, register } from "./upgraded-element" // include `.js` for native modules
 
-class FancyHeader extends UpgradedComponent {
+class FancyHeader extends UpgradedElement {
   static get styles() {
     return `
       .is-fancy {
@@ -58,6 +55,8 @@ class FancyHeader extends UpgradedComponent {
 
 register("fancy-header", FancyHeader)
 ```
+
+**Tip:** You can use all the features of web components here, including the `:host` CSS selector and slots (as shown above)!
 
 Import or link to your component file, then use it:
 
@@ -88,25 +87,25 @@ You can install either by grabbing the source file or with npm/yarn.
 Install it like you would any other package:
 
 ```sh
-$ npm i upgraded-component
+$ npm i upgraded-element
 ```
 
 ```sh
-$ yarn i upgraded-component
+$ yarn i upgraded-element
 ```
 
 Then import the package and create your new component, per [Getting Started](#getting-started) above. 🎉
 
 **Source**
 
-[IIFE](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.js) (browsers) / [ES Module](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.esm.js) / [CommonJS](https://cdn.jsdelivr.net/npm/upgraded-component/lib/upgraded-component.cjs.js)
+[IIFE](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.js) (browsers) / [ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js)
 
 Import directly:
 
 ```js
 // fancy-header.js
 
-import { UpgradedComponent, register } from "./upgraded-component.js"
+import { UpgradedElement, register } from "./upgraded-element.js"
 ```
 
 Then link to your script or module:
@@ -117,9 +116,9 @@ Then link to your script or module:
 
 ## API
 
-`UpgradedComponent` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
+`UpgradedElement` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
 
-Of course, it also extends `HTMLElement`, enabling native lifecycle callbacks for all extenders. Be sure to read about the caveats in [the native callbacks section](#using-native-lifecycle-callbacks) below.
+As mentioned in the beginning, the class extends `HTMLElement`, enabling access to native lifecycle callbacks. Be sure to read [the native callbacks section](#using-native-lifecycle-callbacks) first, as functionality piggy backs off of a few in particular.
 
 ### Render
 
@@ -134,7 +133,7 @@ render() {
 
 ### Styles
 
-Use the static getter `styles` and return your stringified stylesheet:
+Use the static `styles` getter and return your stringified stylesheet:
 
 ```js
 static get styles() {
@@ -152,9 +151,9 @@ static get styles() {
 
 ### Properties
 
-Properties are integral to `UpgradedComponent`. By default, they behave as a function to your component's render state, similar to how state works in React.
+**TL;DR** Properties enable internal state in `UpgradedElement`. By defining a property, it will be upgraded to hook into the render lifecycle, similar to how state works in React.
 
-Use the static getter `properties` and return an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
+Use the static `properties` getter and return an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
 
 Example:
 
@@ -174,29 +173,39 @@ static get properties() {
 }
 ```
 
-By default, all entries to `properties` will be upgraded with internal accessors, of which the setter will trigger a render, `componentPropertyChanged`, and `componentAttributeChanged` (if reflected). See [lifecycle](#lifecycle) methods below.
-
 #### Configuration Options
 
-The configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
+Configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
 
-Enumerate the property with metadata to enable useful behaviors:
+Here are the properties accepted in the configuration object:
 
 - `default` (string|function): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your component, or the HTML element itself. Useful for computing from attributes or other methods on your component (accessed via `this.constructor`).
 - `type` (string): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
 - `reflected` (boolean): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
 
+#### Updating a Property
+
+A property in `UpgradedElement` is like any instance property on a JavaScript class. The difference is that it will be upgraded by default to hook into the render lifecycle.
+
+Every time an upgraded property changes it will trigger the following steps (in order):
+
+1. `componentAttributeChanged` lifecycle (if reflected; see [configuration options](#configuration-options) below)
+2. `componentPropertyChanged` lifecycle
+3. Re-render to reflect the new property / attribute changes into the shadow root.
+
+See [lifecycle](#lifecycle) methods below.
+
 #### Managed Properties
 
-There's also the option to skip accessor upgrading if you decide you'd rather control that logic yourself. This is referred to as a 'managed' property.
+There's also the option to skip accessor upgrading if you prefer to implement more custom functionality. This is referred to as a 'managed' property.
 
-Here's a quick example:
+Here's a quick example for an `isOpen` property:
 
 ```js
 static get properties() {
   return {
-    // NOTE: This will be ignored!
-    cardHeadingText: { type: "string", default: "Some default" }
+    // Hmm, what will this do?
+    isOpen: { type: "string", default: false }
   }
 }
 
@@ -204,36 +213,45 @@ constructor() {
   super()
 
   // provide a default value for the internal property
-  this._cardHeadingText = "My cool heading"
+  this._isOpen = false
 }
 
 // Define accessors
 
-set cardHeadingText(value) {
-  if (!value || value === this.cardHeadingText) return
+set isOpen(value) {
+  // No reason to update if the new value is already the current value
+  if (!value || value === this.isOpen) return
 
   this.validateType(value)
 
-  const oldValue = this.cardHeadingText
-  this._cardHeadingText = value
-
-  this.componentPropertyChanged("cardHeadingText", oldValue, value)
-  this.setAttribute("card-heading-text", value)
-  this.requestRender()
+  const oldValue = this.isOpen
+  this._isOpen = value
 }
 
-get cardHeadingText() {
-  return this._cardHeadingText
+get isOpen() {
+  return this._isOpen
 }
 ```
 
-Worth noting is that setting your managed property via `properties` won't do anything so long as you've declared your own accessors, as indicated above.
+Worth noting is that setting your managed property via `properties` **won't do anything so long as you've declared your own accessors.**
 
-Because the property is managed, you can optionally then tap into internal methods to re-create some or all of the logic included in upgraded properties. Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below.
+**Q:** "What if I want to hook into the lifecycle hooks?"
+
+**A:** You can do that too. Tap into internal methods to re-create some or all of the logic included in an upgraded property.
+
+Using the previous example of `isOpen`, we'll add the following to the end of the setter:
+
+```js
+this.setAttribute("card-heading-text", value)
+this.componentPropertyChanged("isOpen", oldValue, value)
+this.requestRender()
+```
+
+Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `componentDidUpdate`.
 
 ### Lifecycle
 
-As mentioned previously, `UpgradedComponent` provides its own custom lifecycle methods, but also gives you the option to use the [native callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-native-lifecycle-callbacks) to using the native callbacks, though.
+As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [native callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-native-lifecycle-callbacks) to using the native callbacks, though.
 
 The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle. See [using native lifecycle callbacks](#using-native-lifecycle-callbacks) for more details.
 
@@ -251,13 +269,13 @@ The purpose of these is to add more developer fidelity to the existing callbacks
 
 - `componentWillUnmount`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
 
-**Q:** "Why does `UpgradedComponent` use lifecycle methods which seemingly duplicate the existing native callbacks?"
+**Q:** "Why does `UpgradedElement` use lifecycle methods which seemingly duplicate the existing native callbacks?"
 
 **A:** The primary purpose, as mentioned above, is adding more fidelity to the component render/update lifecycle in general. Another reason is for naming consistency and familiarity. As a developer who uses React extensively, I love the API and thought it made sense to mimic (in no subtle terms) the patterns established by the library authors.
 
 #### Using Native Lifecycle Callbacks
 
-`UpgradedComponent` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render of any given component and DOM cleanup steps, respectively.**
+`UpgradedElement` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render of any given component and DOM cleanup steps, respectively.**
 
 Here's a quick reference for which lifecycle methods are dependent on the native callbacks:
 
@@ -339,7 +357,7 @@ This package uses symbols, template strings, ES6 classes, and of course, the var
 
 To get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and [`webcommponentsjs`](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs). For more details on support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks down the separate features that make up the web component standard.
 
-**Enabling transpiling & processing:** If you use a bundler like webpack, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
+**Transpiling & processing:** If you use a bundler like webpack, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
 
 ```js
 module.exports = {
@@ -349,7 +367,7 @@ module.exports = {
       // ...
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?!upgraded-component)/,
+        exclude: /node_modules\/(?!upgraded-element)/,
         loader: "babel-loader",
       },
     ],
@@ -359,15 +377,15 @@ module.exports = {
 
 ## Under the Hood
 
-A few quick points on the design of `UpgradedComponent`:
+A few quick points on the design of `UpgradedElement`:
 
 ### Technical Design
 
-The goal of `UpgradedComponent` is not to add special features. Rather, it's goal is to enable you to use web components with the tools that already exist in the browser. This means: no decorators, no special syntax, and no magic. Those would be considered pluggable features akin to webpack-contrib.
+The goal of `UpgradedElement` is not to add special features. Rather, it's goal is to enable you to use web components with the tools that already exist in the browser. This means: no decorators, no special syntax, and no magic. Those would be considered pluggable features akin to webpack-contrib.
 
 ### Rendering
 
-Rendering for `UpgradedComponent` is a multi-step process.
+Rendering for `UpgradedElement` is a multi-step process.
 
 1. **DOM:** Rendering is handled using a small virtual DOM (VDOM) implementation, almost identical to the one used in [reef](https://github.com/cferdinandi/reef). The main reasoning here is to reduce package size and make rendering cheap. Initial rendering typically takes a millisecond or less, with subsequent re-renders taking a fraction of that.
 

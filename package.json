@@ -1,10 +1,10 @@
 {
-  "name": "upgraded-component",
+  "name": "upgraded-element",
   "version": "0.0.6",
   "description": "A simple base class for using native web components",
-  "main": "lib/upgraded-component.cjs.js",
-  "module": "lib/upgraded-component.esm.js",
-  "browser": "lib/upgraded-component.js",
+  "main": "lib/upgraded-element.cjs.js",
+  "module": "lib/upgraded-element.esm.js",
+  "browser": "lib/upgraded-element.js",
   "scripts": {
     "start": "rollup -c rollup.config.demo.js -w",
     "build": "rm -rf lib && rollup -c",
@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore",
     "prepublish": "npm run build:publish"
   },
-  "homepage": "https://github.com/geotrev/upgraded-component",
+  "homepage": "https://github.com/geotrev/upgraded-element",
   "author": "George Treviranus",
   "license": "MIT",
   "devDependencies": {
@@ -46,9 +46,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/upgraded-component.git"
+    "url": "git+https://github.com/geotrev/upgraded-element.git"
   },
   "bugs": {
-    "url": "https://github.com/geotrev/upgraded-component/issues"
+    "url": "https://github.com/geotrev/upgraded-element/issues"
   }
 }

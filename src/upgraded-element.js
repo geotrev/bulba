@@ -17,7 +17,7 @@ export const register = (tag, Constructor) => {
   }
 }
 
-export class UpgradedComponent extends HTMLElement {
+export class UpgradedElement extends HTMLElement {
   constructor() {
     super()
     this[internal.initialize]()
@@ -26,7 +26,7 @@ export class UpgradedComponent extends HTMLElement {
   // Public
 
   // Retrieve defined properties from the constructor instance
-  // (ideally, not UpgradedComponent itself, but its constructor class)
+  // (ideally, not UpgradedElement itself, but its constructor class)
   static get observedAttributes() {
     let attributes = []
 
