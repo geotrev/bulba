@@ -1,4 +1,4 @@
-import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
+import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -7,16 +7,27 @@ import {
   isFunction,
   isUndefined,
   isSymbol,
+  getTypeTag,
 } from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
+import * as external from "./external"
 
-export const register = (tag, Constructor) => {
+/**
+ * Adds custom element to the global registry.
+ * @param {string} tag
+ * @param {module} UpgradedInstance
+ */
+export const register = (tag, UpgradedInstance) => {
   if (!customElements.get(tag)) {
-    customElements.define(tag, Constructor)
+    customElements.define(tag, UpgradedInstance)
   }
 }
 
+/**
+ * @module UpgradedElement
+ * @extends HTMLElement
+ */
 export class UpgradedElement extends HTMLElement {
   constructor() {
     super()
@@ -25,18 +36,15 @@ export class UpgradedElement extends HTMLElement {
 
   // Public
 
-  // Retrieve defined properties from the constructor instance
-  // (ideally, not UpgradedElement itself, but its constructor class)
+  // Retrieve defined properties from the extender.
   static get observedAttributes() {
     let attributes = []
 
-    if (isEmptyObject(this.properties)) {
-      return attributes
+    if (!isEmptyObject(this.properties)) {
+      Object.keys(this.properties).forEach(property => {
+        if (this.properties[property].reflected) attributes.push(toKebabCase(property))
+      })
     }
-
-    Object.keys(this.properties).forEach(property => {
-      if (this.properties[property].reflected) attributes.push(toKebabCase(property))
-    })
 
     return attributes
   }
@@ -46,44 +54,56 @@ export class UpgradedElement extends HTMLElement {
   adoptedCallback() {}
 
   attributeChangedCallback(attribute, oldValue, newValue) {
-    if (isFunction(this.componentAttributeChanged) && oldValue !== newValue) {
-      this.componentAttributeChanged(attribute, oldValue, newValue)
+    if (isFunction(this[external.elementAttributeChanged]) && oldValue !== newValue) {
+      this[external.elementAttributeChanged](attribute, oldValue, newValue)
     }
   }
 
   connectedCallback() {
     if (this.isConnected) {
-      if (isFunction(this.componentDidConnect)) {
-        this.componentDidConnect()
+      if (isFunction(this[external.elementDidConnect])) {
+        this[external.elementDidConnect]()
       }
 
       this[internal.renderStyles]()
-      window.scheduleComponentUpdate(this[internal.renderDOM])
+      this[external.requestRender]()
     }
   }
 
   disconnectedCallback() {
-    if (isFunction(this.componentWillUnmount)) {
-      this.componentWillUnmount()
+    if (isFunction(this[external.elementWillUnmount])) {
+      this[external.elementWillUnmount]()
     }
 
     // Clean up detached nodes and data.
     this[internal.domMap] = null
   }
 
-  get componentId() {
-    return this[internal.componentId]
+  /**
+   * Returns the internal element id.
+   */
+  get [external.elementIdProperty]() {
+    return this[internal.elementId]
   }
 
-  requestRender() {
+  /**
+   * Schedules a new render.
+   */
+  [external.requestRender]() {
     window.scheduleComponentUpdate(this[internal.renderDOM])
   }
 
-  validateType(property, value, type) {
-    if (type === undefined || typeof value === type) return
+  /**
+   * Validates a property's value.
+   * @param {string} propertyName
+   * @param {string} value
+   * @param {string} type
+   */
+  [external.validateType](propertyName, value, type) {
+    if (type === undefined || getTypeTag(value) === type) return
 
-    return console.warn(
-      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
+    console.warn(
+      `Property '${propertyName}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
         this.constructor.name
       }.`
     )
@@ -91,21 +111,27 @@ export class UpgradedElement extends HTMLElement {
 
   // Private
 
+  /**
+   * Do initial setup work, then upgrade.
+   */
   [internal.initialize]() {
     // Append scheduler to the window
     loadScheduler()
 
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
-    this[internal.firstRender] = true
+    this[internal.isFirstRender] = true
     this[internal.domMap] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
-    this[internal.componentId] = createUUID()
+    this[internal.elementId] = createUUID()
 
-    this.setAttribute("component-id", this.componentId)
+    this.setAttribute(external.elementIdAttribute, this[external.elementIdProperty])
     this[internal.performUpgrade]()
   }
 
+  /**
+   * Upgrade properties detected in the extender.
+   */
   [internal.performUpgrade]() {
     const { properties } = this.constructor
     if (isEmptyObject(properties)) return
@@ -115,12 +141,16 @@ export class UpgradedElement extends HTMLElement {
     })
   }
 
-  [internal.createProperty](property, data = {}) {
+  /**
+   * Upgrade a property based on its configuration. If accessors are detected in
+   * the extender, skip the upgrade.
+   */
+  [internal.createProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
     if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property)) return
 
     const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
-    const { default: defaultValue, type, reflected = false } = data
+    const { default: defaultValue, type, reflected = false } = configuration
 
     // Validate the property's default value type, if given
     // Initialize the private property
@@ -151,23 +181,26 @@ export class UpgradedElement extends HTMLElement {
           this[privateName] = value
           if (reflected) this.setAttribute(attribute, value)
 
-          if (isFunction(this.componentPropertyChanged)) {
-            this.componentPropertyChanged(property, oldValue, value)
+          if (isFunction(this[external.elementPropertyChanged])) {
+            this[external.elementPropertyChanged](property, oldValue, value)
           }
         } else {
           this[privateName] = undefined
           if (reflected) this.removeAttribute(attribute)
 
-          if (isFunction(this.componentPropertyChanged)) {
-            this.componentPropertyChanged(property, oldValue, null)
+          if (isFunction(this[external.elementPropertyChanged])) {
+            this[external.elementPropertyChanged](property, oldValue, null)
           }
         }
 
-        window.scheduleComponentUpdate(this[internal.renderDOM])
+        this[external.requestRender]()
       },
     })
   }
 
+  /**
+   * Retrieves the dom string from the extender.
+   */
   [internal.getDOMString]() {
     let domString
 
@@ -185,6 +218,9 @@ export class UpgradedElement extends HTMLElement {
     return domString.trim()
   }
 
+  /**
+   * Creates the style tag and appends styles as detected in the extender.
+   */
   [internal.renderStyles]() {
     if (!isString(this.constructor.styles)) return
 
@@ -195,26 +231,32 @@ export class UpgradedElement extends HTMLElement {
     this[internal.shadowRoot].appendChild(styleTag)
   }
 
+  /**
+   * Performs one of two paths:
+   *
+   * 1. First render. Renders the view to the shadow root. Triggers `elementDidMount`.
+   *
+   * 2. Not the first render. Creates a template DOM map and diffs the current dom against it.
+   *    Triggers `elementDidUpdate`.
+   */
   [internal.renderDOM]() {
-    if (!this[internal.firstRender]) {
+    if (this[internal.isFirstRender]) {
+      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
+
+      if (isFunction(this[external.elementDidMount])) {
+        this[external.elementDidMount]()
+      }
+
+      this[internal.isFirstRender] = false
+    } else {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
       templateMap = null
-    } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
-    }
 
-    // Apply update lifecycle, if it exists
-    if (!this[internal.firstRender] && isFunction(this.componentDidUpdate)) {
-      this.componentDidUpdate()
+      if (isFunction(this[external.elementDidUpdate])) {
+        this[external.elementDidUpdate]()
+      }
     }
-
-    // Apply mount lifecycle, if it exists
-    if (this[internal.firstRender] && isFunction(this.componentDidMount)) {
-      this.componentDidMount()
-    }
-
-    this[internal.firstRender] = false
   }
 }

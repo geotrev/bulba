@@ -1,9 +1,11 @@
+import { isFunction } from "./utilities"
+
 /**
  * Credit to David Baron for this zero-timeout scheduling solution
  * https://dbaron.org/log/20100309-faster-timeouts
  *
  * This is necessary because the renderer shouldn't block
- * other operations while updating.
+ * other operations before updating.
  */
 
 export const loadScheduler = () => {
@@ -12,24 +14,25 @@ export const loadScheduler = () => {
   const setTimeout = window.setTimeout
   const requestAnimationFrame = window.requestAnimationFrame
   const queue = []
+  const TIMEOUT_DELAY = 0
   const EVENT_TYPE = "message"
-  const UPDATED_COMPONENT_EVENT = "__UPDATED_COMPONENT_SCHEDULED__"
+  const MESSAGE_KEY = "__UPDATED_COMPONENT_SCHEDULED__"
 
   function scheduleUpdate(fn) {
     queue.push(fn)
-    window.postMessage(UPDATED_COMPONENT_EVENT, "*")
+    window.postMessage(MESSAGE_KEY, "*")
   }
 
   function handleMessageEvent(event) {
-    if (event.source == window && event.data == UPDATED_COMPONENT_EVENT) {
+    if (event.source == window && event.data == MESSAGE_KEY) {
       event.stopPropagation()
       if (queue.length > 0) {
         const fn = queue.shift()
 
-        if (typeof requestAnimationFrame === "function") {
+        if (isFunction(requestAnimationFrame)) {
           requestAnimationFrame(fn)
-        } else if (typeof setTimeout === "function") {
-          setTimeout(fn, 0)
+        } else if (isFunction(setTimeout)) {
+          setTimeout(fn, TIMEOUT_DELAY)
         } else {
           fn()
         }
