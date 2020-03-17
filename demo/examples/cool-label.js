@@ -24,12 +24,12 @@ export class CoolLabel extends UpgradedElement {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  componentDidMount() {
+  elementDidMount() {
     this.button = this.shadowRoot.querySelector("#update-btn")
     this.button.addEventListener("click", this.handleClick)
   }
 
-  componentWillUnmount() {
+  elementWillUnmount() {
     this.button.removeEventListener("click", this.hnadleClick)
   }
 
