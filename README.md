@@ -25,6 +25,9 @@ The package implements the same light-weight DOM mapping engine used in [reef](h
     - [Methods](#methods)
     - [Using Custom Element Lifecycle Callbacks](#using-custom-element-lifecycle-callbacks)
   - [Internal Methods and Hooks](#internal-methods-and-hooks)
+    - [requestRender](#requestRender)
+    - [elementId](#elementId)
+    - [validateType](#validateType)
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
 - 🔎 [Under the Hood](#under-the-hood)
@@ -238,6 +241,8 @@ get isOpen() {
 
 Worth noting is that setting your managed property via `properties` **won't do anything so long as you've declared your own accessors.**
 
+NOTE: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
+
 **Q:** "What if I want to re-integrate some of the upgrade logic?"
 
 **A:** You can do that too! Let's try that out...
@@ -352,7 +357,9 @@ You can access the id using the `element-id` attribute attached to any upgraded 
 
 #### `validateType(propertyName, value, type)`
 
-The internal method which compares your property type. If you have a managed property that is reflected to the host, it's possible that the attribute can be set from the outside too. You can use this to validate the computed result (e.g., `parseInt` on the value, if you expect the type to be a `"number"`).
+The internal method which compares your property type. Useful if you are doing computations or other manipulations involving a reflected property.
+
+**Use this method with caution for reflected properties.** You run the risk of an XSS attack. A future enhancement will provide a `sanitize` option which will encode the string to prevent this risk.
 
 ### DOM Events
 
