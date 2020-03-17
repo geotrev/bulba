@@ -1,4 +1,4 @@
-import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./dom"
+import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -7,17 +7,27 @@ import {
   isFunction,
   isUndefined,
   isSymbol,
+  getTypeTag,
 } from "./utilities"
 import { loadScheduler } from "./schedule"
 import * as internal from "./internal"
 import * as external from "./external"
 
+/**
+ * Adds custom element to the global registry.
+ * @param {string} tag
+ * @param {module} UpgradedInstance
+ */
 export const register = (tag, UpgradedInstance) => {
   if (!customElements.get(tag)) {
     customElements.define(tag, UpgradedInstance)
   }
 }
 
+/**
+ * @module UpgradedElement
+ * @extends HTMLElement
+ */
 export class UpgradedElement extends HTMLElement {
   constructor() {
     super()
@@ -30,13 +40,11 @@ export class UpgradedElement extends HTMLElement {
   static get observedAttributes() {
     let attributes = []
 
-    if (isEmptyObject(this.properties)) {
-      return attributes
+    if (!isEmptyObject(this.properties)) {
+      Object.keys(this.properties).forEach(property => {
+        if (this.properties[property].reflected) attributes.push(toKebabCase(property))
+      })
     }
-
-    Object.keys(this.properties).forEach(property => {
-      if (this.properties[property].reflected) attributes.push(toKebabCase(property))
-    })
 
     return attributes
   }
@@ -71,19 +79,31 @@ export class UpgradedElement extends HTMLElement {
     this[internal.domMap] = null
   }
 
+  /**
+   * Returns the internal element id.
+   */
   get [external.elementIdProperty]() {
     return this[internal.elementId]
   }
 
-  requestRender() {
+  /**
+   * Schedules a new render.
+   */
+  [external.requestRender]() {
     window.scheduleComponentUpdate(this[internal.renderDOM])
   }
 
-  validateType(property, value, type) {
-    if (type === undefined || typeof value === type) return
+  /**
+   * Validates a property's value.
+   * @param {string} propertyName
+   * @param {string} value
+   * @param {string} type
+   */
+  [external.validateType](propertyName, value, type) {
+    if (type === undefined || getTypeTag(value) === type) return
 
     return console.warn(
-      `Property '${property}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
+      `Property '${propertyName}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
         this.constructor.name
       }.`
     )

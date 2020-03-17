@@ -327,7 +327,7 @@ This is an internal accessor that returns a unique identifier. E.g., `252u296xs5
 
 You can access the id using the `element-id` attribute attached to any upgraded element.
 
-#### `validateType(value)`
+#### `validateType(propertyName, value, type)`
 
 The internal method which compares your property type. If you have a managed property that is reflected to the host, it's possible that the attribute can be set from the outside too. You can use this to validate the computed result (e.g., `parseInt` on the value, if you expect the type to be a `"number"`).
 

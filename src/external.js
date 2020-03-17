@@ -1,6 +1,8 @@
 // Properties
 
 export const elementIdProperty = "elementId"
+export const requestRender = "requestRender"
+export const validateType = "validateType"
 
 // Attributes
 
