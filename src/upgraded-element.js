@@ -66,7 +66,7 @@ export class UpgradedElement extends HTMLElement {
       }
 
       this[internal.renderStyles]()
-      window.scheduleComponentUpdate(this[internal.renderDOM])
+      this[external.requestRender]()
     }
   }
 
@@ -102,7 +102,7 @@ export class UpgradedElement extends HTMLElement {
   [external.validateType](propertyName, value, type) {
     if (type === undefined || getTypeTag(value) === type) return
 
-    return console.warn(
+    console.warn(
       `Property '${propertyName}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
         this.constructor.name
       }.`
@@ -111,6 +111,9 @@ export class UpgradedElement extends HTMLElement {
 
   // Private
 
+  /**
+   * Do initial setup work, then upgrade.
+   */
   [internal.initialize]() {
     // Append scheduler to the window
     loadScheduler()
@@ -126,6 +129,9 @@ export class UpgradedElement extends HTMLElement {
     this[internal.performUpgrade]()
   }
 
+  /**
+   * Upgrade properties detected in the extender.
+   */
   [internal.performUpgrade]() {
     const { properties } = this.constructor
     if (isEmptyObject(properties)) return
@@ -135,12 +141,16 @@ export class UpgradedElement extends HTMLElement {
     })
   }
 
-  [internal.createProperty](property, data = {}) {
+  /**
+   * Upgrade a property based on its configuration. If accessors are detected in
+   * the extender, skip the upgrade.
+   */
+  [internal.createProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
     if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property)) return
 
     const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
-    const { default: defaultValue, type, reflected = false } = data
+    const { default: defaultValue, type, reflected = false } = configuration
 
     // Validate the property's default value type, if given
     // Initialize the private property
@@ -183,11 +193,14 @@ export class UpgradedElement extends HTMLElement {
           }
         }
 
-        window.scheduleComponentUpdate(this[internal.renderDOM])
+        this[external.requestRender]()
       },
     })
   }
 
+  /**
+   * Retrieves the dom string from the extender.
+   */
   [internal.getDOMString]() {
     let domString
 
@@ -205,6 +218,9 @@ export class UpgradedElement extends HTMLElement {
     return domString.trim()
   }
 
+  /**
+   * Creates the style tag and appends styles as detected in the extender.
+   */
   [internal.renderStyles]() {
     if (!isString(this.constructor.styles)) return
 
@@ -215,26 +231,32 @@ export class UpgradedElement extends HTMLElement {
     this[internal.shadowRoot].appendChild(styleTag)
   }
 
+  /**
+   * Performs one of two paths:
+   *
+   * 1. First render. Renders the view to the shadow root. Triggers `elementDidMount`.
+   *
+   * 2. Not the first render. Creates a template DOM map and diffs the current dom against it.
+   *    Triggers `elementDidUpdate`.
+   */
   [internal.renderDOM]() {
-    if (!this[internal.isFirstRender]) {
+    if (this[internal.isFirstRender]) {
+      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
+
+      if (isFunction(this[external.elementDidMount])) {
+        this[external.elementDidMount]()
+      }
+
+      this[internal.isFirstRender] = false
+    } else {
       let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
       diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
       templateMap = null
-    } else {
-      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
-    }
 
-    // Apply update lifecycle, if it exists
-    if (!this[internal.isFirstRender] && isFunction(this[external.elementDidUpdate])) {
-      this[external.elementDidUpdate]()
+      if (isFunction(this[external.elementDidUpdate])) {
+        this[external.elementDidUpdate]()
+      }
     }
-
-    // Apply mount lifecycle, if it exists
-    if (this[internal.isFirstRender] && isFunction(this[external.elementDidMount])) {
-      this[external.elementDidMount]()
-    }
-
-    this[internal.isFirstRender] = false
   }
 }

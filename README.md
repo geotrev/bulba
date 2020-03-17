@@ -2,7 +2,7 @@
 
 `UpgradedElement` is a base class bringing modern component authoring features to custom elements with no dependencies.
 
-It extends `HTMLElement` to give you [native component callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), but with the added benefits of:
+It extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), but with the added benefits of:
 
 1. Encapsulated styles/HTML in a shadow root
 2. State management via [upgraded properties](#properties)
@@ -39,7 +39,7 @@ Creating a new element is easy. Once you've [installed](#install) the package, e
 ```js
 // fancy-header.js
 
-import { UpgradedElement, register } from "./upgraded-element" // include `.js` for native modules
+import { UpgradedElement, register } from "upgraded-element" // using node module
 
 class FancyHeader extends UpgradedElement {
   static get styles() {
@@ -184,8 +184,8 @@ Configuration is optional. Simply setting the property configuration to an empty
 
 Here are the properties accepted in the configuration object:
 
-- **default** (`string` or `function`): Can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, or the HTML element itself. Useful for computing from attributes or other methods on your element constructor (accessed with `this.constructor`).
-- **type** (`string`): If given, compares with the [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) evaluation of the value. Default values are checked, too.
+- **default** (`string` or `function`): The default value for the property. It can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, aka the HTML element itself.
+- **type** (`string`): Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD.
 - **reflected** (`boolean`): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
 
 #### Updating a Property
@@ -194,8 +194,8 @@ A property in `UpgradedElement` is like any instance property on a JavaScript cl
 
 Every time an upgraded property changes it will trigger the following steps (in order):
 
-1. `elementAttributeChanged` lifecycle (if reflected; see [configuration options](#configuration-options) below)
-2. `elementPropertyChanged` lifecycle
+1. `elementAttributeChanged`, if reflected
+2. `elementPropertyChanged`
 3. Re-render to reflect the new property / attribute changes into the shadow root.
 
 See [lifecycle](#lifecycle) methods below.
@@ -227,8 +227,6 @@ set isOpen(value) {
   // No reason to update if the new value is already the current value
   if (!value || value === this.isOpen) return
 
-  this.validateType(value)
-
   const oldValue = this.isOpen
   this._isOpen = value
 }
@@ -240,9 +238,9 @@ get isOpen() {
 
 Worth noting is that setting your managed property via `properties` **won't do anything so long as you've declared your own accessors.**
 
-**Q:** "What if I want to hook into the lifecycle hooks?"
+**Q:** "What if I want to re-integrate some of the upgrade logic?"
 
-**A:** You can do that too. Tap into internal methods to re-create some or all of the logic included in an upgraded property.
+**A:** You can do that too! Let's try that out...
 
 Using the previous example of `isOpen`, we'll add the following to the end of the setter:
 
@@ -251,6 +249,28 @@ this.setAttribute("card-heading-text", value)
 this.elementPropertyChanged("isOpen", oldValue, value)
 this.requestRender()
 ```
+
+You can also add a type check just before the internal property is set.
+
+All together, those changes would look like this:
+
+```js
+set isOpen(value) {
+  // No reason to update if the new value is already the current value
+  if (!value || value === this.isOpen) return
+
+  this.validateType("isOpen", value, "boolean")
+
+  const oldValue = this.isOpen
+  this._isOpen = value
+
+  this.setAttribute("card-heading-text", value)
+  this.elementPropertyChanged("isOpen", oldValue, value)
+  this.requestRender()
+}
+```
+
+With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but your own prescriptions.
 
 Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `elementDidUpdate`.
 
@@ -276,7 +296,7 @@ The purpose of these is to add more developer fidelity to the existing callbacks
 
 **Q:** "Why does `UpgradedElement` use lifecycle methods which seemingly duplicate the existing native callbacks?"
 
-**A:** The primary purpose, as mentioned above, is adding more fidelity to the element render/update lifecycle in general. Another reason is for naming consistency and familiarity. As a developer who uses React extensively, I love the API and thought it made sense to mimic (in no subtle terms) the patterns established by the library authors.
+**A:** The primary purpose, as mentioned above, is adding more fidelity to the element render/update lifecycle in general. Another reason is for naming consistency. I borrowed similar naming conventions from React as they are already established and focus around state, similar to what `UpgradedComponent` does.
 
 #### Using Custom Element Lifecycle Callbacks
 
@@ -289,7 +309,7 @@ Here's a quick reference for which lifecycle methods are dependent on the native
   - Calls `elementDidMount`
 - 🏳 `attributeChangedCallback`: `super` optional
   - Calls `elementAttributeChanged`
-- 🏳 `adoptedCallback`
+- 🏳 `adoptedCallback` `super` recommended for future support
   - TBD, no methods called
 - 🚨 `disconnectedCallback`: **`super` required**
   - Calls `elementWillUnmount`
