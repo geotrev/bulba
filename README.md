@@ -1,6 +1,6 @@
 # \<upgraded-element\>
 
-`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements.
+`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped.
 
 What you get:
 
@@ -10,7 +10,7 @@ What you get:
 
 The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
 
-The package implements the same light-weight DOM mapping engine used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
+The package uses the same light-weight DOM mapping implementation used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 **Table of Contents**
 
