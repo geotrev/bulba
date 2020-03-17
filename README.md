@@ -1,12 +1,14 @@
 # \<upgraded-element\>
 
-`UpgradedElement` is a base class bringing modern component authoring features to custom elements with no dependencies.
+`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements.
 
-It extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), but with the added benefits of:
+What you get:
 
 1. Encapsulated styles/HTML in a shadow root
 2. State management via [upgraded properties](#properties)
 3. Predictable lifecycle methods
+
+The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
 
 The package implements the same light-weight DOM mapping engine used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
@@ -27,7 +29,7 @@ The package implements the same light-weight DOM mapping engine used in [reef](h
   - [Internal Methods and Hooks](#internal-methods-and-hooks)
     - [requestRender](#requestRender)
     - [elementId](#elementId)
-    - [validateType](#validateType)
+    - [validateType](#validatetypepropertyname-value-type)
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
 - 🔎 [Under the Hood](#under-the-hood)
