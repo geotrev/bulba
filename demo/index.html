@@ -9,12 +9,17 @@
   </head>
   <body style="max-width: 800px">
     <simple-header>Just chillin at the top of the page</simple-header>
+    <hr />
     <cool-label first-name="Silver" description="This is my favorite group of people."></cool-label>
+    <hr />
     <lifecycle-printer first-name="Amy" description="Testing lifecycles..."></lifecycle-printer>
-    <custom-accessor-button></custom-accessor-button>
-
     <br />
     <button class="delete-btn">Remove element ^</button>
+    <hr />
+    <custom-accessor-button></custom-accessor-button>
+    <hr />
+    <nested-element><p>Twice removed, nested slot content.</p></nested-element>
+
     <script src="bundle.js"></script>
     <!-- Test cleanup: -->
     <script>

@@ -100,12 +100,11 @@ export class UpgradedElement extends HTMLElement {
    * @param {string} type
    */
   [external.validateType](propertyName, value, type) {
-    if (type === undefined || getTypeTag(value) === type) return
+    const evaluatedType = getTypeTag(value)
+    if (type === undefined || evaluatedType === type) return
 
     console.warn(
-      `Property '${propertyName}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
-        this.constructor.name
-      }.`
+      `Property '${propertyName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
   }
 
