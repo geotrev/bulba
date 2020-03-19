@@ -2,7 +2,12 @@ import { UpgradedElement, register } from "../../src/upgraded-element"
 
 class SimpleHeader extends UpgradedElement {
   static get styles() {
-    return "::slotted(*) { font-weight: normal; font-family: sans-serif; }"
+    return `
+      ::slotted(*) { 
+        font-weight: normal;
+        font-family: sans-serif;
+      }
+    `
   }
 
   render() {

@@ -40,7 +40,7 @@ class CustomAccessorButton extends UpgradedElement {
   render() {
     return `
       <p>Pressing this won't do anything:</p>
-      <button>This is: <span id='text'>${this.text || "(uh oh, no text)"}</span></button>
+      <button>This is:&nbsp;<span id='text'>${this.text || "(uh oh, no text)"}</span></button>
     `
   }
 }
