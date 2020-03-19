@@ -1,4 +1,4 @@
-import { createDOMMap, diffDOM, stringToHTML, renderMapToDOM } from "./reef-dom"
+import { createDOMMap, diffDOM, stringToHTML, renderToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -100,12 +100,11 @@ export class UpgradedElement extends HTMLElement {
    * @param {string} type
    */
   [external.validateType](propertyName, value, type) {
-    if (type === undefined || getTypeTag(value) === type) return
+    const evaluatedType = getTypeTag(value)
+    if (type === undefined || evaluatedType === type) return
 
     console.warn(
-      `Property '${propertyName}' is invalid type of '${typeof value}'. Expected '${type}'. Check ${
-        this.constructor.name
-      }.`
+      `Property '${propertyName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
   }
 
@@ -169,6 +168,15 @@ export class UpgradedElement extends HTMLElement {
       get() {
         return this[privateName]
       },
+
+      /**
+       * Set a new value:
+       * - If the value is the same as before, exit early
+       * - Validate the type if requested.
+       * - If reflected, call setAttribute
+       * - If elementPropertyChanged is defined, call it
+       * - Request a new render.
+       */
       set(value) {
         // Don't set if the value is the same to prevent unnecessary re-renders.
         if (value === this[privateName]) return
@@ -232,31 +240,39 @@ export class UpgradedElement extends HTMLElement {
   }
 
   /**
-   * Performs one of two paths:
-   *
-   * 1. First render. Renders the view to the shadow root. Triggers `elementDidMount`.
-   *
-   * 2. Not the first render. Creates a template DOM map and diffs the current dom against it.
-   *    Triggers `elementDidUpdate`.
+   * Runs either a new render or diffs the existing virtual DOM to a new one.
    */
   [internal.renderDOM]() {
+    /**
+     * First render:
+     *
+     * Creates a virtual DOM from the extending `render` and patches
+     * it into the shadow root. Triggers `elementDidMount` if defined.
+     */
     if (this[internal.isFirstRender]) {
       this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      renderMapToDOM(this[internal.domMap], this[internal.shadowRoot])
+      renderToDOM(this[internal.domMap], this[internal.shadowRoot])
 
       if (isFunction(this[external.elementDidMount])) {
         this[external.elementDidMount]()
       }
 
       this[internal.isFirstRender] = false
-    } else {
-      let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
-      templateMap = null
 
-      if (isFunction(this[external.elementDidUpdate])) {
-        this[external.elementDidUpdate]()
-      }
+      return
+    }
+
+    /**
+     * All subsequent renders:
+     *
+     * Create a new virtual DOM and diff it against the existing virtual DOM.
+     */
+    let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+    diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
+    templateMap = null
+
+    if (isFunction(this[external.elementDidUpdate])) {
+      this[external.elementDidUpdate]()
     }
   }
 }

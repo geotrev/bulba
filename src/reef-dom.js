@@ -1,6 +1,6 @@
 /**
  * Credit for this approach goes to Chris Ferdinandi.
- * Minor changes added here and there.
+ * Minor changes added here and there to support ES6 + modularization.
  * https://github.com/cferdinandi/reef
  */
 
@@ -14,12 +14,6 @@ const dynamicAttributes = [
   "selected",
   "value",
 ]
-
-export const stringToHTML = domString => {
-  const parser = new DOMParser()
-  const context = parser.parseFromString(domString, "text/html")
-  return context.body
-}
 
 const getAttribute = (name, value) => {
   return {
@@ -53,20 +47,6 @@ const getAttributes = node => {
   getDynamicAttributes(node, attributes)
 
   return attributes
-}
-
-export const createDOMMap = (element, isSVG) => {
-  return Array.prototype.map.call(element.childNodes, node => {
-    const type =
-      node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getAttributes(node) : []
-    const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
-    const details = { node, content, attributes, type }
-
-    details.isSVG = isSVG || details.type === "svg"
-    details.children = createDOMMap(node, details.isSVG)
-    return details
-  })
 }
 
 const getStyleMap = styles => {
@@ -187,6 +167,7 @@ const diffAttributes = (template, existing) => {
     return newAttributes === null || newAttributes.value !== attribute.value
   })
 
+  // Run the diff
   addAttributes(existing.node, changedAttributes)
   removeAttributes(existing.node, removedAttributes)
 }
@@ -194,7 +175,7 @@ const diffAttributes = (template, existing) => {
 // Starting at the top level, recursively iterate through the new map
 // and update changes to the current one if there are differences.
 
-const syncTemplateToMap = (templateMap, domMap, element) => (node, index) => {
+const syncNodes = (templateMap, domMap, element) => (node, index) => {
   const existingChildNode = domMap[index]
   const templateChildNode = templateMap[index]
 
@@ -238,6 +219,10 @@ const syncTemplateToMap = (templateMap, domMap, element) => (node, index) => {
   }
 }
 
+/**
+ * Export utilities
+ */
+
 export const diffDOM = (templateMap, domMap, element) => {
   // Remove missing children from map
   let delta = domMap.length - templateMap.length
@@ -248,10 +233,42 @@ export const diffDOM = (templateMap, domMap, element) => {
     }
   }
 
-  // Diff it
-  templateMap.forEach(syncTemplateToMap(templateMap, domMap, element))
+  // Run the diff
+  templateMap.forEach(syncNodes(templateMap, domMap, element))
 }
 
-export const renderMapToDOM = (templateMap, root) => {
+export const renderToDOM = (templateMap, root) => {
   templateMap.forEach(element => root.appendChild(element.node))
+}
+
+export const stringToHTML = stringToRender => {
+  /**
+   * Remove all extraneous whitespace.
+   *
+   * - From the beginning + end of the document fragment
+   * - If there's more than one space before a left tag bracket, replace them with one
+   * - If there's more than one space before a right tag bracket, replace them with one
+   */
+  const processedDOMString = stringToRender
+    .trim()
+    .replace(/\s+</g, "<")
+    .replace(/>\s+/g, ">")
+
+  const parser = new DOMParser()
+  const context = parser.parseFromString(processedDOMString, "text/html")
+  return context.body
+}
+
+export const createDOMMap = (element, isSVG) => {
+  return Array.prototype.map.call(element.childNodes, node => {
+    const type =
+      node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
+    const attributes = node.nodeType === 1 ? getAttributes(node) : []
+    const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
+    const details = { node, content, attributes, type }
+
+    details.isSVG = isSVG || details.type === "svg"
+    details.children = createDOMMap(node, details.isSVG)
+    return details
+  })
 }

@@ -41,6 +41,7 @@ export class CoolLabel extends UpgradedElement {
       <p class="compliments" data-select="${this.firstName}">You're awesome, ${this.firstName}!</p>
       <p>${this.getAttribute("description")}</p>
       <button id="update-btn">Change Name</button>
+      <slot></slot>
     `
   }
 
