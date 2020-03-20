@@ -241,19 +241,22 @@ get isOpen() {
 }
 ```
 
-Worth noting is that setting your managed property via `properties` **won't do anything so long as you've declared your own accessors.**
+Tip 1:Adding a managed property into the `properties` object **won't do anything so long as you've declared your own accessors.**
 
-NOTE: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
+Tip 2: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
 
-**Q:** "What if I want to re-integrate some of the upgrade logic?"
-
-**A:** You can do that too! Let's try that out...
+Tip 3: You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
 
 Using the previous example of `isOpen`, we'll add the following to the end of the setter:
 
 ```js
+// Reflecr
 this.setAttribute("card-heading-text", value)
+
+// Trigger lifecycle
 this.elementPropertyChanged("isOpen", oldValue, value)
+
+// Render the updated values to the shadow root
 this.requestRender()
 ```
 
@@ -264,7 +267,7 @@ All together, those changes would look like this:
 ```js
 set isOpen(value) {
   // No reason to update if the new value is already the current value
-  if (!value || value === this.isOpen) return
+  if (value === this.isOpen) return
 
   this.validateType("isOpen", value, "boolean")
 
@@ -277,7 +280,7 @@ set isOpen(value) {
 }
 ```
 
-With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but your own prescriptions.
+With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but with your own prescriptions.
 
 Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `elementDidUpdate`.
 
@@ -285,7 +288,7 @@ Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#int
 
 As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [built-in callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-custom-element-lifecycle-callbacks) to using the native callbacks, though.
 
-The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle.
+The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render lifecycle.
 
 #### Methods
 
