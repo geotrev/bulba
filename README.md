@@ -436,11 +436,11 @@ Here is the thinking behind decisions and technical direction.
 
 ### Goals
 
-- **Intuitive API.** Provide an easy way to create an encapsulated styles and view in a shadow root. Enable internal state using familiar patterns (class properties).
+- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful methods at all stages of an element's lifecycle.
 
-- **No hidden expectations.** In the vanilla custom element API, `connectedCallback` may be triggered when an element is disconnected. Unexpected behavior like this is guarded against so expectations are straightforward. All contracts should have guarantees and stability.
+- **Consistent expectations.** Unexpected behavior, like `connectedCallback` being triggered when the element is disconnected, are guarded against so contracts are guaranteed. Escape hatches are provided for advanced control.
 
-- **No magic.** Everything you write is with existing technologies in the browser. Features that change existing behavior, like upgraded properties, are meant to improve bootstrapping, and should be easily customizable.
+- **No magic.** Code that's required to use `UpgradedElement` is with existing technologies in the browser. Custom features are transparent with necessary documentation.
 
 ## Contribute
 
