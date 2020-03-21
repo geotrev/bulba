@@ -35,6 +35,7 @@ The package uses the same light-weight DOM mapping implementation used in [reef]
 - 🔎 [Under the Hood](#under-the-hood)
   - [Technical Design](#technical-design)
   - [Rendering](#rendering)
+- 🏆 [Principles & Goals](#principles-goals)
 - 🤝 [Contribute](#contribute)
 
 ## Getting Started
@@ -423,19 +424,23 @@ module.exports = {
 
 A few quick points on the design of `UpgradedElement`:
 
-### Technical Design
-
-The goal of `UpgradedElement` is not to add special features. Rather, it's goal is to enable you to use custom elements with the tools that already exist in the browser. In other words, the whole package is vanilla JavaScript. Extras such as decorators, typescript support, and the like, could be future plugins.
-
 ### Rendering
 
-1. **DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef). The main reasoning here is to reduce package size and make rendering cheap and fast.
+1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef) with some optimizations specific to shadow DOM concerns. The main reasoning here is to reduce package size and make rendering cheap and fast.
 
-2. **Scheduling:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
+2. **Performance:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
 
-### TODOS
+## Princples & Goals
 
-- [ ] **Batch property changes into a single render.** Unfortunately, every single property change triggers a re-render. This isn't _horrible_ right now since re-renders are decently cheap, but it would improve performance in more complex cases.
+Here is the thinking behind decisions and technical direction.
+
+### Goals
+
+- **Intuitive API.** Provide an easy way to create an encapsulated styles and view in a shadow root. Enable internal state using familiar patterns (class properties).
+
+- **No hidden expectations.** In the vanilla custom element API, `connectedCallback` may be triggered when an element is disconnected. Unexpected behavior like this is guarded against so expectations are straightforward. All contracts should have guarantees and stability.
+
+- **No magic.** Everything you write is with existing technologies in the browser. Features that change existing behavior, like upgraded properties, are meant to improve bootstrapping, and should be easily customizable.
 
 ## Contribute
 
