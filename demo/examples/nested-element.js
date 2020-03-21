@@ -14,6 +14,22 @@ class NestedElement extends UpgradedElement {
     `
   }
 
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  elementDidMount() {
+    this.label = this.shadowRoot.querySelector("cool-label")
+    this.label.addEventListener("click", this.handleClick)
+  }
+
+  handleClick() {
+    // Why doesn't this get the right DOM state, even though `cool-label`
+    // has already been updated?
+    this.requestRender()
+  }
+
   render() {
     return `
       <p>This one is nested:</p>
