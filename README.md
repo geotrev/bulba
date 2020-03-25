@@ -5,12 +5,11 @@
 What you get:
 
 1. Encapsulated styles/HTML in a shadow root
-2. State management via [upgraded properties](#properties)
-3. Predictable lifecycle methods
+2. Dynamic DOM updates using the dom diffing technique found in [reefjs](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi); render times are lightning fast!
+3. State management via [upgraded properties](#properties)
+4. Predictable and familiar lifecycle methods
 
 The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
-
-The package uses the same light-weight DOM mapping implementation used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 **Table of Contents**
 
