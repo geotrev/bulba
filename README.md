@@ -230,8 +230,7 @@ constructor() {
 
 set isOpen(value) {
   // No reason to update if the new value is already the current value
-  if (!value || value === this.isOpen) return
-
+  if (value === this.isOpen) return
   const oldValue = this.isOpen
   this._isOpen = value
 }
