@@ -5,12 +5,11 @@
 What you get:
 
 1. Encapsulated styles/HTML in a shadow root
-2. State management via [upgraded properties](#properties)
-3. Predictable lifecycle methods
+2. Dynamic DOM updates using the dom diffing technique found in [reefjs](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi); render times are lightning fast!
+3. State management via [upgraded properties](#properties)
+4. Predictable and familiar lifecycle methods
 
 The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
-
-The package uses the same light-weight DOM mapping implementation used in [reef](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi). The result is dynamic DOM updates and lightning fast render times (under a millisecond)! ⚡⚡⚡
 
 **Table of Contents**
 
@@ -35,6 +34,7 @@ The package uses the same light-weight DOM mapping implementation used in [reef]
 - 🔎 [Under the Hood](#under-the-hood)
   - [Technical Design](#technical-design)
   - [Rendering](#rendering)
+- 🏆 [Principles & Goals](#principles-goals)
 - 🤝 [Contribute](#contribute)
 
 ## Getting Started
@@ -230,8 +230,7 @@ constructor() {
 
 set isOpen(value) {
   // No reason to update if the new value is already the current value
-  if (!value || value === this.isOpen) return
-
+  if (value === this.isOpen) return
   const oldValue = this.isOpen
   this._isOpen = value
 }
@@ -241,19 +240,22 @@ get isOpen() {
 }
 ```
 
-Worth noting is that setting your managed property via `properties` **won't do anything so long as you've declared your own accessors.**
+Tip 1:Adding a managed property into the `properties` object **won't do anything so long as you've declared your own accessors.**
 
-NOTE: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
+Tip 2: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
 
-**Q:** "What if I want to re-integrate some of the upgrade logic?"
-
-**A:** You can do that too! Let's try that out...
+Tip 3: You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
 
 Using the previous example of `isOpen`, we'll add the following to the end of the setter:
 
 ```js
+// Reflecr
 this.setAttribute("card-heading-text", value)
+
+// Trigger lifecycle
 this.elementPropertyChanged("isOpen", oldValue, value)
+
+// Render the updated values to the shadow root
 this.requestRender()
 ```
 
@@ -264,7 +266,7 @@ All together, those changes would look like this:
 ```js
 set isOpen(value) {
   // No reason to update if the new value is already the current value
-  if (!value || value === this.isOpen) return
+  if (value === this.isOpen) return
 
   this.validateType("isOpen", value, "boolean")
 
@@ -277,7 +279,7 @@ set isOpen(value) {
 }
 ```
 
-With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but your own prescriptions.
+With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but with your own prescriptions.
 
 Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `elementDidUpdate`.
 
@@ -285,7 +287,7 @@ Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#int
 
 As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [built-in callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-custom-element-lifecycle-callbacks) to using the native callbacks, though.
 
-The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render/update lifecycle.
+The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render lifecycle.
 
 #### Methods
 
@@ -420,19 +422,23 @@ module.exports = {
 
 A few quick points on the design of `UpgradedElement`:
 
-### Technical Design
-
-The goal of `UpgradedElement` is not to add special features. Rather, it's goal is to enable you to use custom elements with the tools that already exist in the browser. In other words, the whole package is vanilla JavaScript. Extras such as decorators, typescript support, and the like, could be future plugins.
-
 ### Rendering
 
-1. **DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef). The main reasoning here is to reduce package size and make rendering cheap and fast.
+1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef) with some optimizations specific to shadow DOM concerns. The main reasoning here is to reduce package size and make rendering cheap and fast.
 
-2. **Scheduling:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
+2. **Performance:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
 
-### TODOS
+## Princples & Goals
 
-- [ ] **Batch property changes into a single render.** Unfortunately, every single property change triggers a re-render. This isn't _horrible_ right now since re-renders are decently cheap, but it would improve performance in more complex cases.
+Here is the thinking behind decisions and technical direction.
+
+### Goals
+
+- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful methods at all stages of an element's lifecycle.
+
+- **Consistent expectations.** Unexpected behavior, like `connectedCallback` being triggered when the element is disconnected, are guarded against so contracts are guaranteed. Escape hatches are provided for advanced control.
+
+- **No magic.** Code that's required to use `UpgradedElement` is with existing technologies in the browser. Custom features are transparent with necessary documentation.
 
 ## Contribute
 

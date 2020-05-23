@@ -14,7 +14,7 @@ export const loadScheduler = () => {
   const setTimeout = window.setTimeout
   const requestAnimationFrame = window.requestAnimationFrame
   const queue = []
-  const TIMEOUT_DELAY = 0
+  const DELAY = 0
   const EVENT_TYPE = "message"
   const MESSAGE_KEY = "__UPDATED_COMPONENT_SCHEDULED__"
 
@@ -32,7 +32,7 @@ export const loadScheduler = () => {
         if (isFunction(requestAnimationFrame)) {
           requestAnimationFrame(fn)
         } else if (isFunction(setTimeout)) {
-          setTimeout(fn, TIMEOUT_DELAY)
+          setTimeout(fn, DELAY)
         } else {
           fn()
         }
