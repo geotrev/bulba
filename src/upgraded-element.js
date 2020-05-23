@@ -240,33 +240,28 @@ export class UpgradedElement extends HTMLElement {
   }
 
   /**
-   * Runs either a new render or diffs the existing virtual DOM to a new one.
+   * First render:
+   *
+   * Creates a virtual DOM from the extending `render` and patches
+   * it into the shadow root. Triggers `elementDidMount` if defined.
    */
-  [internal.renderDOM]() {
-    /**
-     * First render:
-     *
-     * Creates a virtual DOM from the extending `render` and patches
-     * it into the shadow root. Triggers `elementDidMount` if defined.
-     */
-    if (this[internal.isFirstRender]) {
-      this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
-      renderToDOM(this[internal.domMap], this[internal.shadowRoot])
+  [internal.getInitialRenderState]() {
+    this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+    renderToDOM(this[internal.domMap], this[internal.shadowRoot])
 
-      if (isFunction(this[external.elementDidMount])) {
-        this[external.elementDidMount]()
-      }
-
-      this[internal.isFirstRender] = false
-
-      return
+    if (isFunction(this[external.elementDidMount])) {
+      this[external.elementDidMount]()
     }
 
-    /**
-     * All subsequent renders:
-     *
-     * Create a new virtual DOM and diff it against the existing virtual DOM.
-     */
+    this[internal.isFirstRender] = false
+  }
+
+  /**
+   * All subsequent renders:
+   *
+   * Create a new virtual DOM and diff it against the existing virtual DOM.
+   */
+  [internal.getNextRenderState]() {
     let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
     diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
     templateMap = null
@@ -274,5 +269,16 @@ export class UpgradedElement extends HTMLElement {
     if (isFunction(this[external.elementDidUpdate])) {
       this[external.elementDidUpdate]()
     }
+  }
+
+  /**
+   * Runs either a new render or diffs the existing virtual DOM to a new one.
+   */
+  [internal.renderDOM]() {
+    if (this[internal.isFirstRender]) {
+      return this[internal.getInitialRenderState]()
+    }
+
+    this[internal.getNextRenderState]()
   }
 }
