@@ -1,4 +1,4 @@
-import { createDOMMap, diffDOM, stringToHTML, renderToDOM } from "./reef-dom"
+import { createDOMMap, stringToHTML, diffDOM, renderToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -218,12 +218,13 @@ export class UpgradedElement extends HTMLElement {
       throw new Error(`You must include a render method in component: ${this.constructor.name}`)
     }
 
-    if (!isString(domString))
+    if (!isString(domString)) {
       throw new Error(
         `You attempted to render a non-string template in component: ${this.constructor.name}.`
       )
+    }
 
-    return domString.trim()
+    return domString
   }
 
   /**
