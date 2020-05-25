@@ -53,9 +53,9 @@ export class UpgradedElement extends HTMLElement {
   // Consumers will need to call super() to remain compatible, in the mean time.
   adoptedCallback() {}
 
-  attributeChangedCallback(attribute, oldValue, newValue) {
+  attributeChangedCallback(name, oldValue, newValue) {
     if (isFunction(this[external.elementAttributeChanged]) && oldValue !== newValue) {
-      this[external.elementAttributeChanged](attribute, oldValue, newValue)
+      this[external.elementAttributeChanged](name, oldValue, newValue)
     }
   }
 
@@ -95,16 +95,16 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Validates a property's value.
-   * @param {string} propertyName
+   * @param {string} property
    * @param {string} value
    * @param {string} type
    */
-  [external.validateType](propertyName, value, type) {
+  [external.validateType](property, value, type) {
     const evaluatedType = getTypeTag(value)
     if (type === undefined || evaluatedType === type) return
 
     console.warn(
-      `Property '${propertyName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
+      `Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
   }
 
@@ -136,7 +136,7 @@ export class UpgradedElement extends HTMLElement {
     if (isEmptyObject(properties)) return
 
     Object.keys(properties).forEach(property => {
-      this[internal.createProperty](property, properties[property])
+      this[internal.upgradeProperty](property, properties[property])
     })
   }
 
@@ -144,7 +144,7 @@ export class UpgradedElement extends HTMLElement {
    * Upgrade a property based on its configuration. If accessors are detected in
    * the extender, skip the upgrade.
    */
-  [internal.createProperty](property, configuration = {}) {
+  [internal.upgradeProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
     if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property)) return
 
@@ -171,10 +171,10 @@ export class UpgradedElement extends HTMLElement {
 
       /**
        * Set a new value:
-       * - If the value is the same as before, exit early
-       * - Validate the type if requested.
-       * - If reflected, call setAttribute
+       * - If the value is the same as before, exit
+       * - Validate the type
        * - If elementPropertyChanged is defined, call it
+       * - If reflected, call setAttribute
        * - Request a new render.
        */
       set(value) {
@@ -184,23 +184,23 @@ export class UpgradedElement extends HTMLElement {
 
         const attribute = toKebabCase(property)
         const oldValue = this[privateName]
+        const hasPropertyChangedLifecycle = isFunction(this[external.elementPropertyChanged])
 
         if (value) {
           this[privateName] = value
-          if (reflected) this.setAttribute(attribute, value)
 
-          if (isFunction(this[external.elementPropertyChanged])) {
+          if (hasPropertyChangedLifecycle) {
             this[external.elementPropertyChanged](property, oldValue, value)
           }
         } else {
           this[privateName] = undefined
-          if (reflected) this.removeAttribute(attribute)
 
-          if (isFunction(this[external.elementPropertyChanged])) {
+          if (hasPropertyChangedLifecycle) {
             this[external.elementPropertyChanged](property, oldValue, null)
           }
         }
 
+        if (reflected) this.removeAttribute(attribute)
         this[external.requestRender]()
       },
     })
@@ -227,6 +227,10 @@ export class UpgradedElement extends HTMLElement {
     return domString
   }
 
+  [internal.getDOMMap]() {
+    return createDOMMap(stringToHTML(this[internal.getDOMString]()))
+  }
+
   /**
    * Creates the style tag and appends styles as detected in the extender.
    */
@@ -243,11 +247,11 @@ export class UpgradedElement extends HTMLElement {
   /**
    * First render:
    *
-   * Creates a virtual DOM from the extending `render` and patches
-   * it into the shadow root. Triggers `elementDidMount` if defined.
+   * Create a virtual DOM from the external `render` method and patch
+   * it into the shadow root. Triggers `elementDidMount`, if defined.
    */
   [internal.getInitialRenderState]() {
-    this[internal.domMap] = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+    this[internal.domMap] = this[internal.getDOMMap]()
     renderToDOM(this[internal.domMap], this[internal.shadowRoot])
 
     if (isFunction(this[external.elementDidMount])) {
@@ -263,7 +267,7 @@ export class UpgradedElement extends HTMLElement {
    * Create a new virtual DOM and diff it against the existing virtual DOM.
    */
   [internal.getNextRenderState]() {
-    let templateMap = createDOMMap(stringToHTML(this[internal.getDOMString]()))
+    let templateMap = this[internal.getDOMMap]()
     diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
     templateMap = null
 
