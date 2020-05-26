@@ -34,7 +34,7 @@ The class extends `HTMLElement` to give you [custom element callbacks](https://d
 - 🔎 [Under the Hood](#under-the-hood)
   - [Technical Design](#technical-design)
   - [Rendering](#rendering)
-- 🏆 [Principles & Goals](#principles-goals)
+- 🏆 [Goals](#goals)
 - 🤝 [Contribute](#contribute)
 
 ## Getting Started
@@ -428,11 +428,7 @@ A few quick points on the design of `UpgradedElement`:
 
 2. **Performance:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
 
-## Princples & Goals
-
-Here is the thinking behind decisions and technical direction.
-
-### Goals
+## Goals
 
 - **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful methods at all stages of an element's lifecycle.
 
