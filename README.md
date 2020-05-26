@@ -32,8 +32,6 @@ The class extends `HTMLElement` to give you [custom element callbacks](https://d
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
 - 🔎 [Under the Hood](#under-the-hood)
-  - [Technical Design](#technical-design)
-  - [Rendering](#rendering)
 - 🏆 [Goals](#goals)
 - 🤝 [Contribute](#contribute)
 
