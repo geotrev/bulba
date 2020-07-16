@@ -192,15 +192,18 @@ export class UpgradedElement extends HTMLElement {
           if (hasPropertyChangedLifecycle) {
             this[external.elementPropertyChanged](property, oldValue, value)
           }
+
+          if (reflected) this.setAttribute(attribute, value)
         } else {
           this[privateName] = undefined
 
           if (hasPropertyChangedLifecycle) {
             this[external.elementPropertyChanged](property, oldValue, null)
           }
+
+          if (reflected) this.removeAttribute(attribute)
         }
 
-        if (reflected) this.removeAttribute(attribute)
         this[external.requestRender]()
       },
     })
