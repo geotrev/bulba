@@ -40,13 +40,16 @@ class NestedElement extends UpgradedElement {
 
   handleClick() {
     this.borderColor = ["gray", "blue", "purple", "lime", "orange"][Math.floor(Math.random() * 5)]
+    this.shadowRoot.querySelector("cool-label").firstName = ["Mario", "Samus", "Luigi", "C Falcon"][
+      Math.floor(Math.random() * 4)
+    ]
   }
 
   render() {
     return `
       <p>This one is nested.</p>
       <button id="clicker">Click to update</button>
-      <div class="border" style='border-color: ${this.borderColor}'>
+      <div class="border" style="border-color: ${this.borderColor}">
         <cool-label first-name="Chaos" description="I'm nested!">
           <slot></slot>
         </cool-label>
