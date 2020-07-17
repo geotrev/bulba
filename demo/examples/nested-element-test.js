@@ -1,7 +1,7 @@
 import { UpgradedElement, register } from "../../src/upgraded-element"
-import "./cool-label"
+import "./reflect-properties-test"
 
-class NestedElement extends UpgradedElement {
+class NestedElementTest extends UpgradedElement {
   static get properties() {
     return {
       borderColor: {
@@ -40,9 +40,12 @@ class NestedElement extends UpgradedElement {
 
   handleClick() {
     this.borderColor = ["gray", "blue", "purple", "lime", "orange"][Math.floor(Math.random() * 5)]
-    this.shadowRoot.querySelector("cool-label").firstName = ["Mario", "Samus", "Luigi", "C Falcon"][
-      Math.floor(Math.random() * 4)
-    ]
+    this.shadowRoot.querySelector("reflect-properties-test").firstName = [
+      "Mario",
+      "Samus",
+      "Luigi",
+      "C Falcon",
+    ][Math.floor(Math.random() * 4)]
   }
 
   render() {
@@ -50,12 +53,12 @@ class NestedElement extends UpgradedElement {
       <p>This one is nested.</p>
       <button id="clicker">Click to update</button>
       <div class="border" style="border-color: ${this.borderColor}">
-        <cool-label first-name="Chaos" description="I'm nested!">
+        <reflect-properties-test first-name="Chaos" description="I'm nested!">
           <slot></slot>
-        </cool-label>
+        </reflect-properties-test>
       </div>
     `
   }
 }
 
-register("nested-element", NestedElement)
+register("nested-element-test", NestedElementTest)

@@ -1,6 +1,6 @@
 import { UpgradedElement, register } from "../../src/upgraded-element"
 
-class SimpleHeader extends UpgradedElement {
+class SlotTest extends UpgradedElement {
   static get styles() {
     return `
       ::slotted(*) { 
@@ -15,4 +15,4 @@ class SimpleHeader extends UpgradedElement {
   }
 }
 
-register("simple-header", SimpleHeader)
+register("slot-test", SlotTest)

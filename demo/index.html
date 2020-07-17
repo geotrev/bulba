@@ -7,24 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   </head>
-  <body style="max-width: 800px">
-    <simple-header>Just chillin at the top of the page</simple-header>
+  <body style="max-width: 800px;">
+    <slot-test>Just chillin at the top of the page</slot-test>
     <hr />
-    <cool-label first-name="Silver" description="This is my favorite group of people."></cool-label>
+    <reflect-properties-test
+      first-name="Silver"
+      description="This is my favorite group of people."
+    ></reflect-properties-test>
     <hr />
-    <lifecycle-printer first-name="Amy" description="Testing lifecycles..."></lifecycle-printer>
+    <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
     <br />
     <button class="delete-btn">Remove element ^</button>
     <hr />
-    <custom-accessor-button></custom-accessor-button>
+    <custom-accessor-test></custom-accessor-test>
     <hr />
-    <nested-element><p>Twice removed, nested slot content.</p></nested-element>
+    <nested-element-test><p>Twice removed, nested slot content.</p></nested-element-test>
 
     <script src="bundle.js"></script>
     <!-- Test cleanup: -->
     <script>
       document.querySelector(".delete-btn").addEventListener("click", () => {
-        const testElement = document.querySelector("lifecycle-printer")
+        const testElement = document.querySelector("lifecycle-test")
         testElement.parentNode.removeChild(testElement)
       })
     </script>

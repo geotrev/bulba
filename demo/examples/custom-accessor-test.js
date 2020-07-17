@@ -1,6 +1,6 @@
 import { UpgradedElement, register } from "../../src/upgraded-element"
 
-class CustomAccessorButton extends UpgradedElement {
+class CustomAccessorTest extends UpgradedElement {
   static get properties() {
     return {
       text: { type: "string" },
@@ -45,4 +45,4 @@ class CustomAccessorButton extends UpgradedElement {
   }
 }
 
-register("custom-accessor-button", CustomAccessorButton)
+register("custom-accessor-test", CustomAccessorTest)
