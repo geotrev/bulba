@@ -2,12 +2,13 @@
 
 `UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped.
 
+How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children, which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
+
 What you get:
 
-1. Encapsulated styles/HTML in a shadow root
-2. Dynamic DOM updates using the dom diffing technique found in [reefjs](https://github.com/cferdinandi/reef) (built by Chris Ferdinandi); render times are lightning fast!
-3. State management via [upgraded properties](#properties)
-4. Predictable and familiar lifecycle methods
+1. Encapsulated [styles](#styles) and [view](#render) in a shadow root.
+2. State management via [upgraded properties](#properties)
+3. Predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for custom render logic.
 
 The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
 
@@ -32,9 +33,7 @@ The class extends `HTMLElement` to give you [custom element callbacks](https://d
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
 - 🔎 [Under the Hood](#under-the-hood)
-  - [Technical Design](#technical-design)
-  - [Rendering](#rendering)
-- 🏆 [Principles & Goals](#principles-goals)
+- 🏆 [Goals](#goals)
 - 🤝 [Contribute](#contribute)
 
 ## Getting Started
@@ -215,7 +214,7 @@ Here's a quick example for an `isOpen` property:
 static get properties() {
   return {
     // Hmm, what will this do?
-    isOpen: { type: "string", default: false }
+    isOpen: { type: "boolean", default: false }
   }
 }
 
@@ -229,9 +228,7 @@ constructor() {
 // Define accessors
 
 set isOpen(value) {
-  // No reason to update if the new value is already the current value
   if (value === this.isOpen) return
-  const oldValue = this.isOpen
   this._isOpen = value
 }
 
@@ -240,43 +237,32 @@ get isOpen() {
 }
 ```
 
-Tip 1:Adding a managed property into the `properties` object **won't do anything so long as you've declared your own accessors.**
+Tips:
 
-Tip 2: Always name the internal property something different than the accessor that sets it. For example, `isOpen` gets and sets the property `_isOpen`. Technically both are properties on the class, therefore if both are the same name, an error will be thrown later.
+1. Adding a managed property into the `properties` object **won't do anything so long as you've declared custom accessors.**
+2. Always name the internal property something different than the accessor methods that get/set its value. In other words, `isOpen` gets and sets the property `_isOpen`. _Technically_ both are properties on the class, therefore if both are the same name, an error will be thrown later.
+3. You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
 
-Tip 3: You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
-
-Using the previous example of `isOpen`, we'll add the following to the end of the setter:
+To achieve the existing behavior of an upgraded property, you can add in upgraded-element's [internal methods](#internal-methods-and-hooks). Using the previous `isOpen` as a base, let's add some more logic:
 
 ```js
-// Reflecr
-this.setAttribute("card-heading-text", value)
+if (value === this.isOpen) return
 
-// Trigger lifecycle
+// Validate type, will print a warning if incorrect
+this.validateType("isOpen", value, "boolean")
+
+const oldValue = this.isOpen
+this._isOpen = value
+
+// Reflect property to an attribute, if desired:
+this.setAttribute("is-open", String(value))
+
+// Trigger elementPropertyChanged():
 this.elementPropertyChanged("isOpen", oldValue, value)
 
-// Render the updated values to the shadow root
+// Render the updated values to the shadow root, which
+// will later trigger elementDidUpdate():
 this.requestRender()
-```
-
-You can also add a type check just before the internal property is set.
-
-All together, those changes would look like this:
-
-```js
-set isOpen(value) {
-  // No reason to update if the new value is already the current value
-  if (value === this.isOpen) return
-
-  this.validateType("isOpen", value, "boolean")
-
-  const oldValue = this.isOpen
-  this._isOpen = value
-
-  this.setAttribute("card-heading-text", value)
-  this.elementPropertyChanged("isOpen", oldValue, value)
-  this.requestRender()
-}
 ```
 
 With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but with your own prescriptions.
@@ -428,11 +414,7 @@ A few quick points on the design of `UpgradedElement`:
 
 2. **Performance:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
 
-## Princples & Goals
-
-Here is the thinking behind decisions and technical direction.
-
-### Goals
+## Goals
 
 - **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful methods at all stages of an element's lifecycle.
 
