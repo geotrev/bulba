@@ -1,7 +1,7 @@
 import { register } from "../../src/upgraded-element"
-import { CoolLabel } from "./cool-label"
+import { ReflectPropertiesTest } from "./reflect-properties-test"
 
-class LifecyclePrinter extends CoolLabel {
+class LifecycleTest extends ReflectPropertiesTest {
   /**
    * Two types of properties: `generated` and `managed`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
@@ -132,4 +132,4 @@ class LifecyclePrinter extends CoolLabel {
   }
 }
 
-register("lifecycle-printer", LifecyclePrinter)
+register("lifecycle-test", LifecycleTest)

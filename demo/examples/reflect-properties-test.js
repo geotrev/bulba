@@ -1,6 +1,6 @@
 import { UpgradedElement, register } from "../../src/upgraded-element"
 
-export class CoolLabel extends UpgradedElement {
+export class ReflectPropertiesTest extends UpgradedElement {
   static get properties() {
     return {
       firstName: {
@@ -66,4 +66,4 @@ export class CoolLabel extends UpgradedElement {
   }
 }
 
-register("cool-label", CoolLabel)
+register("reflect-properties-test", ReflectPropertiesTest)
