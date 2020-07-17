@@ -2,7 +2,7 @@
 
 `UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped.
 
-Why does `upgraded-element` stand apart from other UI libraries? It is built on top of native browser technologies: shadow roots, custom elements, all while being lightning fast. Additionally, DOM updates are restricted to shadow roots only; this means a change by a parent element will only propagates down the tree if attributes on other upgraded elements are changed, which is a big win on performance. The DOM diffing implementation is a slightly forked version of [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi, further improving the speed of renders to fractions of a millisecond.
+How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children, which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
 
 What you get:
 
@@ -238,6 +238,7 @@ get isOpen() {
 ```
 
 Tips:
+
 1. Adding a managed property into the `properties` object **won't do anything so long as you've declared custom accessors.**
 2. Always name the internal property something different than the accessor methods that get/set its value. In other words, `isOpen` gets and sets the property `_isOpen`. _Technically_ both are properties on the class, therefore if both are the same name, an error will be thrown later.
 3. You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
