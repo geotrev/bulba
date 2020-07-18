@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../../src/upgraded-element"
+import { UpgradedElement, register } from "../../src"
 
 export class ReflectPropertiesTest extends UpgradedElement {
   static get properties() {

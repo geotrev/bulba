@@ -14,17 +14,6 @@ import * as internal from "./internal"
 import * as external from "./external"
 
 /**
- * Adds custom element to the global registry.
- * @param {string} tag
- * @param {module} UpgradedInstance
- */
-export const register = (tag, UpgradedInstance) => {
-  if (!customElements.get(tag)) {
-    customElements.define(tag, UpgradedInstance)
-  }
-}
-
-/**
  * @module UpgradedElement
  * @extends HTMLElement
  */

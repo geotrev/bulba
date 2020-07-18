@@ -4,7 +4,7 @@ import resolve from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
 
 const banner = require("./.bin/banner")
-const input = path.resolve(__dirname, "src/upgraded-element.js")
+const input = path.resolve(__dirname, "src")
 const plugins = [resolve(), commonjs()]
 
 if (process.env.NODE_ENV === "publish") {

@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../../src/upgraded-element"
+import { UpgradedElement, register } from "../../src"
 
 class CustomAccessorTest extends UpgradedElement {
   static get properties() {
