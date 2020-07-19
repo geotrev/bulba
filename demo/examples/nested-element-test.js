@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../../src/upgraded-element"
+import { UpgradedElement, register } from "../../src"
 import "./reflect-properties-test"
 
 class NestedElementTest extends UpgradedElement {

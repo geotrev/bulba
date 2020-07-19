@@ -1,4 +1,4 @@
-import { register } from "../../src/upgraded-element"
+import { register } from "../../src"
 import { ReflectPropertiesTest } from "./reflect-properties-test"
 
 class LifecycleTest extends ReflectPropertiesTest {

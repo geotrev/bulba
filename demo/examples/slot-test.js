@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../../src/upgraded-element"
+import { UpgradedElement, register } from "../../src"
 
 class SlotTest extends UpgradedElement {
   static get styles() {
