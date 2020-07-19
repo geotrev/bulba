@@ -9,7 +9,7 @@ import {
   isSymbol,
   getTypeTag,
 } from "./utilities"
-import { loadScheduler } from "./schedule"
+import { getScheduler } from "./scheduler"
 import * as internal from "./internal"
 import * as external from "./external"
 
@@ -79,7 +79,7 @@ export class UpgradedElement extends HTMLElement {
    * Schedules a new render.
    */
   [external.requestRender]() {
-    window.scheduleComponentUpdate(this[internal.renderDOM])
+    this[internal.schedule](this[internal.renderDOM])
   }
 
   /**
@@ -104,7 +104,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.initialize]() {
     // Append scheduler to the window
-    loadScheduler()
+    this[internal.schedule] = getScheduler()
 
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
