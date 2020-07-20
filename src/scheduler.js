@@ -43,6 +43,5 @@ export function getScheduler() {
     }
   }
 
-  // Add as readonly property - you shall not pass!
   return fn => schedule(fn)
 }
