@@ -1,4 +1,4 @@
-import { createDOMMap, stringToHTML, diffDOM, renderToDOM } from "./reef-dom"
+import { createVDOM, stringToHTML, diffVDOM, renderToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -207,12 +207,12 @@ export class UpgradedElement extends HTMLElement {
     if (isFunction(this.render)) {
       domString = this.render()
     } else {
-      throw new Error(`You must include a render method in component: ${this.constructor.name}`)
+      throw new Error(`You must include a render method in component: '${this.constructor.name}'`)
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in component: ${this.constructor.name}.`
+        `You attempted to render a non-string template in component: '${this.constructor.name}'.`
       )
     }
 
@@ -220,7 +220,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getDOMMap]() {
-    return createDOMMap(stringToHTML(this[internal.getDOMString]()))
+    return createVDOM(stringToHTML(this[internal.getDOMString]()))
   }
 
   /**
@@ -260,7 +260,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getNextRenderState]() {
     let templateMap = this[internal.getDOMMap]()
-    diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
+    diffVDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
     templateMap = null
 
     if (isFunction(this[external.elementDidUpdate])) {
