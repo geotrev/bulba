@@ -1,43 +1,14 @@
 /**
  * Credit for this approach goes to Chris Ferdinandi.
- * Minor changes added here and there to support ES6 + modularization.
+ * It's basically the same as reefjs, but has renamed vars,
+ * supports es6, and includes more methods for upgrade-element's
+ * specific use-case..
  * https://github.com/cferdinandi/reef
  */
 
 const dynamicAttributes = ["checked", "selected", "value"]
 
-const getVNodeAttribute = (name, value) => {
-  return { name, value }
-}
-
-const getVNodeDynamicAttributes = (vNode, attributes) => {
-  dynamicAttributes.forEach(prop => {
-    if (!vNode[prop]) return
-    attributes.push(getVNodeAttribute(prop, vNode[prop]))
-  })
-}
-
-const getVNodeBaseAttributes = vNode => {
-  return Array.prototype.reduce.call(
-    vNode.attributes,
-    (allAttributes, attribute) => {
-      if (dynamicAttributes.indexOf(attribute.name) < 0) {
-        allAttributes.push(getVNodeAttribute(attribute.name, attribute.value))
-      }
-      return allAttributes
-    },
-    []
-  )
-}
-
-const getElementAttributes = element => {
-  const attributes = getVNodeBaseAttributes(element)
-  getVNodeDynamicAttributes(element, attributes)
-
-  return attributes
-}
-
-const getVNodeStyles = styles => {
+const getElementStyles = styles => {
   return styles.split(";").map(style => {
     const entry = style.trim()
 
@@ -62,7 +33,7 @@ const addElementStyles = (element, styles) => {
 
 const diffElementStyles = (element, styles) => {
   // Get style map
-  const vNodeStyles = getVNodeStyles(styles)
+  const vNodeStyles = getElementStyles(styles)
 
   // Get styles to remove
   const vNodeStaleStyles = Array.prototype.filter.call(element.style, style => {
@@ -95,6 +66,11 @@ const removeElementAttributes = (element, attributes) => {
   })
 }
 
+/**
+ * Sets new attributes, styles, and classNames
+ * @param {HTMLElement} element
+ * @param {Array} attributes
+ */
 const addElementAttributes = (element, attributes) => {
   attributes.forEach(attribute => {
     // If the attribute is `class` or `style`,
@@ -115,7 +91,7 @@ const addElementAttributes = (element, attributes) => {
 
 /**
  * Create a new element from virtual node.
- * @param {Object} element
+ * @param {Object} vNode
  */
 const createElement = vNode => {
   let node
@@ -140,6 +116,37 @@ const createElement = vNode => {
   }
 
   return node
+}
+
+const getVNodeAttribute = (name, value) => {
+  return { name, value }
+}
+
+const getVNodeDynamicAttributes = (vNode, attributes) => {
+  dynamicAttributes.forEach(prop => {
+    if (!vNode[prop]) return
+    attributes.push(getVNodeAttribute(prop, vNode[prop]))
+  })
+}
+
+const getVNodeBaseAttributes = vNode => {
+  return Array.prototype.reduce.call(
+    vNode.attributes,
+    (allAttributes, attribute) => {
+      if (dynamicAttributes.indexOf(attribute.name) < 0) {
+        allAttributes.push(getVNodeAttribute(attribute.name, attribute.value))
+      }
+      return allAttributes
+    },
+    []
+  )
+}
+
+const getVNodeAttributes = element => {
+  const attributes = getVNodeBaseAttributes(element)
+  getVNodeDynamicAttributes(element, attributes)
+
+  return attributes
 }
 
 /**
@@ -250,12 +257,13 @@ export const diffVDOM = (nextVDOM, oldVDOM, root) => {
 }
 
 /**
- * Render nextVDOM into the given root element.
- * @param {Array} nextVDOM
+ * Renders a vDOM into the given root element. This happens one time,
+ * when a component is first rendered.
+ * @param {Array} vDOM
  * @param {ShadowRoot} root
  */
-export const renderToDOM = (nextVDOM, root) => {
-  nextVDOM.forEach(vNode => root.appendChild(vNode.node))
+export const renderToDOM = (vDOM, root) => {
+  vDOM.forEach(vNode => root.appendChild(vNode.node))
 }
 
 /**
@@ -277,7 +285,7 @@ export const stringToHTML = stringToRender => {
 }
 
 /**
- *
+ * Creates a new virtual DOM from nodes within a given element.
  * @param {HTMLElement|HTMLBodyElement} element
  * @param {boolean} isSVG
  */
@@ -285,7 +293,7 @@ export const createVDOM = (element, isSVG) => {
   return Array.prototype.map.call(element.childNodes, node => {
     const type =
       node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getElementAttributes(node) : []
+    const attributes = node.nodeType === 1 ? getVNodeAttributes(node) : []
     const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
     const vNode = { node, content, attributes, type }
 

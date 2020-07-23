@@ -93,13 +93,13 @@ export class UpgradedElement extends HTMLElement {
   }
 
   // Private
-  
+
   /**
    * Triggers a lifecycle method of the specified `name` with `args`, if given.
    */
   [internal.runLifecycle](name, ...args) {
-    if (isFunction(this[name]) {
-      this[name]](...args)    
+    if (isFunction(this[name])) {
+      this[name](...args)
     }
   }
 
@@ -113,7 +113,7 @@ export class UpgradedElement extends HTMLElement {
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.isFirstRender] = true
-    this[internal.getVDOM] = []
+    this[internal.vDOM] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
@@ -137,7 +137,7 @@ export class UpgradedElement extends HTMLElement {
    * Upgrade a property based on its configuration. If accessors are detected in
    * the extender, skip the upgrade.
    * @param {String} property - name of the upgraded property.
-   * @param {{value, default, reflected}} configuration - property definition of the extender. 
+   * @param {{value, default, reflected}} configuration - property definition of the extender.
    */
   [internal.upgradeProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
@@ -241,7 +241,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getInitialRenderState]() {
     this[internal.vDOM] = this[internal.getVDOM]()
-    renderToDOM(this[internal.getVDOM], this[internal.shadowRoot])
+    renderToDOM(this[internal.vDOM], this[internal.shadowRoot])
     this[internal.runLifecycle](external.elementDidMount)
     this[internal.isFirstRender] = false
   }
@@ -252,7 +252,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diffVDOM(nextVDOM, this[internal.getVDOM], this[internal.shadowRoot])
+    diffVDOM(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }

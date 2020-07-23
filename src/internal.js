@@ -11,6 +11,7 @@ export const schedule = Symbol("#schedule")
 // Methods
 
 export const initialize = Symbol("#initialize")
+export const runLifecycle = Symbol("#runLifecycle")
 export const performUpgrade = Symbol("#performUpgrade")
 export const upgradeProperty = Symbol("#upgradeProperty")
 export const renderStyles = Symbol("#renderStyles")
