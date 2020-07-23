@@ -24,11 +24,7 @@ export const toKebabCase = value =>
  * @param {*} value
  * @returns {string}
  */
-export const getTypeTag = value =>
-  Object.prototype.toString
-    .call(value)
-    .slice(8, -1)
-    .toLowerCase()
+export const getTypeTag = value => Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
 
 /**
  * Checks if the value is an object literal.
@@ -38,7 +34,7 @@ export const getTypeTag = value =>
 export const isPlainObject = value => getTypeTag(value) === "object"
 
 /**
- * Checks if the value is an object literal with zero properties.
+ * Checks if the value is an object literal with no enumerable properties.
  * @param {*} value
  * @returns {boolean}
  */

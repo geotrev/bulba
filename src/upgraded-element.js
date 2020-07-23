@@ -65,13 +65,16 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Returns the internal element id.
+   * @returns {string}
    */
   get [external.elementIdProperty]() {
     return this[internal.elementId]
   }
 
   /**
-   * Schedules a new render.
+   * Requests a new render at the next animation frame.
+   * Will batch subsequent renders if they are requested
+   * before the previous frame has completed (0-16/17 milliseconds)
    */
   [external.requestRender]() {
     this[internal.schedule](this[internal.renderDOM])
@@ -96,6 +99,8 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Triggers a lifecycle method of the specified `name` with `args`, if given.
+   * @param {string} name - name of the lifecycle method
+   * @param {arguments} args - args to pass along to the method, if any
    */
   [internal.runLifecycle](name, ...args) {
     if (isFunction(this[name])) {
@@ -136,7 +141,7 @@ export class UpgradedElement extends HTMLElement {
   /**
    * Upgrade a property based on its configuration. If accessors are detected in
    * the extender, skip the upgrade.
-   * @param {String} property - name of the upgraded property.
+   * @param {string} property - name of the upgraded property.
    * @param {{value, default, reflected}} configuration - property definition of the extender.
    */
   [internal.upgradeProperty](property, configuration = {}) {
@@ -197,7 +202,7 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Retrieves the dom string from the extender.
-   * @returns {String} - Stringified HTML from the extender's render method.
+   * @returns {string} - Stringified HTML from the extender's render method.
    */
   [internal.getDOMString]() {
     let domString
