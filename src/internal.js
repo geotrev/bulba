@@ -2,15 +2,16 @@
 
 export const elementId = Symbol("#elementId")
 export const shadowRoot = Symbol("#shadowRoot")
-export const domMap = Symbol("#domMap")
+export const vDOM = Symbol("#vDOM")
 export const getDOMString = Symbol("#getDOMString")
-export const getDOMMap = Symbol("#getDOMMap")
+export const getVDOM = Symbol("#getVDOM")
 export const isFirstRender = Symbol("#isFirstRender")
 export const schedule = Symbol("#schedule")
 
 // Methods
 
 export const initialize = Symbol("#initialize")
+export const runLifecycle = Symbol("#runLifecycle")
 export const performUpgrade = Symbol("#performUpgrade")
 export const upgradeProperty = Symbol("#upgradeProperty")
 export const renderStyles = Symbol("#renderStyles")

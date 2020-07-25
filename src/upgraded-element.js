@@ -1,4 +1,4 @@
-import { createDOMMap, stringToHTML, diffDOM, renderToDOM } from "./reef-dom"
+import { createVDOM, stringToHTML, diffVDOM, renderToDOM } from "./reef-dom"
 import {
   createUUID,
   toKebabCase,
@@ -43,40 +43,38 @@ export class UpgradedElement extends HTMLElement {
   adoptedCallback() {}
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (isFunction(this[external.elementAttributeChanged]) && oldValue !== newValue) {
-      this[external.elementAttributeChanged](name, oldValue, newValue)
+    if (oldValue !== newValue) {
+      this[internal.runLifecycle](external.elementAttributeChanged, name, oldValue, newValue)
     }
   }
 
   connectedCallback() {
     if (this.isConnected) {
-      if (isFunction(this[external.elementDidConnect])) {
-        this[external.elementDidConnect]()
-      }
-
+      this[internal.runLifecycle](external.elementDidConnect)
       this[internal.renderStyles]()
       this[external.requestRender]()
     }
   }
 
   disconnectedCallback() {
-    if (isFunction(this[external.elementWillUnmount])) {
-      this[external.elementWillUnmount]()
-    }
+    this[internal.runLifecycle](external.elementWillUnmount)
 
     // Clean up detached nodes and data.
-    this[internal.domMap] = null
+    this[internal.vDOM] = null
   }
 
   /**
    * Returns the internal element id.
+   * @returns {string}
    */
   get [external.elementIdProperty]() {
     return this[internal.elementId]
   }
 
   /**
-   * Schedules a new render.
+   * Requests a new render at the next animation frame.
+   * Will batch subsequent renders if they are requested
+   * before the previous frame has completed (0-16/17 milliseconds)
    */
   [external.requestRender]() {
     this[internal.schedule](this[internal.renderDOM])
@@ -100,6 +98,17 @@ export class UpgradedElement extends HTMLElement {
   // Private
 
   /**
+   * Triggers a lifecycle method of the specified `name` with `args`, if given.
+   * @param {string} name - name of the lifecycle method
+   * @param {arguments} args - args to pass along to the method, if any
+   */
+  [internal.runLifecycle](name, ...args) {
+    if (isFunction(this[name])) {
+      this[name](...args)
+    }
+  }
+
+  /**
    * Do initial setup work, then upgrade.
    */
   [internal.initialize]() {
@@ -109,7 +118,7 @@ export class UpgradedElement extends HTMLElement {
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.isFirstRender] = true
-    this[internal.domMap] = []
+    this[internal.vDOM] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
@@ -132,6 +141,8 @@ export class UpgradedElement extends HTMLElement {
   /**
    * Upgrade a property based on its configuration. If accessors are detected in
    * the extender, skip the upgrade.
+   * @param {string} property - name of the upgraded property.
+   * @param {{value, default, reflected}} configuration - property definition of the extender.
    */
   [internal.upgradeProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
@@ -173,23 +184,14 @@ export class UpgradedElement extends HTMLElement {
 
         const attribute = toKebabCase(property)
         const oldValue = this[privateName]
-        const hasPropertyChangedLifecycle = isFunction(this[external.elementPropertyChanged])
 
         if (value) {
           this[privateName] = value
-
-          if (hasPropertyChangedLifecycle) {
-            this[external.elementPropertyChanged](property, oldValue, value)
-          }
-
+          this[internal.runLifecycle](external.elementPropertyChanged, property, oldValue, value)
           if (reflected) this.setAttribute(attribute, value)
         } else {
           this[privateName] = undefined
-
-          if (hasPropertyChangedLifecycle) {
-            this[external.elementPropertyChanged](property, oldValue, null)
-          }
-
+          this[internal.runLifecycle](external.elementPropertyChanged, property, oldValue, value)
           if (reflected) this.removeAttribute(attribute)
         }
 
@@ -200,6 +202,7 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Retrieves the dom string from the extender.
+   * @returns {string} - Stringified HTML from the extender's render method.
    */
   [internal.getDOMString]() {
     let domString
@@ -207,20 +210,20 @@ export class UpgradedElement extends HTMLElement {
     if (isFunction(this.render)) {
       domString = this.render()
     } else {
-      throw new Error(`You must include a render method in component: ${this.constructor.name}`)
+      throw new Error(`You must include a render method in component: '${this.constructor.name}'`)
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in component: ${this.constructor.name}.`
+        `You attempted to render a non-string template in component: '${this.constructor.name}'.`
       )
     }
 
     return domString
   }
 
-  [internal.getDOMMap]() {
-    return createDOMMap(stringToHTML(this[internal.getDOMString]()))
+  [internal.getVDOM]() {
+    return createVDOM(stringToHTML(this[internal.getDOMString]()))
   }
 
   /**
@@ -237,35 +240,26 @@ export class UpgradedElement extends HTMLElement {
   }
 
   /**
-   * First render:
-   *
+   * For first render:
    * Create a virtual DOM from the external `render` method and patch
    * it into the shadow root. Triggers `elementDidMount`, if defined.
    */
   [internal.getInitialRenderState]() {
-    this[internal.domMap] = this[internal.getDOMMap]()
-    renderToDOM(this[internal.domMap], this[internal.shadowRoot])
-
-    if (isFunction(this[external.elementDidMount])) {
-      this[external.elementDidMount]()
-    }
-
+    this[internal.vDOM] = this[internal.getVDOM]()
+    renderToDOM(this[internal.vDOM], this[internal.shadowRoot])
+    this[internal.runLifecycle](external.elementDidMount)
     this[internal.isFirstRender] = false
   }
 
   /**
-   * All subsequent renders:
-   *
+   * All renders after initial render:
    * Create a new virtual DOM and diff it against the existing virtual DOM.
    */
   [internal.getNextRenderState]() {
-    let templateMap = this[internal.getDOMMap]()
-    diffDOM(templateMap, this[internal.domMap], this[internal.shadowRoot])
-    templateMap = null
-
-    if (isFunction(this[external.elementDidUpdate])) {
-      this[external.elementDidUpdate]()
-    }
+    let nextVDOM = this[internal.getVDOM]()
+    diffVDOM(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
+    nextVDOM = null
+    this[internal.runLifecycle](external.elementDidUpdate)
   }
 
   /**

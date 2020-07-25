@@ -1,55 +1,42 @@
 /**
  * Credit for this approach goes to Chris Ferdinandi.
- * Minor changes added here and there to support ES6 + modularization.
+ * It's basically the same as reefjs, but has renamed vars,
+ * supports es6, and includes more methods for upgrade-element's
+ * specific use-case..
  * https://github.com/cferdinandi/reef
  */
 
-const dynamicAttributes = [
-  "checked",
-  "disabled",
-  "hidden",
-  "lang",
-  "readonly",
-  "required",
-  "selected",
-  "value",
-]
+/**
+ * An object whose key/value pairs are the name and value of an attribute, respectively.
+ * @typedef Attribute
+ * @type {Object}
+ * @property {string} name
+ * @property {string} value
+ */
 
-const getAttribute = (name, value) => {
-  return {
-    name: name,
-    value: value,
-  }
-}
+/**
+ * Object representation of a DOM element.
+ * @typedef VirtualNode
+ * @type {Object}
+ * @property {string} type - The type of node. E.g., tag name, "comment", or "text".
+ * @property {Attribute[]} attributes - List of attributes, if any.
+ * @property {TextNode|CommentNode} content - Text or comment content, if any.
+ * @property {VirtualNode[]} children - Child virtual nodes, if any.
+ * @property {Element} node - The corresponding DOM element.
+ */
 
-const getDynamicAttributes = (node, attributes) => {
-  dynamicAttributes.forEach(prop => {
-    if (!node[prop]) return
-    attributes.push(getAttribute(prop, node[prop]))
-  })
-}
+/**
+ * @type {string[]}
+ */
+const dynamicAttributes = ["checked", "selected", "value"]
 
-const getBaseAttributes = node => {
-  return Array.prototype.reduce.call(
-    node.attributes,
-    (allAttributes, attribute) => {
-      if (dynamicAttributes.indexOf(attribute.name) < 0) {
-        allAttributes.push(getAttribute(attribute.name, attribute.value))
-      }
-      return allAttributes
-    },
-    []
-  )
-}
-
-const getAttributes = node => {
-  const attributes = getBaseAttributes(node)
-  getDynamicAttributes(node, attributes)
-
-  return attributes
-}
-
-const getStyleMap = styles => {
+/**
+ * Takes an inline style string and reduces it to
+ * an array of objects per prop/value pair.
+ * @param {string} styles
+ * @returns {Attribute[]}
+ */
+const getElementStyles = styles => {
   return styles.split(";").map(style => {
     const entry = style.trim()
 
@@ -64,39 +51,59 @@ const getStyleMap = styles => {
   })
 }
 
-const removeStyles = (element, styles) => {
+/**
+ * Removes inline styles from the element.
+ * @param {Element} element
+ * @param {Attribute[]} styles
+ */
+const removeElementStyles = (element, styles) => {
   styles.forEach(style => (element.style[style.name] = ""))
 }
 
-const changeStyles = (element, styles) => {
+/**
+ * Adds inline styles to the element.
+ * @param {Element} element
+ * @param {Attribute[]} styles
+ */
+const addElementStyles = (element, styles) => {
   styles.forEach(style => (element.style[style.name] = style.value))
 }
 
-const diffStyles = (element, styles) => {
+/**
+ * Updates styles on element: removes missing, updates existing if changed.
+ * @param {Element} element
+ * @param {string} styles
+ */
+const diffElementStyles = (element, styles) => {
   // Get style map
-  const styleMap = getStyleMap(styles)
+  const processed = getElementStyles(styles)
 
   // Get styles to remove
-  const remove = Array.prototype.filter.call(element.style, style => {
-    const findStyle = styleMap.find(newStyle => {
+  const staleStyles = Array.prototype.filter.call(element.style, style => {
+    const findStyle = processed.find(newStyle => {
       return newStyle.name === style && newStyle.value === element.style[style]
     })
     return findStyle === undefined
   })
 
   // Apply changes
-  removeStyles(element, remove)
-  changeStyles(element, styleMap)
+  removeElementStyles(element, staleStyles)
+  addElementStyles(element, processed)
 }
 
-const removeAttributes = (element, attributes) => {
+/**
+ * Removes stale attributes from the element.
+ * @param {Element} element
+ * @param {Attribute[]} attributes
+ */
+const removeElementAttributes = (element, attributes) => {
   attributes.forEach(attribute => {
     // If the attribute is `class` or `style`,
     // unset the properties.
     if (attribute.name === "class") {
       element.className = ""
     } else if (attribute.name === "style") {
-      removeStyles(element, Array.prototype.slice.call(element.style))
+      removeElementStyles(element, Array.prototype.slice.call(element.style))
     } else {
       // If the attribute is also a property, unset it
       if (attribute.name in element) {
@@ -107,14 +114,19 @@ const removeAttributes = (element, attributes) => {
   })
 }
 
-const addAttributes = (element, attributes) => {
+/**
+ * Adds attributes to the element.
+ * @param {Element} element
+ * @param {Attribute[]} attributes
+ */
+const addElementAttributes = (element, attributes) => {
   attributes.forEach(attribute => {
     // If the attribute is `class` or `style`,
     // apply those as properties.
     if (attribute.name === "class") {
       element.className = attribute.value
     } else if (attribute.name === "style") {
-      diffStyles(element, attribute.value)
+      diffElementStyles(element, attribute.value)
     } else {
       // If the attribute is also a property, set it
       if (attribute.name in element) {
@@ -125,150 +137,223 @@ const addAttributes = (element, attributes) => {
   })
 }
 
-const createNode = element => {
-  let node
-  if (element.type === "text") {
-    node = document.createTextNode(element.content)
-  } else if (element.type === "comment") {
-    node = document.createComment(element.content)
-  } else if (element.isSVG) {
-    node = document.createElementNS("http://www.w3.org/2000/svg", element.type)
+/**
+ * Create a new element from virtual node.
+ * @param {VirtualNode} vNode
+ */
+const createElement = vNode => {
+  let element
+  if (vNode.type === "text") {
+    element = document.createTextNode(vNode.content)
+  } else if (vNode.type === "comment") {
+    element = document.createComment(vNode.content)
+  } else if (vNode.isSVG) {
+    element = document.createElementNS("http://www.w3.org/2000/svg", vNode.type)
   } else {
-    node = document.createElement(element.type)
+    element = document.createElement(vNode.type)
   }
 
-  addAttributes(node, element.attributes)
+  addElementAttributes(element, vNode.attributes)
 
-  if (element.children.length > 0) {
-    element.children.forEach(childElement => {
-      node.appendChild(createNode(childElement))
+  if (vNode.children.length > 0) {
+    vNode.children.forEach(childElement => {
+      element.appendChild(createElement(childElement))
     })
-  } else if (element.type !== "text") {
-    node.textContent = element.content
+  } else if (vNode.type !== "text") {
+    element.textContent = vNode.content
   }
 
-  return node
+  return element
 }
 
-const diffAttributes = (template, existing) => {
-  const removedAttributes = existing.attributes.filter(attribute => {
-    const newAttributes = template.attributes.find(newAttribute => {
-      return attribute.name === newAttribute.name
-    })
+/**
+ * Create an attribute name/value object.
+ * @param {string} name
+ * @param {string} value
+ */
+const getVNodeAttribute = (name, value) => {
+  return { name, value }
+}
+
+/**
+ * Gets dynamic property-based attributes to be applied.
+ * @param {VirtualNode} vNode
+ * @param {Attribute[]} attributes
+ */
+const getVNodeDynamicAttributes = (vNode, attributes) => {
+  dynamicAttributes.forEach(prop => {
+    if (!vNode[prop]) return
+    attributes.push(getVNodeAttribute(prop, vNode[prop]))
+  })
+}
+
+/**
+ * Gets virtual node attributes to be applied.
+ * @param {VirtualNode} vNode
+ */
+const getVNodeBaseAttributes = vNode => {
+  return Array.prototype.reduce.call(
+    vNode.attributes,
+    (allAttributes, attribute) => {
+      if (dynamicAttributes.indexOf(attribute.name) < 0) {
+        allAttributes.push(getVNodeAttribute(attribute.name, attribute.value))
+      }
+      return allAttributes
+    },
+    []
+  )
+}
+
+const getVNodeAttributes = element => {
+  const attributes = getVNodeBaseAttributes(element)
+  getVNodeDynamicAttributes(element, attributes)
+
+  return attributes
+}
+
+/**
+ * Reconcile attributes from nextVNode to oldVNode
+ * @param {VirtualNode} nextVNode
+ * @param {VirtualNode} oldVNode
+ */
+const diffVNodeAttributes = (nextVNode, oldVNode) => {
+  const removedAttributes = oldVNode.attributes.filter(attribute => {
+    const newAttributes = nextVNode.attributes.find(
+      newAttribute => attribute.name === newAttribute.name
+    )
 
     return newAttributes === null
   })
 
-  const changedAttributes = template.attributes.filter(attribute => {
-    const newAttributes = find(existing.attributes, existingAttribute => {
-      return attribute.name === existingAttribute.name
-    })
+  const changedAttributes = nextVNode.attributes.filter(attribute => {
+    if (dynamicAttributes.indexOf(attribute.name) > -1) return false
+
+    const newAttributes = find(
+      oldVNode.attributes,
+      oldAttribute => attribute.name === oldAttribute.name
+    )
 
     return newAttributes === null || newAttributes.value !== attribute.value
   })
 
-  // Run the diff
-  addAttributes(existing.node, changedAttributes)
-  removeAttributes(existing.node, removedAttributes)
+  // Add and remove attributes
+  addElementAttributes(oldVNode.node, changedAttributes)
+  removeElementAttributes(oldVNode.node, removedAttributes)
 }
 
 // Starting at the top level, recursively iterate through the new map
 // and update changes to the current one if there are differences.
 
-const syncNodes = (templateMap, domMap, element) => (node, index) => {
-  const existingChildNode = domMap[index]
-  const templateChildNode = templateMap[index]
-
-  // 1. Create and append new children
-  if (!existingChildNode) {
-    return element.appendChild(createNode(templateChildNode))
-  }
-
-  // 2. If element is not the same type, rebuild it
-  if (templateChildNode.type !== existingChildNode.type) {
-    return existingChildNode.node.parentNode.replaceChild(
-      createNode(templateChildNode),
-      existingChildNode.node
-    )
-  }
-
-  // 3. Update attributes
-  diffAttributes(templateChildNode, existingChildNode)
-
-  // 4. Update content
-  if (templateChildNode.content && templateChildNode.content !== existingChildNode.content) {
-    existingChildNode.node.textContent = templateChildNode.content
-  }
-
-  // 5a. Remove stale child nodes
-  if (existingChildNode.children.length > 0 && node.children.length < 1) {
-    return (existingChildNode.node.innerHTML = "")
-  }
-
-  // 5b. Rebuild elements that are empty but shouldn't be
-  //     Uses a document fragment to prevent unnecessary reflows
-  if (existingChildNode.children.length < 1 && node.children.length > 0) {
-    const fragment = document.createDocumentFragment()
-    diffDOM(node.children, existingChildNode.children, fragment)
-    return element.appendChild(fragment)
-  }
-
-  // 5c. Diff any children of the current node.
-  if (node.children.length > 0) {
-    diffDOM(node.children, existingChildNode.children, existingChildNode.node)
-  }
-}
-
 /**
  * Export utilities
  */
 
-export const diffDOM = (templateMap, domMap, element) => {
+/**
+ * Reconcile nextVDOM (new render state) against oldVDOM (old render state).
+ * @param {VirtualNode[]} nextVDOM - new virtual DOM
+ * @param {VirtualNode[]} oldVDOM - old virtual DOM
+ * @param {Element|ShadowRoot} root
+ */
+export const diffVDOM = (nextVDOM, oldVDOM, root) => {
   // Remove missing children from map
-  let delta = domMap.length - templateMap.length
+  let delta = oldVDOM.length - nextVDOM.length
   if (delta > 0) {
     for (; delta > 0; delta--) {
-      const child = domMap[domMap.length - delta]
-      child.node.parentNode.removeChild(child.node)
+      const vNode = oldVDOM[oldVDOM.length - delta]
+      vNode.node.parentNode.removeChild(vNode.node)
     }
   }
 
-  // Run the diff
-  templateMap.forEach(syncNodes(templateMap, domMap, element))
+  // Update existing and new nodes, recursively
+  nextVDOM.forEach((node, index) => {
+    const oldVNodeChild = oldVDOM[index]
+    const nextVNodeChild = nextVDOM[index]
+
+    // 1. Create and append new children
+    if (!oldVNodeChild) {
+      return root.appendChild(createElement(nextVNodeChild))
+    }
+
+    // 2. If element is not the same type, rebuild it
+    if (nextVNodeChild.type !== oldVNodeChild.type) {
+      return oldVNodeChild.node.parentNode.replaceChild(
+        createElement(nextVNodeChild),
+        oldVNodeChild.node
+      )
+    }
+
+    // 3. Update attributes
+    diffVNodeAttributes(nextVNodeChild, oldVNodeChild)
+
+    // 4. Update content
+    if (nextVNodeChild.content && nextVNodeChild.content !== oldVNodeChild.content) {
+      oldVNodeChild.node.textContent = nextVNodeChild.content
+    }
+
+    // 5a. Remove stale child nodes
+    if (oldVNodeChild.children.length > 0 && node.children.length < 1) {
+      return (oldVNodeChild.node.innerHTML = "")
+    }
+
+    // 5b. Rebuild elements that are empty but shouldn't be
+    //     Uses a document fragment to prevent unnecessary reflows
+    if (oldVNodeChild.children.length < 1 && node.children.length > 0) {
+      const fragment = document.createDocumentFragment()
+      diffVDOM(node.children, oldVNodeChild.children, fragment)
+      return root.appendChild(fragment)
+    }
+
+    // 5c. Diff any children of the current node.
+    if (node.children.length > 0) {
+      diffVDOM(node.children, oldVNodeChild.children, oldVNodeChild.node)
+    }
+  })
 }
 
-export const renderToDOM = (templateMap, root) => {
-  templateMap.forEach(element => root.appendChild(element.node))
+/**
+ * Renders a vDOM into the given root element. This happens one time,
+ * when a component is first rendered.
+ * @param {VirtualNode[]} vDOM
+ * @param {ShadowRoot} root
+ */
+export const renderToDOM = (vDOM, root) => {
+  vDOM.forEach(vNode => root.appendChild(vNode.node))
 }
 
+/**
+ * Convert stringified HTML into valid HTML, stripping all extra spaces.
+ * @param {string} stringToRender
+ */
 export const stringToHTML = stringToRender => {
   /**
-   * Remove all extraneous whitespace.
-   *
+   * Remove all extraneous whitespace:
    * - From the beginning + end of the document fragment
    * - If there's more than one space before a left tag bracket, replace them with one
    * - If there's more than one space before a right tag bracket, replace them with one
    */
-  const processedDOMString = stringToRender
-    .trim()
-    .replace(/\s+</g, "<")
-    .replace(/>\s+/g, ">")
+  const processedDOMString = stringToRender.trim().replace(/\s+</g, "<").replace(/>\s+/g, ">")
 
   const parser = new DOMParser()
   const context = parser.parseFromString(processedDOMString, "text/html")
   return context.body
 }
 
-export const createDOMMap = (element, isSVG) => {
+/**
+ * Creates a new virtual DOM from nodes within a given element.
+ * @param {Element|HTMLBodyElement} element
+ * @param {boolean} isSVG
+ * @returns {VirtualNode[]}
+ */
+export const createVDOM = (element, isSVG) => {
   return Array.prototype.map.call(element.childNodes, node => {
     const type =
       node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getAttributes(node) : []
+    const attributes = node.nodeType === 1 ? getVNodeAttributes(node) : []
     const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
-    const details = { node, content, attributes, type }
+    const vNode = { node, content, attributes, type }
 
-    details.isSVG = isSVG || details.type === "svg"
-    details.children = createDOMMap(node, details.isSVG)
-    return details
+    vNode.isSVG = isSVG || vNode.type === "svg"
+    vNode.children = createVDOM(node, vNode.isSVG)
+    return vNode
   })
 }
