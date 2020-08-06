@@ -10,7 +10,7 @@
     "build": "rm -rf lib && rollup -c",
     "build:publish": "rm -rf lib && NODE_ENV='publish' rollup -c",
     "lint": "eslint . --ext .js -c .eslintrc.js --ignore-path .eslintignore",
-    "prepublish": "npm run build:publish"
+    "prepublishOnly": "npm run build:publish"
   },
   "homepage": "https://github.com/geotrev/upgraded-element",
   "author": "George Treviranus",
