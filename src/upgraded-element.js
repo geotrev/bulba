@@ -156,7 +156,7 @@ export class UpgradedElement extends HTMLElement {
 
     let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
     if (!isUndefined(initialValue)) {
-      if (type) this.validateType(property, initialValue, type)
+      if (type) this[external.validateType](property, initialValue, type)
       this[privateName] = initialValue
     }
 
@@ -180,7 +180,7 @@ export class UpgradedElement extends HTMLElement {
       set(value) {
         // Don't set if the value is the same to prevent unnecessary re-renders.
         if (value === this[privateName]) return
-        if (type) this.validateType(property, value, type)
+        if (type) this[external.validateType](property, value, type)
 
         const attribute = toKebabCase(property)
         const oldValue = this[privateName]
