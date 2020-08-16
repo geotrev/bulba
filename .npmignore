@@ -3,11 +3,9 @@
 
 # logs
 npm-error.log*
-coverage/
-.sass-cache/
 
-# bin
-.bin/
+# build helpers
+build/
 
 # tests
 src/__tests__/
@@ -18,9 +16,9 @@ demo/
 # configs
 .browserslistrc
 .eslintignore
-.eslintrc.js
+.eslintrc.json
 .prettierignore
-.prettierrc.js
-babel.config.js
+.prettierrc.json
+babel.config.json
 rollup.config.js
 rollup.config.demo.js
