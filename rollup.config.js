@@ -39,12 +39,12 @@ const moduleOutputs = FORMAT_TYPES.map((format) => ({
 const umdOutputs = [
   {
     ...baseOutput(FORMAT_UMD),
-    file: path.resolve(__dirname, `dist/upgraded-element.umd.js`),
+    file: path.resolve(__dirname, `dist/upgraded-element.js`),
   },
   {
     ...baseOutput(FORMAT_UMD),
     plugins: [terserPlugin],
-    file: path.resolve(__dirname, `dist/upgraded-element.umd.min.js`),
+    file: path.resolve(__dirname, `dist/upgraded-element.min.js`),
   },
 ]
 
