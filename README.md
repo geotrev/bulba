@@ -116,7 +116,7 @@ When linking to the source file with a `script` tag, be sure to include `integri
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/undernet.bundle.js"
-  integrity="sha256-svQbwvA9NhkI8R+1IEkQyyy1+PImkt6yR8EKUjCZQEU="
+  integrity="sha256-pFyWclXndc+lfjqhz0KxGYi68zYnHc6l5G8zQipvkUQ="
   crossorigin="anonymous"
 ></script>
 
@@ -124,7 +124,7 @@ When linking to the source file with a `script` tag, be sure to include `integri
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/undernet.bundle.min.js"
-  integrity="sha256-ebIFYK3d2DDrLR2mEhvXqzebQf2lF9Bmfao1HbhT9m4="
+  integrity="sha256-HafUi7/84L0gVq7wvtKH4U4ykv0Y3lkRnSq2WCd7MkU="
   crossorigin="anonymous"
 ></script>
 ```
