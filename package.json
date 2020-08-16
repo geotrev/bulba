@@ -46,7 +46,8 @@
     "web components"
   ],
   "files": [
-    "lib/**.{js,map}",
+    "lib/*.{js,map}",
+    "dist/*.{js,map}",
     "src/*.js"
   ],
   "repository": {
