@@ -1,13 +1,15 @@
 import path from "path"
 import commonjs from "@rollup/plugin-commonjs"
 import resolve from "@rollup/plugin-node-resolve"
+import babel from "@rollup/plugin-babel"
 import { terser } from "rollup-plugin-terser"
+import { banner } from "./build/banner"
 
-const banner = require("./.bin/banner")
+const MODULE_TYPES = ["cjs", "es"]
 const input = path.resolve(__dirname, "src")
-const plugins = [resolve(), commonjs()]
+const plugins = [resolve(), commonjs(), babel({ babelHelpers: "bundled" })]
 
-if (process.env.NODE_ENV === "publish") {
+if (process.env.BABEL_ENV === "publish") {
   plugins.push(
     terser({
       output: {
@@ -24,38 +26,14 @@ if (process.env.NODE_ENV === "publish") {
   )
 }
 
-export default [
-  {
-    input,
-    plugins,
-    output: {
-      banner,
-      format: "iife",
-      file: path.resolve(__dirname, "lib/upgraded-element.js"),
-      sourcemap: true,
-      name: "UpgradedElement",
-    },
-  },
-  {
-    input,
-    plugins,
-    output: {
-      banner,
-      format: "cjs",
-      file: path.resolve(__dirname, "lib/upgraded-element.cjs.js"),
-      sourcemap: true,
-      name: "UpgradedElement",
-    },
-  },
-  {
-    input,
-    plugins,
-    output: {
-      banner,
-      format: "esm",
-      file: path.resolve(__dirname, "lib/upgraded-element.esm.js"),
-      sourcemap: true,
-      name: "UpgradedElement",
-    },
-  },
-]
+export default {
+  input,
+  plugins,
+  output: MODULE_TYPES.map(format => ({
+    banner,
+    format,
+    file: path.resolve(__dirname, `lib/upgraded-element.${format}.js`),
+    sourcemap: true,
+    name: "UpgradedElement",
+  })),
+}
