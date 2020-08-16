@@ -3,8 +3,8 @@
   "version": "0.3.1",
   "description": "A simple base class for using native web components",
   "main": "lib/upgraded-element.cjs.js",
-  "module": "lib/upgraded-element.esm.js",
-  "browser": "lib/upgraded-element.umd.js",
+  "module": "lib/upgraded-element.es.js",
+  "browser": "lib/upgraded-element.js",
   "type": "module",
   "scripts": {
     "watch": "rollup -c rollup.config.demo.js -w",
