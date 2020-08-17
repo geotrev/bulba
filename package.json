@@ -11,8 +11,10 @@
     "build": "BABEL_ENV=build rollup -c",
     "build:publish": "BABEL_ENV=publish rollup -c",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
+    "postversion:build-integrity": "node build/integrity.js",
+    "postversion:bump-origin": "git add -p && git commit -m 'adds new hashes' && git push && git push --tags",
     "preversion": "npm run build:publish",
-    "prepublishOnly": "node build/integrity.js && git add -p"
+    "postversion": "npm run postversion:build-integrity && npm run postversion:bump-origin"
   },
   "homepage": "https://github.com/geotrev/upgraded-element",
   "author": "George Treviranus <hello@geotrev.com>",
