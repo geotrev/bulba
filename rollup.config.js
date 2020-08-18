@@ -26,13 +26,13 @@ const terserPlugin = terser({
 const baseOutput = (format) => ({
   banner,
   format,
-  plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : undefined,
   name: "UpgradedElement",
   sourcemap: true,
 })
 
 const moduleOutputs = FORMAT_TYPES.map((format) => ({
   ...baseOutput(format),
+  plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : undefined,
   file: path.resolve(__dirname, `lib/upgraded-element.${format}.js`),
 }))
 
