@@ -35,5 +35,5 @@ export function getScheduler() {
     }
   }
 
-  return fn => schedule(fn)
+  return (fn) => schedule(fn)
 }

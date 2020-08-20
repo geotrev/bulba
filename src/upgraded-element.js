@@ -30,8 +30,9 @@ export class UpgradedElement extends HTMLElement {
     let attributes = []
 
     if (!isEmptyObject(this.properties)) {
-      Object.keys(this.properties).forEach(property => {
-        if (this.properties[property].reflected) attributes.push(toKebabCase(property))
+      Object.keys(this.properties).forEach((property) => {
+        if (this.properties[property].reflected)
+          attributes.push(toKebabCase(property))
       })
     }
 
@@ -44,7 +45,12 @@ export class UpgradedElement extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
-      this[internal.runLifecycle](external.elementAttributeChanged, name, oldValue, newValue)
+      this[internal.runLifecycle](
+        external.elementAttributeChanged,
+        name,
+        oldValue,
+        newValue
+      )
     }
   }
 
@@ -122,7 +128,10 @@ export class UpgradedElement extends HTMLElement {
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
-    this.setAttribute(external.elementIdAttribute, this[external.elementIdProperty])
+    this.setAttribute(
+      external.elementIdAttribute,
+      this[external.elementIdProperty]
+    )
     this[internal.performUpgrade]()
   }
 
@@ -133,7 +142,7 @@ export class UpgradedElement extends HTMLElement {
     const { properties } = this.constructor
     if (isEmptyObject(properties)) return
 
-    Object.keys(properties).forEach(property => {
+    Object.keys(properties).forEach((property) => {
       this[internal.upgradeProperty](property, properties[property])
     })
   }
@@ -146,15 +155,20 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.upgradeProperty](property, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
-    if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property)) return
+    if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property))
+      return
 
-    const privateName = isSymbol(property) ? Symbol() : `__private_${property}__`
+    const privateName = isSymbol(property)
+      ? Symbol()
+      : `__private_${property}__`
     const { default: defaultValue, type, reflected = false } = configuration
 
     // Validate the property's default value type, if given
     // Initialize the private property
 
-    let initialValue = isFunction(defaultValue) ? defaultValue(this) : defaultValue
+    let initialValue = isFunction(defaultValue)
+      ? defaultValue(this)
+      : defaultValue
     if (!isUndefined(initialValue)) {
       if (type) this[external.validateType](property, initialValue, type)
       this[privateName] = initialValue
@@ -187,11 +201,21 @@ export class UpgradedElement extends HTMLElement {
 
         if (value) {
           this[privateName] = value
-          this[internal.runLifecycle](external.elementPropertyChanged, property, oldValue, value)
+          this[internal.runLifecycle](
+            external.elementPropertyChanged,
+            property,
+            oldValue,
+            value
+          )
           if (reflected) this.setAttribute(attribute, value)
         } else {
           this[privateName] = undefined
-          this[internal.runLifecycle](external.elementPropertyChanged, property, oldValue, value)
+          this[internal.runLifecycle](
+            external.elementPropertyChanged,
+            property,
+            oldValue,
+            value
+          )
           if (reflected) this.removeAttribute(attribute)
         }
 
@@ -210,7 +234,9 @@ export class UpgradedElement extends HTMLElement {
     if (isFunction(this.render)) {
       domString = this.render()
     } else {
-      throw new Error(`You must include a render method in component: '${this.constructor.name}'`)
+      throw new Error(
+        `You must include a render method in component: '${this.constructor.name}'`
+      )
     }
 
     if (!isString(domString)) {
