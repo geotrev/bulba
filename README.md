@@ -107,24 +107,24 @@ Then import the package and create your new element, per [Getting Started](#gett
 
 **Source**
 
-[ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js) / [UMD](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.js) / [UMD (minified)](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.min.js)
+[ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js) / [Standalone Bundle](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.js) / [Standalone Bundle (minified)](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.min.js)
 
 When linking to the source file with a `script` tag, be sure to include `integrity` and `crossorigin` attributes:
 
 ```html
-<!-- Get unminified bundle for dev: -->
+<!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/undernet.bundle.js"
-  integrity="sha256-pFyWclXndc+lfjqhz0KxGYi68zYnHc6l5G8zQipvkUQ="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/upgraded-element.js"
+  integrity="sha256-2EFzIOsSSa8sqA5KfI2RQo2SmfZowFZ+CxiYiizuWHA="
   crossorigin="anonymous"
 ></script>
 
-<!-- Or minified/uglified bundle: -->
+<!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/undernet.bundle.min.js"
-  integrity="sha256-HafUi7/84L0gVq7wvtKH4U4ykv0Y3lkRnSq2WCd7MkU="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/upgraded-element.min.js"
+  integrity="sha256-yY2snO4AQGNMsfSSSAF8BTcUhpVpEyOl2z4og7Ma10k="
   crossorigin="anonymous"
 ></script>
 ```

@@ -4,7 +4,10 @@
  */
 export const createUUID = () => {
   const base = Number.MAX_SAFE_INTEGER
-  return Math.floor(Math.random() * base).toString(36) + Math.abs(Date.now()).toString(36)
+  return (
+    Math.floor(Math.random() * base).toString(36) +
+    Math.abs(Date.now()).toString(36)
+  )
 }
 
 /**
@@ -12,11 +15,11 @@ export const createUUID = () => {
  * @param {string} value
  * @returns {string}
  */
-export const toKebabCase = value =>
+export const toKebabCase = (value) =>
   value &&
   value
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-    .map(x => x.toLowerCase())
+    .map((x) => x.toLowerCase())
     .join("-")
 
 /**
@@ -24,46 +27,48 @@ export const toKebabCase = value =>
  * @param {*} value
  * @returns {string}
  */
-export const getTypeTag = value => Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
+export const getTypeTag = (value) =>
+  Object.prototype.toString.call(value).slice(8, -1).toLowerCase()
 
 /**
  * Checks if the value is an object literal.
  * @param {*} value
  * @returns {boolean}
  */
-export const isPlainObject = value => getTypeTag(value) === "object"
+export const isPlainObject = (value) => getTypeTag(value) === "object"
 
 /**
  * Checks if the value is an object literal with no enumerable properties.
  * @param {*} value
  * @returns {boolean}
  */
-export const isEmptyObject = value => !isPlainObject(value) || !Object.keys(value).length
+export const isEmptyObject = (value) =>
+  !isPlainObject(value) || !Object.keys(value).length
 
 /**
  * Checks if the value is a function.
  * @param {*} value
  * @returns {boolean}
  */
-export const isFunction = value => getTypeTag(value) === "function"
+export const isFunction = (value) => getTypeTag(value) === "function"
 
 /**
  * Checks if the value is a string literal.
  * @param {*} value
  * @returns {boolean}
  */
-export const isString = value => getTypeTag(value) === "string"
+export const isString = (value) => getTypeTag(value) === "string"
 
 /**
  * Checks if the value is undefined.
  * @param {*} value
  * @returns {boolean}
  */
-export const isUndefined = value => getTypeTag(value) === "undefined"
+export const isUndefined = (value) => getTypeTag(value) === "undefined"
 
 /**
  * Checks if the value is a symbol.
  * @param {*} value
  * @returns {boolean}
  */
-export const isSymbol = value => getTypeTag(value) === "symbol"
+export const isSymbol = (value) => getTypeTag(value) === "symbol"

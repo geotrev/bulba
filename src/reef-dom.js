@@ -36,8 +36,8 @@ const dynamicAttributes = ["checked", "selected", "value"]
  * @param {string} styles
  * @returns {Attribute[]}
  */
-const getElementStyles = styles => {
-  return styles.split(";").map(style => {
+const getElementStyles = (styles) => {
+  return styles.split(";").map((style) => {
     const entry = style.trim()
 
     if (entry.indexOf(":") > 0) {
@@ -57,7 +57,7 @@ const getElementStyles = styles => {
  * @param {Attribute[]} styles
  */
 const removeElementStyles = (element, styles) => {
-  styles.forEach(style => (element.style[style.name] = ""))
+  styles.forEach((style) => (element.style[style.name] = ""))
 }
 
 /**
@@ -66,7 +66,7 @@ const removeElementStyles = (element, styles) => {
  * @param {Attribute[]} styles
  */
 const addElementStyles = (element, styles) => {
-  styles.forEach(style => (element.style[style.name] = style.value))
+  styles.forEach((style) => (element.style[style.name] = style.value))
 }
 
 /**
@@ -79,8 +79,8 @@ const diffElementStyles = (element, styles) => {
   const processed = getElementStyles(styles)
 
   // Get styles to remove
-  const staleStyles = Array.prototype.filter.call(element.style, style => {
-    const findStyle = processed.find(newStyle => {
+  const staleStyles = Array.prototype.filter.call(element.style, (style) => {
+    const findStyle = processed.find((newStyle) => {
       return newStyle.name === style && newStyle.value === element.style[style]
     })
     return findStyle === undefined
@@ -97,7 +97,7 @@ const diffElementStyles = (element, styles) => {
  * @param {Attribute[]} attributes
  */
 const removeElementAttributes = (element, attributes) => {
-  attributes.forEach(attribute => {
+  attributes.forEach((attribute) => {
     // If the attribute is `class` or `style`,
     // unset the properties.
     if (attribute.name === "class") {
@@ -120,7 +120,7 @@ const removeElementAttributes = (element, attributes) => {
  * @param {Attribute[]} attributes
  */
 const addElementAttributes = (element, attributes) => {
-  attributes.forEach(attribute => {
+  attributes.forEach((attribute) => {
     // If the attribute is `class` or `style`,
     // apply those as properties.
     if (attribute.name === "class") {
@@ -141,7 +141,7 @@ const addElementAttributes = (element, attributes) => {
  * Create a new element from virtual node.
  * @param {VirtualNode} vNode
  */
-const createElement = vNode => {
+const createElement = (vNode) => {
   let element
   if (vNode.type === "text") {
     element = document.createTextNode(vNode.content)
@@ -156,7 +156,7 @@ const createElement = vNode => {
   addElementAttributes(element, vNode.attributes)
 
   if (vNode.children.length > 0) {
-    vNode.children.forEach(childElement => {
+    vNode.children.forEach((childElement) => {
       element.appendChild(createElement(childElement))
     })
   } else if (vNode.type !== "text") {
@@ -181,7 +181,7 @@ const getVNodeAttribute = (name, value) => {
  * @param {Attribute[]} attributes
  */
 const getVNodeDynamicAttributes = (vNode, attributes) => {
-  dynamicAttributes.forEach(prop => {
+  dynamicAttributes.forEach((prop) => {
     if (!vNode[prop]) return
     attributes.push(getVNodeAttribute(prop, vNode[prop]))
   })
@@ -191,7 +191,7 @@ const getVNodeDynamicAttributes = (vNode, attributes) => {
  * Gets virtual node attributes to be applied.
  * @param {VirtualNode} vNode
  */
-const getVNodeBaseAttributes = vNode => {
+const getVNodeBaseAttributes = (vNode) => {
   return Array.prototype.reduce.call(
     vNode.attributes,
     (allAttributes, attribute) => {
@@ -204,7 +204,7 @@ const getVNodeBaseAttributes = vNode => {
   )
 }
 
-const getVNodeAttributes = element => {
+const getVNodeAttributes = (element) => {
   const attributes = getVNodeBaseAttributes(element)
   getVNodeDynamicAttributes(element, attributes)
 
@@ -212,29 +212,30 @@ const getVNodeAttributes = element => {
 }
 
 /**
- * Reconcile attributes from nextVNode to oldVNode
+ * Reconcile attributes from oldVNode to nextVNode
  * @param {VirtualNode} nextVNode
  * @param {VirtualNode} oldVNode
  */
 const diffVNodeAttributes = (nextVNode, oldVNode) => {
-  const removedAttributes = oldVNode.attributes.filter(attribute => {
+  const removedAttributes = oldVNode.attributes.filter((attribute) => {
     const newAttributes = nextVNode.attributes.find(
-      newAttribute => attribute.name === newAttribute.name
+      (newAttribute) => attribute.name === newAttribute.name
     )
 
     return newAttributes === null
   })
 
-  const changedAttributes = nextVNode.attributes.filter(attribute => {
+  const changedAttributes = nextVNode.attributes.filter((attribute) => {
     if (dynamicAttributes.indexOf(attribute.name) > -1) return false
 
-    const newAttributes = find(
-      oldVNode.attributes,
-      oldAttribute => attribute.name === oldAttribute.name
+    const newAttributes = oldVNode.attributes.some(
+      (oldAttribute) => attribute.name === oldAttribute.name
     )
 
     return newAttributes === null || newAttributes.value !== attribute.value
   })
+
+  console.log(changedAttributes)
 
   // Add and remove attributes
   addElementAttributes(oldVNode.node, changedAttributes)
@@ -286,7 +287,10 @@ export const diffVDOM = (nextVDOM, oldVDOM, root) => {
     diffVNodeAttributes(nextVNodeChild, oldVNodeChild)
 
     // 4. Update content
-    if (nextVNodeChild.content && nextVNodeChild.content !== oldVNodeChild.content) {
+    if (
+      nextVNodeChild.content &&
+      nextVNodeChild.content !== oldVNodeChild.content
+    ) {
       oldVNodeChild.node.textContent = nextVNodeChild.content
     }
 
@@ -317,21 +321,24 @@ export const diffVDOM = (nextVDOM, oldVDOM, root) => {
  * @param {ShadowRoot} root
  */
 export const renderToDOM = (vDOM, root) => {
-  vDOM.forEach(vNode => root.appendChild(vNode.node))
+  vDOM.forEach((vNode) => root.appendChild(vNode.node))
 }
 
 /**
  * Convert stringified HTML into valid HTML, stripping all extra spaces.
  * @param {string} stringToRender
  */
-export const stringToHTML = stringToRender => {
+export const stringToHTML = (stringToRender) => {
   /**
    * Remove all extraneous whitespace:
    * - From the beginning + end of the document fragment
    * - If there's more than one space before a left tag bracket, replace them with one
    * - If there's more than one space before a right tag bracket, replace them with one
    */
-  const processedDOMString = stringToRender.trim().replace(/\s+</g, "<").replace(/>\s+/g, ">")
+  const processedDOMString = stringToRender
+    .trim()
+    .replace(/\s+</g, "<")
+    .replace(/>\s+/g, ">")
 
   const parser = new DOMParser()
   const context = parser.parseFromString(processedDOMString, "text/html")
@@ -345,11 +352,16 @@ export const stringToHTML = stringToRender => {
  * @returns {VirtualNode[]}
  */
 export const createVDOM = (element, isSVG) => {
-  return Array.prototype.map.call(element.childNodes, node => {
+  return Array.prototype.map.call(element.childNodes, (node) => {
     const type =
-      node.nodeType === 3 ? "text" : node.nodeType === 8 ? "comment" : node.tagName.toLowerCase()
+      node.nodeType === 3
+        ? "text"
+        : node.nodeType === 8
+        ? "comment"
+        : node.tagName.toLowerCase()
     const attributes = node.nodeType === 1 ? getVNodeAttributes(node) : []
-    const content = node.childNodes && node.childNodes.length > 0 ? null : node.textContent
+    const content =
+      node.childNodes && node.childNodes.length > 0 ? null : node.textContent
     const vNode = { node, content, attributes, type }
 
     vNode.isSVG = isSVG || vNode.type === "svg"
