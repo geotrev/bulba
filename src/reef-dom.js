@@ -235,8 +235,6 @@ const diffVNodeAttributes = (nextVNode, oldVNode) => {
     return newAttributes === null || newAttributes.value !== attribute.value
   })
 
-  console.log(changedAttributes)
-
   // Add and remove attributes
   addElementAttributes(oldVNode.node, changedAttributes)
   removeElementAttributes(oldVNode.node, removedAttributes)
