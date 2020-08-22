@@ -180,9 +180,9 @@ static get styles() {
 
 ### Properties
 
-**TL;DR** Properties enable internal state in `UpgradedElement`. By defining a property, it will be upgraded to hook into the render lifecycle, similar to how state works in React.
+Properties are the internal state mechanism in an upgraded element. Defining a property will always hook it into the render lifecycle, similar to how state works in React.
 
-Use the static `properties` getter and return an object, where each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
+Define your `properties` using the static getter. Each entry is the property name (key) and configuration (value). Property names should always be `camelCase`.
 
 Example:
 
@@ -202,15 +202,37 @@ static get properties() {
 }
 ```
 
-#### Configuration Options
+#### Property Metadata
 
 Configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
 
-Here are the properties accepted in the configuration object:
+A `property` can have the following configurations:
 
-- **default** (`string` or `function`): The default value for the property. It can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, aka the HTML element itself.
-- **type** (`string`): Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD.
-- **reflected** (`boolean`): Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
+##### `default`
+
+> Value type: String or Function
+
+The default value for the property. It can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, aka the HTML element itself.
+
+##### `type` 
+
+> Value type: String
+
+Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD. Here is a full list of types:
+  - 'string'
+  - 'number'
+  - 'symbol'
+  - 'object'
+  - 'array'
+  - 'function'
+  - 'boolean'
+  - 'bigint'
+  
+##### `reflected`
+
+> Value type: Boolean
+
+Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
 
 #### Updating a Property
 
