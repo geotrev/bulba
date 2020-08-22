@@ -219,14 +219,14 @@ The default value for the property. It can be a primitive value, or callback whi
 > Value type: String
 
 Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD. Here is a full list of types:
-  - 'string'
-  - 'number'
-  - 'symbol'
-  - 'object'
-  - 'array'
-  - 'function'
-  - 'boolean'
-  - 'bigint'
+  - `string`
+  - `number`
+  - `symbol`
+  - `object`
+  - `array`
+  - `function`
+  - `boolean`
+  - `bigint`
   
 ##### `reflected`
 
