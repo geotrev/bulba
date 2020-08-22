@@ -2,7 +2,7 @@
 
 `UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped.
 
-How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children, which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
+How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children (unless those children have [reflected properties](#configuration-options)), which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
 
 What you get:
 
