@@ -12,6 +12,7 @@ import {
 import { getScheduler } from "./scheduler"
 import * as internal from "./internal"
 import * as external from "./external"
+import "./direction-observer"
 
 /**
  * @module UpgradedElement
@@ -128,10 +129,15 @@ export class UpgradedElement extends HTMLElement {
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
+    // Set id as an attribute
     this.setAttribute(
       external.elementIdAttribute,
       this[external.elementIdProperty]
     )
+
+    // Set document direction for reflow support in shadow roots
+    this.setAttribute("dir", String(document.dir || "ltr"))
+
     this[internal.performUpgrade]()
   }
 
