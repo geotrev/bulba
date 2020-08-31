@@ -1,6 +1,6 @@
 # \<upgraded-element\>
 
-`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped.
+`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped. Partially inspired by [LitElement](https://github.com/polymer/lit-element).
 
 How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children (unless those children have [reflected properties](#configuration-options)), which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
 
@@ -454,7 +454,7 @@ A few quick points on the design of `UpgradedElement`:
 
 1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef) with some optimizations specific to shadow DOM concerns. The main reasoning here is to reduce package size and make rendering cheap and fast.
 
-2. **Performance:** All renders are asynchronously requested to happen at the next animation frame. This is accomplished using a combination of `postMessage` and `requestAnimationFrame`. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). If `setTimeout` isn't available, then the render is called on the same frame as the `postMessage` handler.
+2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested, they are batched to reduce having multiple renders. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). 
 
 ## Goals
 
