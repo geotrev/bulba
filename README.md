@@ -243,6 +243,7 @@ Every time an upgraded property changes it will trigger the following steps (in 
 1. `elementAttributeChanged`, if reflected
 2. `elementPropertyChanged`
 3. Re-render to reflect the new property / attribute changes into the shadow root.
+4. `elementDidUpdate`
 
 See [lifecycle](#lifecycle) methods below.
 
@@ -285,7 +286,7 @@ Tips:
 2. Always name the internal property something different than the accessor methods that get/set its value. In other words, `isOpen` gets and sets the property `_isOpen`. _Technically_ both are properties on the class, therefore if both are the same name, an error will be thrown later.
 3. You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
 
-To achieve the existing behavior of an upgraded property, you can add in upgraded-element's [internal methods](#internal-methods-and-hooks). Using the previous `isOpen` as a base, let's add some more logic:
+To achieve the existing behavior of an upgraded property, you can add in upgraded-element's [internal methods](#internal-methods-and-hooks). Using the previous `isOpen` as a base, let's add some more logic to our setter:
 
 ```js
 if (value === this.isOpen) return
