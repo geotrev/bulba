@@ -1,4 +1,4 @@
-import { isFunction } from "./utilities"
+import { isFunction } from "../utilities/is-type"
 
 /**
  * This scheduler uses either requestAnimationFrame or setTimeout to schedule

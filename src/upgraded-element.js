@@ -1,18 +1,22 @@
-import { createVDOM, stringToHTML, diffVDOM, renderToDOM } from "./reef-dom"
 import {
-  createUUID,
-  toKebabCase,
+  createVDOM,
+  stringToHTML,
+  diffVDOM,
+  renderToDOM,
+} from "./renderer/reef-dom"
+import {
   isEmptyObject,
   isString,
   isFunction,
   isUndefined,
   isSymbol,
   getTypeTag,
-} from "./utilities"
-import { getScheduler } from "./scheduler"
+} from "./utilities/is-type"
+import { createUUID } from "./utilities/create-uuid"
+import { toKebabCase } from "./utilities/transform-case"
+import { getScheduler } from "./renderer/scheduler"
 import * as internal from "./internal"
 import * as external from "./external"
-import "./direction-observer"
 
 /**
  * @module UpgradedElement

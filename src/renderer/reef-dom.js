@@ -22,7 +22,8 @@
  * @property {Attribute[]} attributes - List of attributes, if any.
  * @property {TextNode|CommentNode} content - Text or comment content, if any.
  * @property {VirtualNode[]} children - Child virtual nodes, if any.
- * @property {Element} node - The corresponding DOM element.
+ * @property {HTMLElement} node - The corresponding DOM element.
+ * @property {boolean} isSVG
  */
 
 /**
@@ -53,7 +54,7 @@ const getElementStyles = (styles) => {
 
 /**
  * Removes inline styles from the element.
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {Attribute[]} styles
  */
 const removeElementStyles = (element, styles) => {
@@ -62,7 +63,7 @@ const removeElementStyles = (element, styles) => {
 
 /**
  * Adds inline styles to the element.
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {Attribute[]} styles
  */
 const addElementStyles = (element, styles) => {
@@ -71,7 +72,7 @@ const addElementStyles = (element, styles) => {
 
 /**
  * Updates styles on element: removes missing, updates existing if changed.
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {string} styles
  */
 const diffElementStyles = (element, styles) => {
@@ -93,7 +94,7 @@ const diffElementStyles = (element, styles) => {
 
 /**
  * Removes stale attributes from the element.
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {Attribute[]} attributes
  */
 const removeElementAttributes = (element, attributes) => {
@@ -116,7 +117,7 @@ const removeElementAttributes = (element, attributes) => {
 
 /**
  * Adds attributes to the element.
- * @param {Element} element
+ * @param {HTMLElement} element
  * @param {Attribute[]} attributes
  */
 const addElementAttributes = (element, attributes) => {
@@ -170,6 +171,7 @@ const createElement = (vNode) => {
  * Create an attribute name/value object.
  * @param {string} name
  * @param {string} value
+ * @returns {Attribute}
  */
 const getVNodeAttribute = (name, value) => {
   return { name, value }
@@ -177,23 +179,24 @@ const getVNodeAttribute = (name, value) => {
 
 /**
  * Gets dynamic property-based attributes to be applied.
- * @param {VirtualNode} vNode
+ * @param {HTMLElement} element
  * @param {Attribute[]} attributes
  */
-const getVNodeDynamicAttributes = (vNode, attributes) => {
+const getVNodeDynamicAttributes = (element, attributes) => {
   dynamicAttributes.forEach((prop) => {
-    if (!vNode[prop]) return
-    attributes.push(getVNodeAttribute(prop, vNode[prop]))
+    if (!element[prop]) return
+    attributes.push(getVNodeAttribute(prop, element[prop]))
   })
 }
 
 /**
- * Gets virtual node attributes to be applied.
- * @param {VirtualNode} vNode
+ * Gets non-dynamic node attributes to be applied.
+ * @param {HTMLElement} element
+ * @returns {Attribute[]}
  */
-const getVNodeBaseAttributes = (vNode) => {
+const getVNodeBaseAttributes = (element) => {
   return Array.prototype.reduce.call(
-    vNode.attributes,
+    element.attributes,
     (allAttributes, attribute) => {
       if (dynamicAttributes.indexOf(attribute.name) < 0) {
         allAttributes.push(getVNodeAttribute(attribute.name, attribute.value))
@@ -204,6 +207,10 @@ const getVNodeBaseAttributes = (vNode) => {
   )
 }
 
+/**
+ * Gets all virtual node attributes.
+ * @returns {Attribute[]}
+ */
 const getVNodeAttributes = (element) => {
   const attributes = getVNodeBaseAttributes(element)
   getVNodeDynamicAttributes(element, attributes)
@@ -251,7 +258,7 @@ const diffVNodeAttributes = (nextVNode, oldVNode) => {
  * Reconcile nextVDOM (new render state) against oldVDOM (old render state).
  * @param {VirtualNode[]} nextVDOM - new virtual DOM
  * @param {VirtualNode[]} oldVDOM - old virtual DOM
- * @param {Element|ShadowRoot} root
+ * @param {HTMLElement|ShadowRoot} root
  */
 export const diffVDOM = (nextVDOM, oldVDOM, root) => {
   // Remove missing children from map
@@ -345,7 +352,7 @@ export const stringToHTML = (stringToRender) => {
 
 /**
  * Creates a new virtual DOM from nodes within a given element.
- * @param {Element|HTMLBodyElement} element
+ * @param {HTMLElement|ShadowRoot|HTMLBodyElement} element
  * @param {boolean} isSVG
  * @returns {VirtualNode[]}
  */
