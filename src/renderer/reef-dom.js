@@ -32,6 +32,16 @@
 const dynamicAttributes = ["checked", "selected", "value"]
 
 /**
+ * Returns the first item in an array that satisfies
+ * the callback condition
+ */
+const find = (arr, callback) => {
+  var matches = arr.filter(callback)
+  if (matches.length < 1) return null
+  return matches[0]
+}
+
+/**
  * Takes an inline style string and reduces it to
  * an array of objects per prop/value pair.
  * @param {string} styles
@@ -77,19 +87,20 @@ const addElementStyles = (element, styles) => {
  */
 const diffElementStyles = (element, styles) => {
   // Get style map
-  const processed = getElementStyles(styles)
+  const styleMap = getElementStyles(styles)
 
   // Get styles to remove
   const staleStyles = Array.prototype.filter.call(element.style, (style) => {
-    const findStyle = processed.find((newStyle) => {
+    const findStyle = find(styleMap, (newStyle) => {
       return newStyle.name === style && newStyle.value === element.style[style]
     })
-    return findStyle === undefined
+
+    return findStyle === null
   })
 
   // Apply changes
   removeElementStyles(element, staleStyles)
-  addElementStyles(element, processed)
+  addElementStyles(element, styleMap)
 }
 
 /**
@@ -224,22 +235,21 @@ const getVNodeAttributes = (element) => {
  * @param {VirtualNode} oldVNode
  */
 const diffVNodeAttributes = (nextVNode, oldVNode) => {
-  const removedAttributes = oldVNode.attributes.filter((attribute) => {
-    const newAttributes = nextVNode.attributes.find(
-      (newAttribute) => attribute.name === newAttribute.name
-    )
+  // Get stale attributes
+  const removedAttributes = oldVNode.attributes.filter((oldAtt) => {
+    const getAtt = find(nextVNode.attributes, (newAtt) => {
+      return oldAtt.name === newAtt.name
+    })
 
-    return newAttributes === null
+    return getAtt === null
   })
 
-  const changedAttributes = nextVNode.attributes.filter((attribute) => {
-    if (dynamicAttributes.indexOf(attribute.name) > -1) return false
-
-    const newAttributes = oldVNode.attributes.some(
-      (oldAttribute) => attribute.name === oldAttribute.name
-    )
-
-    return newAttributes === null || newAttributes.value !== attribute.value
+  // Get changed or new attributes
+  const changedAttributes = nextVNode.attributes.filter((newAtt) => {
+    const getAtt = find(oldVNode.attributes, (oldAtt) => {
+      return newAtt.name === oldAtt.name
+    })
+    return getAtt === null || getAtt.value !== newAtt.value
   })
 
   // Add and remove attributes
