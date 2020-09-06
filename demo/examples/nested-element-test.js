@@ -18,7 +18,7 @@ class NestedElementTest extends UpgradedElement {
       }
 
       .border {
-        border-width: 1px;
+        border-width: 3px;
         border-style: solid;
       }
     `
@@ -39,7 +39,9 @@ class NestedElementTest extends UpgradedElement {
   }
 
   handleClick() {
-    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][Math.floor(Math.random() * 5)]
+    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
+      Math.floor(Math.random() * 5)
+    ]
     this.shadowRoot.querySelector("reflect-properties-test").firstName = [
       "Mario",
       "Samus",
@@ -50,7 +52,7 @@ class NestedElementTest extends UpgradedElement {
 
   render() {
     return `
-      <p>This one is nested.</p>
+      <p>This one is nested with inline styles.</p>
       <button id="clicker">Click to update</button>
       <div class="border" style="border-color: ${this.borderColor}">
         <reflect-properties-test first-name="Chaos" description="I'm nested!">

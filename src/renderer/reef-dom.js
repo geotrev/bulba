@@ -1,17 +1,8 @@
 /**
- * Credit for this approach goes to Chris Ferdinandi.
- * It's basically the same as reefjs, but has renamed vars,
- * supports es6, and includes more methods for upgrade-element's
- * specific use-case..
+ * Credit for this virtual dom implementation goes to Chris Ferdinandi.
+ * It's mostly the same as reefjs, but changes the data structure slightly
+ * in select areas.
  * https://github.com/cferdinandi/reef
- */
-
-/**
- * An object whose key/value pairs are the name and value of an attribute, respectively.
- * @typedef Attribute
- * @type {Object}
- * @property {string} name
- * @property {string} value
  */
 
 /**
@@ -19,7 +10,7 @@
  * @typedef VirtualNode
  * @type {Object}
  * @property {string} type - The type of node. E.g., tag name, "comment", or "text".
- * @property {Attribute[]} attributes - List of attributes, if any.
+ * @property {Object.<string, string>} attributes - List of attributes, if any.
  * @property {TextNode|CommentNode} content - Text or comment content, if any.
  * @property {VirtualNode[]} children - Child virtual nodes, if any.
  * @property {HTMLElement} node - The corresponding DOM element.
@@ -32,13 +23,14 @@
 const dynamicAttributes = ["checked", "selected", "value"]
 
 /**
- * Returns the first item in an array that satisfies
- * the callback condition
+ * Reverse for loop for improved performance.
+ * @param {[]} items
+ * @param callback
  */
-const find = (arr, callback) => {
-  var matches = arr.filter(callback)
-  if (matches.length < 1) return null
-  return matches[0]
+const forEachReverse = (items, callback) => {
+  for (let i = items.length - 1; i >= 0; i--) {
+    callback(items[i])
+  }
 }
 
 /**
@@ -47,19 +39,19 @@ const find = (arr, callback) => {
  * @param {string} styles
  * @returns {Attribute[]}
  */
-const getElementStyles = (styles) => {
-  return styles.split(";").map((style) => {
+const styleStringToMap = (styles) => {
+  return styles.split(";").reduce((allStyles, style) => {
     const entry = style.trim()
 
     if (entry.indexOf(":") > 0) {
       const [name, value] = entry.split(":")
-
-      return {
-        name: name ? name.trim() : "",
-        value: value ? value.trim() : "",
+      if (value.trim() !== "") {
+        return { ...allStyles, [name.trim()]: value.trim() }
       }
     }
-  })
+
+    return allStyles
+  }, {})
 }
 
 /**
@@ -67,8 +59,8 @@ const getElementStyles = (styles) => {
  * @param {HTMLElement} element
  * @param {Attribute[]} styles
  */
-const removeElementStyles = (element, styles) => {
-  styles.forEach((style) => (element.style[style.name] = ""))
+const removeStyles = (element, styles) => {
+  forEachReverse(styles, (property) => (element.style[property] = ""))
 }
 
 /**
@@ -76,31 +68,32 @@ const removeElementStyles = (element, styles) => {
  * @param {HTMLElement} element
  * @param {Attribute[]} styles
  */
-const addElementStyles = (element, styles) => {
-  styles.forEach((style) => (element.style[style.name] = style.value))
+const updateStyles = (element, properties, styleMap) => {
+  forEachReverse(properties, (property) => {
+    if (element.style[property] === styleMap[property]) return
+    element.style[property] = styleMap[property]
+  })
 }
 
 /**
- * Updates styles on element: removes missing, updates existing if changed.
+ * Updates styles on element.
  * @param {HTMLElement} element
  * @param {string} styles
  */
-const diffElementStyles = (element, styles) => {
+const diffStyles = (element, styles) => {
   // Get style map
-  const styleMap = getElementStyles(styles)
+  const styleMap = styleStringToMap(styles)
+  const styleProps = Object.keys(styleMap)
 
   // Get styles to remove
-  const staleStyles = Array.prototype.filter.call(element.style, (style) => {
-    const findStyle = find(styleMap, (newStyle) => {
-      return newStyle.name === style && newStyle.value === element.style[style]
-    })
+  const staleStyles = Array.prototype.filter.call(
+    element.style,
+    (style) => styleMap[style] === undefined
+  )
 
-    return findStyle === null
-  })
-
-  // Apply changes
-  removeElementStyles(element, staleStyles)
-  addElementStyles(element, styleMap)
+  // Remove + update changes
+  removeStyles(element, staleStyles)
+  updateStyles(element, styleProps, styleMap)
 }
 
 /**
@@ -108,21 +101,20 @@ const diffElementStyles = (element, styles) => {
  * @param {HTMLElement} element
  * @param {Attribute[]} attributes
  */
-const removeElementAttributes = (element, attributes) => {
+const removeAttributes = (element, attributes) => {
   attributes.forEach((attribute) => {
-    // If the attribute is `class` or `style`,
-    // unset the properties.
-    if (attribute.name === "class") {
+    // If the attribute is `class` or `style`, unset the properties.
+    if (attribute === "class") {
       element.className = ""
-    } else if (attribute.name === "style") {
-      removeElementStyles(element, Array.prototype.slice.call(element.style))
-    } else {
+    } else if (attribute === "style") {
+      removeStyles(element, Array.prototype.slice.call(element.style))
+    } else if (attribute in element) {
       // If the attribute is also a property, unset it
-      if (attribute.name in element) {
-        element[attribute.name] = ""
-      }
-      element.removeAttribute(attribute.name)
+      element[attribute] = ""
     }
+
+    // Clean up the DOM attribute
+    element.removeAttribute(attribute)
   })
 }
 
@@ -131,20 +123,20 @@ const removeElementAttributes = (element, attributes) => {
  * @param {HTMLElement} element
  * @param {Attribute[]} attributes
  */
-const addElementAttributes = (element, attributes) => {
-  attributes.forEach((attribute) => {
-    // If the attribute is `class` or `style`,
-    // apply those as properties.
-    if (attribute.name === "class") {
-      element.className = attribute.value
-    } else if (attribute.name === "style") {
-      diffElementStyles(element, attribute.value)
+const addAttributes = (element, attributes) => {
+  forEachReverse(Object.keys(attributes), (attribute) => {
+    const value = attributes[attribute]
+    // If the attribute is `class` or `style`, apply those as properties.
+    if (attribute === "class") {
+      element.className = value
+    } else if (attribute === "style") {
+      diffStyles(element, value)
     } else {
       // If the attribute is also a property, set it
-      if (attribute.name in element) {
-        element[attribute.name] = attribute.value || attribute.name
+      if (attribute in element) {
+        element[attribute] = value || attribute
       }
-      element.setAttribute(attribute.name, attribute.value || "")
+      element.setAttribute(attribute, value || "")
     }
   })
 }
@@ -165,7 +157,7 @@ const createElement = (vNode) => {
     element = document.createElement(vNode.type)
   }
 
-  addElementAttributes(element, vNode.attributes)
+  addAttributes(element, vNode.attributes)
 
   if (vNode.children.length > 0) {
     vNode.children.forEach((childElement) => {
@@ -179,52 +171,42 @@ const createElement = (vNode) => {
 }
 
 /**
- * Create an attribute name/value object.
- * @param {string} name
- * @param {string} value
- * @returns {Attribute}
- */
-const getVNodeAttribute = (name, value) => {
-  return { name, value }
-}
-
-/**
  * Gets dynamic property-based attributes to be applied.
  * @param {HTMLElement} element
- * @param {Attribute[]} attributes
+ * @param {Object.<string, string>} attributes
  */
-const getVNodeDynamicAttributes = (element, attributes) => {
-  dynamicAttributes.forEach((prop) => {
+const getDynamicAttributes = (element, attributes) => {
+  forEachReverse(dynamicAttributes, (prop) => {
     if (!element[prop]) return
-    attributes.push(getVNodeAttribute(prop, element[prop]))
+    attributes[prop] = element[prop]
   })
 }
 
 /**
  * Gets non-dynamic node attributes to be applied.
  * @param {HTMLElement} element
- * @returns {Attribute[]}
+ * @returns {Object.<string, string>}
  */
-const getVNodeBaseAttributes = (element) => {
-  return Array.prototype.reduce.call(
-    element.attributes,
-    (allAttributes, attribute) => {
-      if (dynamicAttributes.indexOf(attribute.name) < 0) {
-        allAttributes.push(getVNodeAttribute(attribute.name, attribute.value))
-      }
-      return allAttributes
-    },
-    []
-  )
+const getBaseAttributes = (element) => {
+  let attributes = {}
+
+  Array.prototype.forEach.call(element.attributes, (attribute) => {
+    if (dynamicAttributes.indexOf(attribute.name) < 0) {
+      attributes[attribute.name] = attribute.value
+    }
+  })
+
+  return attributes
 }
 
 /**
  * Gets all virtual node attributes.
- * @returns {Attribute[]}
+ * @param {HTMLElement} element
+ * @returns {Object.<string, string>}
  */
-const getVNodeAttributes = (element) => {
-  const attributes = getVNodeBaseAttributes(element)
-  getVNodeDynamicAttributes(element, attributes)
+const getAttributes = (element) => {
+  const attributes = getBaseAttributes(element)
+  getDynamicAttributes(element, attributes)
 
   return attributes
 }
@@ -234,27 +216,35 @@ const getVNodeAttributes = (element) => {
  * @param {VirtualNode} nextVNode
  * @param {VirtualNode} oldVNode
  */
-const diffVNodeAttributes = (nextVNode, oldVNode) => {
-  // Get stale attributes
-  const removedAttributes = oldVNode.attributes.filter((oldAtt) => {
-    const getAtt = find(nextVNode.attributes, (newAtt) => {
-      return oldAtt.name === newAtt.name
-    })
+const diffAttributes = (nextVNode, oldVNode) => {
+  let removedAttributes = []
+  let changedAttributes = {}
 
-    return getAtt === null
+  // Get stale attributes
+  forEachReverse(Object.keys(oldVNode.attributes), (attr) => {
+    const oldValue = oldVNode.attributes[attr]
+    const nextValue = nextVNode.attributes[attr]
+    if (oldValue === nextValue) return
+
+    if (nextValue === undefined) {
+      removedAttributes.push(attr)
+    }
   })
 
   // Get changed or new attributes
-  const changedAttributes = nextVNode.attributes.filter((newAtt) => {
-    const getAtt = find(oldVNode.attributes, (oldAtt) => {
-      return newAtt.name === oldAtt.name
-    })
-    return getAtt === null || getAtt.value !== newAtt.value
+  forEachReverse(Object.keys(nextVNode.attributes), (attr) => {
+    const oldValue = oldVNode.attributes[attr]
+    const nextValue = nextVNode.attributes[attr]
+    if (oldValue === nextValue) return
+
+    if (nextValue && (oldValue === undefined || oldValue !== nextValue)) {
+      changedAttributes[attr] = nextValue
+    }
   })
 
   // Add and remove attributes
-  addElementAttributes(oldVNode.node, changedAttributes)
-  removeElementAttributes(oldVNode.node, removedAttributes)
+  removeAttributes(oldVNode.node, removedAttributes)
+  addAttributes(oldVNode.node, changedAttributes)
 }
 
 // Starting at the top level, recursively iterate through the new map
@@ -299,7 +289,7 @@ export const diffVDOM = (nextVDOM, oldVDOM, root) => {
     }
 
     // 3. Update attributes
-    diffVNodeAttributes(nextVNodeChild, oldVNodeChild)
+    diffAttributes(nextVNodeChild, oldVNodeChild)
 
     // 4. Update content
     if (
@@ -361,6 +351,15 @@ export const stringToHTML = (stringToRender) => {
 }
 
 /**
+ * 1. Detect shadow root as a type and set root node type
+ *    - node.children is SR children (type === 11)
+ * 2. Detect if children is flat
+ *    - If childNodes.length > 1, use an array
+ *    - If childNodes.length === 1, use object to directly access node
+ * 3. Set attributes as key: value instead of array of {name, type}.
+ */
+
+/**
  * Creates a new virtual DOM from nodes within a given element.
  * @param {HTMLElement|ShadowRoot|HTMLBodyElement} element
  * @param {boolean} isSVG
@@ -374,7 +373,7 @@ export const createVDOM = (element, isSVG) => {
         : node.nodeType === 8
         ? "comment"
         : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getVNodeAttributes(node) : []
+    const attributes = node.nodeType === 1 ? getAttributes(node) : {}
     const content =
       node.childNodes && node.childNodes.length > 0 ? null : node.textContent
     const vNode = { node, content, attributes, type }

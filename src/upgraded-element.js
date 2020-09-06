@@ -101,6 +101,7 @@ export class UpgradedElement extends HTMLElement {
     const evaluatedType = getTypeTag(value)
     if (type === undefined || evaluatedType === type) return
 
+    // eslint-disable-next-line no-console
     console.warn(
       `Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
@@ -206,7 +207,6 @@ export class UpgradedElement extends HTMLElement {
         if (value === this[privateName]) return
         if (type) this[external.validateType](property, value, type)
 
-        const attribute = toKebabCase(property)
         const oldValue = this[privateName]
 
         if (value) {
@@ -217,7 +217,10 @@ export class UpgradedElement extends HTMLElement {
             oldValue,
             value
           )
-          if (reflected) this.setAttribute(attribute, value)
+          if (reflected) {
+            const attribute = toKebabCase(property)
+            this.setAttribute(attribute, value)
+          }
         } else {
           this[privateName] = undefined
           this[internal.runLifecycle](
@@ -226,7 +229,10 @@ export class UpgradedElement extends HTMLElement {
             oldValue,
             value
           )
-          if (reflected) this.removeAttribute(attribute)
+          if (reflected) {
+            const attribute = toKebabCase(property)
+            this.removeAttribute(attribute)
+          }
         }
 
         this[external.requestRender]()

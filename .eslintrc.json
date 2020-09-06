@@ -24,5 +24,8 @@
       }
     },
     "import/ignore": [".(scss)$"]
+  },
+  "rules": {
+    "no-console": 2
   }
 }
