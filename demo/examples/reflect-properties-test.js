@@ -36,7 +36,7 @@ export class ReflectPropertiesTest extends UpgradedElement {
   }
 
   elementDidMount() {
-    this.changeNameButton = this.shadowRoot.querySelector("#update-btn")
+    this.changeNameButton = this.shadowRoot.querySelector("#update-name-btn")
     this.removeHighlightsButton = this.shadowRoot.querySelector(
       "#update-hl-btn"
     )
@@ -69,7 +69,7 @@ export class ReflectPropertiesTest extends UpgradedElement {
       this.firstName
     }!</p>
       <p>${this.getAttribute("description")}</p>
-      <button id="update-btn">Change Name</button>
+      <button id="update-name-btn">Change Name</button>
       <button id="update-hl-btn">Remove Highlights</button>
       <button id="update-attr-btn">Remove Attribute</button>
       <slot></slot>

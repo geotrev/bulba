@@ -4,14 +4,16 @@ class CustomAccessorTest extends UpgradedElement {
   static get properties() {
     return {
       text: { type: "string" },
+      preventUpdates: {
+        type: "boolean",
+        default: false,
+      },
     }
   }
 
   set text(value) {
     this._text = value
-
-    // Uncomment to get the setter to update view
-    // this.requestRender()
+    this.requestRender()
   }
 
   get text() {
@@ -20,27 +22,40 @@ class CustomAccessorTest extends UpgradedElement {
 
   constructor() {
     super()
-    this.handleClick = this.handleClick.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
   }
 
   elementDidMount() {
     this.text = "Cool"
-    this.button = this.shadowRoot.querySelector("button")
-    this.button.addEventListener("click", this.handleClick)
+    this.button = this.shadowRoot.querySelector("#update")
+    this.button.addEventListener("click", this.handleUpdate)
+    this.cancelButton = this.shadowRoot.querySelector("#cancel-updates")
+    this.cancelButton.addEventListener("click", this.handleCancel)
   }
 
   elementWillUnmount() {
-    this.button.removeEventListener("click", this.handleClick)
+    this.button.removeEventListener("click", this.handleUpdate)
+    this.cancelButton.removeEventListener("click", this.handleCancel)
   }
 
-  handleClick() {
+  handleUpdate() {
+    if (this.preventUpdates) return
     this.text = this.text === "Cool" ? "Not Cool" : "Cool"
+  }
+
+  handleCancel() {
+    this.preventUpdates = true
   }
 
   render() {
     return `
-      <p>Pressing this won't do anything:</p>
-      <button>This is:&nbsp;<span id='text'>${this.text || "(uh oh, no text)"}</span></button>
+      <p>Update text with custom accessors:</p>
+      <button id="update">This is:&nbsp;<span id='text'>${
+        this.text || "(uh oh, no text)"
+      }</span></button>
+      <p>Stop updates from happening:</p>
+      <button id="cancel-updates">Disable updates</button>
     `
   }
 }
