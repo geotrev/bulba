@@ -1,6 +1,8 @@
 import { register } from "../../src"
 import { ReflectPropertiesTest } from "./reflect-properties-test"
 
+/* eslint-disable no-console */
+
 class LifecycleTest extends ReflectPropertiesTest {
   /**
    * Two types of properties: `generated` and `managed`.
@@ -100,6 +102,7 @@ class LifecycleTest extends ReflectPropertiesTest {
 
   elementDidUpdate() {
     console.log("elementDidUpdate")
+    console.log("====================")
   }
 
   /**
@@ -110,6 +113,7 @@ class LifecycleTest extends ReflectPropertiesTest {
   elementDidMount() {
     super.elementDidMount()
     console.log("elementDidMount")
+    console.log("====================")
   }
 
   /**

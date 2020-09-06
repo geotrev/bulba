@@ -11,7 +11,7 @@ export class ReflectPropertiesTest extends UpgradedElement {
       dataAttr: {
         type: "string",
         default: (element) =>
-          `data-select='${element.getAttribute("first-name")}'`,
+          `data-removes='${element.getAttribute("first-name")}'`,
       },
       highlight: {
         type: "string",
@@ -65,10 +65,11 @@ export class ReflectPropertiesTest extends UpgradedElement {
       <p style="${this.highlight}">
         You've changed names ${this.changeCount} times
       </p>
-      <p class="compliments" ${this.dataAttr}>You're awesome, ${
-      this.firstName
-    }!</p>
+      <p class="compliments" ${this.dataAttr} data-empty="${
+      this.dataAttr
+    }">You're awesome, ${this.firstName}!</p>
       <p>${this.getAttribute("description")}</p>
+      ${this.dataAttr === "" ? "<div>Removed attribute</div>" : ""}
       <button id="update-name-btn">Change Name</button>
       <button id="update-hl-btn">Remove Highlights</button>
       <button id="update-attr-btn">Remove Attribute</button>
@@ -91,9 +92,11 @@ export class ReflectPropertiesTest extends UpgradedElement {
   handleNameChange() {
     this.changeCount = this.changeCount + 1
     const newName = this.getNewName()
-    this.dataAttr = `data-select='${newName}'`
+    const [text, bg] = this.getHighlight()
+
+    this.dataAttr = `data-removes='${newName}'`
+    this.highlight = `color: ${text}; background-color: ${bg}`
     this.firstName = newName
-    this.setHighlight()
   }
 
   handleRemoveHL() {
@@ -110,7 +113,7 @@ export class ReflectPropertiesTest extends UpgradedElement {
     return items[Math.floor(Math.random() * items.length)]
   }
 
-  setHighlight() {
+  getHighlight() {
     const bg = this.getRandom([
       "darkorange",
       "blue",
@@ -119,7 +122,7 @@ export class ReflectPropertiesTest extends UpgradedElement {
       "purple",
     ])
     const text = this.getRandom(["skyblue", "lime", "white"])
-    this.highlight = `color: ${text}; background-color: ${bg}`
+    return [text, bg]
   }
 }
 

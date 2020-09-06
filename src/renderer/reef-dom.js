@@ -81,7 +81,6 @@ const updateStyles = (element, properties, styleMap) => {
  * @param {string} styles
  */
 const diffStyles = (element, styles) => {
-  // Get style map
   const styleMap = styleStringToMap(styles)
   const styleProps = Object.keys(styleMap)
 
@@ -226,7 +225,7 @@ const diffAttributes = (nextVNode, oldVNode) => {
     const nextValue = nextVNode.attributes[attr]
     if (oldValue === nextValue) return
 
-    if (nextValue === undefined) {
+    if (typeof nextValue === "undefined") {
       removedAttributes.push(attr)
     }
   })
@@ -237,7 +236,7 @@ const diffAttributes = (nextVNode, oldVNode) => {
     const nextValue = nextVNode.attributes[attr]
     if (oldValue === nextValue) return
 
-    if (nextValue && (oldValue === undefined || oldValue !== nextValue)) {
+    if (typeof nextValue !== "undefined") {
       changedAttributes[attr] = nextValue
     }
   })
