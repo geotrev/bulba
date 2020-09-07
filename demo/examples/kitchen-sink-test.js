@@ -1,6 +1,6 @@
 import { UpgradedElement, register } from "../../src"
 
-export class ReflectPropertiesTest extends UpgradedElement {
+export class KitchenSinkTest extends UpgradedElement {
   static get properties() {
     return {
       firstName: {
@@ -62,18 +62,20 @@ export class ReflectPropertiesTest extends UpgradedElement {
 
   render() {
     return `
-      <p style="${this.highlight}">
-        You've changed names ${this.changeCount} times
-      </p>
-      <p class="compliments" ${this.dataAttr} data-empty="${
+      <div>
+        <p style="${this.highlight}">
+          You've changed names ${this.changeCount} times
+        </p>
+        <p class="compliments" ${this.dataAttr} data-empty="${
       this.dataAttr
     }">You're awesome, ${this.firstName}!</p>
-      <p>${this.getAttribute("description")}</p>
-      ${this.dataAttr === "" ? "<div>Removed attribute</div>" : ""}
-      <button id="update-name-btn">Change Name</button>
-      <button id="update-hl-btn">Remove Highlights</button>
-      <button id="update-attr-btn">Remove Attribute</button>
-      <slot></slot>
+        <p>${this.getAttribute("description")}</p>
+        ${this.dataAttr === "" ? "<div>Removed attribute</div>" : ""}
+        <button id="update-name-btn">Change Name</button>
+        <button id="update-hl-btn">Remove Highlights</button>
+        <button id="update-attr-btn">Remove Attribute</button>
+        <slot></slot>
+      </div>
     `
   }
 
@@ -126,4 +128,4 @@ export class ReflectPropertiesTest extends UpgradedElement {
   }
 }
 
-register("reflect-properties-test", ReflectPropertiesTest)
+register("kitchen-sink-test", KitchenSinkTest)

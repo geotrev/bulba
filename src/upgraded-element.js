@@ -1,5 +1,5 @@
 import {
-  createVDOM,
+  createVNode,
   stringToHTML,
   diffVDOM,
   renderToDOM,

@@ -1,5 +1,5 @@
 import { UpgradedElement, register } from "../../src"
-import "./reflect-properties-test"
+import "./kitchen-sink-test"
 
 class NestedElementTest extends UpgradedElement {
   static get properties() {
@@ -42,7 +42,7 @@ class NestedElementTest extends UpgradedElement {
     this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
       Math.floor(Math.random() * 5)
     ]
-    this.shadowRoot.querySelector("reflect-properties-test").firstName = [
+    this.shadowRoot.querySelector("kitchen-sink-test").firstName = [
       "Mario",
       "Samus",
       "Luigi",
@@ -52,12 +52,14 @@ class NestedElementTest extends UpgradedElement {
 
   render() {
     return `
-      <p>This one is nested with inline styles.</p>
-      <button id="clicker">Click to update</button>
-      <div class="border" style="border-color: ${this.borderColor}">
-        <reflect-properties-test first-name="Chaos" description="I'm nested!">
-          <slot></slot>
-        </reflect-properties-test>
+      <div>
+        <p>This one is nested with inline styles.</p>
+        <button id="clicker">Click to update</button>
+        <div class="border" style="border-color: ${this.borderColor}">
+          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
+            <slot></slot>
+          </kitchen-sink-test>
+        </div>
       </div>
     `
   }

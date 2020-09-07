@@ -1,9 +1,9 @@
 import { register } from "../../src"
-import { ReflectPropertiesTest } from "./reflect-properties-test"
+import { KitchenSinkTest } from "./kitchen-sink-test"
 
 /* eslint-disable no-console */
 
-class LifecycleTest extends ReflectPropertiesTest {
+class LifecycleTest extends KitchenSinkTest {
   /**
    * Two types of properties: `generated` and `managed`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it

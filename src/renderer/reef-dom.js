@@ -14,7 +14,7 @@
  * @property {TextNode|CommentNode} content - Text or comment content, if any.
  * @property {VirtualNode[]} children - Child virtual nodes, if any.
  * @property {HTMLElement} node - The corresponding DOM element.
- * @property {boolean} isSVG
+ * @property {boolean} isSVGNode
  */
 
 /**
@@ -150,7 +150,7 @@ const createElement = (vNode) => {
     element = document.createTextNode(vNode.content)
   } else if (vNode.type === "comment") {
     element = document.createComment(vNode.content)
-  } else if (vNode.isSVG) {
+  } else if (vNode.isSVGNode) {
     element = document.createElementNS("http://www.w3.org/2000/svg", vNode.type)
   } else {
     element = document.createElement(vNode.type)
@@ -254,78 +254,77 @@ const diffAttributes = (nextVNode, oldVNode) => {
  */
 
 /**
- * Reconcile nextVDOM (new render state) against oldVDOM (old render state).
- * @param {VirtualNode[]} nextVDOM - new virtual DOM
- * @param {VirtualNode[]} oldVDOM - old virtual DOM
+ * Reconcile nextVNode (new render state) against oldVNode (old render state).
+ * - If nextVNode has a new `type`, rebuild the node and replace it
+ * - If nextVNode has a different `children` structure (array vs object),
+ *   rebuild it.
+ * - If children is an array, begin comparing nodes.
+ *   - when oldVNode.children[i].type !== nextVNode.children[i].type,
+ *
+ * @param {VirtualNode[]} nextVNode - new virtual DOM
+ * @param {VirtualNode[]} oldVNode - old virtual DOM
  * @param {HTMLElement|ShadowRoot} root
  */
-export const diffVDOM = (nextVDOM, oldVDOM, root) => {
-  // Remove missing children from map
-  let delta = oldVDOM.length - nextVDOM.length
-  if (delta > 0) {
-    for (; delta > 0; delta--) {
-      const vNode = oldVDOM[oldVDOM.length - delta]
-      vNode.node.parentNode.removeChild(vNode.node)
-    }
-  }
-
-  // Update existing and new nodes, recursively
-  nextVDOM.forEach((node, index) => {
-    const oldVNodeChild = oldVDOM[index]
-    const nextVNodeChild = nextVDOM[index]
-
-    // 1. Create and append new children
-    if (!oldVNodeChild) {
-      return root.appendChild(createElement(nextVNodeChild))
-    }
-
-    // 2. If element is not the same type, rebuild it
-    if (nextVNodeChild.type !== oldVNodeChild.type) {
-      return oldVNodeChild.node.parentNode.replaceChild(
-        createElement(nextVNodeChild),
-        oldVNodeChild.node
-      )
-    }
-
-    // 3. Update attributes
-    diffAttributes(nextVNodeChild, oldVNodeChild)
-
-    // 4. Update content
-    if (
-      nextVNodeChild.content &&
-      nextVNodeChild.content !== oldVNodeChild.content
-    ) {
-      oldVNodeChild.node.textContent = nextVNodeChild.content
-    }
-
-    // 5a. Remove stale child nodes
-    if (oldVNodeChild.children.length > 0 && node.children.length < 1) {
-      return (oldVNodeChild.node.innerHTML = "")
-    }
-
-    // 5b. Rebuild elements that are empty but shouldn't be
-    //     Uses a document fragment to prevent unnecessary reflows
-    if (oldVNodeChild.children.length < 1 && node.children.length > 0) {
-      const fragment = document.createDocumentFragment()
-      diffVDOM(node.children, oldVNodeChild.children, fragment)
-      return root.appendChild(fragment)
-    }
-
-    // 5c. Diff any children of the current node.
-    if (node.children.length > 0) {
-      diffVDOM(node.children, oldVNodeChild.children, oldVNodeChild.node)
-    }
-  })
+export const diffVDOM = (nextVNode, oldVNode, root) => {
+  // // Remove missing children from map
+  // let delta = oldVNode.length - nextVNode.length
+  // if (delta > 0) {
+  //   for (; delta > 0; delta--) {
+  //     const vNode = oldVNode[oldVNode.length - delta]
+  //     vNode.node.parentNode.removeChild(vNode.node)
+  //   }
+  // }
+  // // Update existing and new nodes, recursively
+  // nextVNode.forEach((node, index) => {
+  //   const oldVNodeChild = oldVNode[index]
+  //   const nextVNodeChild = nextVNode[index]
+  //   // 1. Create and append new children
+  //   if (!oldVNodeChild) {
+  //     return root.appendChild(createElement(nextVNodeChild))
+  //   }
+  //   // 2. If element is not the same type, rebuild it
+  //   if (nextVNodeChild.type !== oldVNodeChild.type) {
+  //     return oldVNodeChild.node.parentNode.replaceChild(
+  //       createElement(nextVNodeChild),
+  //       oldVNodeChild.node
+  //     )
+  //   }
+  //   // 3. Update attributes
+  //   diffAttributes(nextVNodeChild, oldVNodeChild)
+  //   // 4. Update content
+  //   if (
+  //     nextVNodeChild.content &&
+  //     nextVNodeChild.content !== oldVNodeChild.content
+  //   ) {
+  //     oldVNodeChild.node.textContent = nextVNodeChild.content
+  //   }
+  //   // 5a. Remove stale child nodes
+  //   if (oldVNodeChild.children.length > 0 && node.children.length < 1) {
+  //     return (oldVNodeChild.node.innerHTML = "")
+  //   }
+  //   // 5b. Rebuild elements that are empty but shouldn't be
+  //   //     Uses a document fragment to prevent unnecessary reflows
+  //   if (oldVNodeChild.children.length < 1 && node.children.length > 0) {
+  //     const fragment = document.createDocumentFragment()
+  //     diffVDOM(node.children, oldVNodeChild.children, fragment)
+  //     return root.appendChild(fragment)
+  //   }
+  //   // 5c. Diff any children of the current node.
+  //   if (node.children.length > 0) {
+  //     diffVDOM(node.children, oldVNodeChild.children, oldVNodeChild.node)
+  //   }
+  // })
 }
 
 /**
- * Renders a vDOM into the given root element. This happens one time,
+ * Renders a vDOM into the given root context. This happens one time,
  * when a component is first rendered.
+ * All subsequent renders are the result of reconciliation.
  * @param {VirtualNode[]} vDOM
- * @param {ShadowRoot} root
+ * @param {ShadowRoot} context
  */
-export const renderToDOM = (vDOM, root) => {
-  vDOM.forEach((vNode) => root.appendChild(vNode.node))
+export const renderToDOM = (vNode, root) => {
+  root.appendChild(vNode.node)
 }
 
 /**
@@ -361,24 +360,49 @@ export const stringToHTML = (stringToRender) => {
 /**
  * Creates a new virtual DOM from nodes within a given element.
  * @param {HTMLElement|ShadowRoot|HTMLBodyElement} element
- * @param {boolean} isSVG
+ * @param {boolean} isSVGNode
  * @returns {VirtualNode[]}
  */
-export const createVDOM = (element, isSVG) => {
-  return Array.prototype.map.call(element.childNodes, (node) => {
-    const type =
-      node.nodeType === 3
-        ? "text"
-        : node.nodeType === 8
-        ? "comment"
-        : node.tagName.toLowerCase()
-    const attributes = node.nodeType === 1 ? getAttributes(node) : {}
-    const content =
-      node.childNodes && node.childNodes.length > 0 ? null : node.textContent
-    const vNode = { node, content, attributes, type }
+export const createVNode = (node, isSVGNode = false) => {
+  const isRoot = node.tagName === "BODY"
+  const childNodes = node.childNodes
+  const numChildNodes = childNodes ? childNodes.length : 0
 
-    vNode.isSVG = isSVG || vNode.type === "svg"
-    vNode.children = createVDOM(node, vNode.isSVG)
-    return vNode
-  })
+  if (isRoot) {
+    if (numChildNodes > 1) {
+      throw new Error(
+        "UpgradedElement: Your element should not have more than one shadow root node."
+      )
+    } else if (numChildNodes === 0) {
+      throw new Error(
+        "UpgradedElement: Your element should have at least one shadow root node."
+      )
+    } else {
+      return createVNode(childNodes[0])
+    }
+  }
+
+  let vNode = { node }
+
+  vNode.type =
+    node.nodeType === 3
+      ? "text"
+      : node.nodeType === 8
+      ? "comment"
+      : node.tagName.toLowerCase()
+  vNode.isSVGNode = isSVGNode || vNode.type === "svg"
+  vNode.attributes = node.nodeType === 1 ? getAttributes(node) : {}
+  vNode.content = numChildNodes > 0 ? null : node.textContent
+
+  if (numChildNodes > 1) {
+    vNode.children = Array.prototype.map.call(childNodes, (child) =>
+      createVNode(child, vNode.isSVGNode)
+    )
+  } else if (numChildNodes === 1) {
+    vNode.children = createVNode(childNodes[0])
+  } else {
+    vNode.children = null
+  }
+
+  return vNode
 }
