@@ -1,9 +1,9 @@
 import {
   createVNode,
   stringToHTML,
-  diffVDOM,
+  diffVNode,
   renderToDOM,
-} from "./renderer/reef-dom"
+} from "./renderer/om-dom-dom"
 import {
   isEmptyObject,
   isString,
@@ -209,7 +209,7 @@ export class UpgradedElement extends HTMLElement {
 
         const oldValue = this[privateName]
 
-        if (typeof value !== undefined) {
+        if (typeof value !== "undefined") {
           this[privateName] = value
           this[internal.runLifecycle](
             external.elementPropertyChanged,
@@ -222,7 +222,7 @@ export class UpgradedElement extends HTMLElement {
             this.setAttribute(attribute, value)
           }
         } else {
-          this[privateName] = undefined
+          delete this[privateName]
           this[internal.runLifecycle](
             external.elementPropertyChanged,
             property,
@@ -265,7 +265,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getVDOM]() {
-    return createVDOM(stringToHTML(this[internal.getDOMString]()))
+    return createVNode(stringToHTML(this[internal.getDOMString]()))
   }
 
   /**
@@ -299,7 +299,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diffVDOM(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
+    diffVNode(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }
