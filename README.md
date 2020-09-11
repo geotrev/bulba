@@ -115,16 +115,16 @@ When linking to the source file with a `script` tag, be sure to include `integri
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/upgraded-element.js"
-  integrity="sha256-G/tIiIcqSiKFeq2X7DlA6laZGBuVCdig96KCAOIT6ks="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.0/dist/upgraded-element.js"
+  integrity="sha256-GWocm6Zdii9Ffv+745RpLUFQe7SlrfQhdyInX6Rnmxk="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@latest/dist/upgraded-element.min.js"
-  integrity="sha256-waCWKicYMCJic4tBKdkV54qhuGsq8J9JWQY+QmFVjj8="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.0/dist/upgraded-element.min.js"
+  integrity="sha256-gNgvpMZlQskLCSqF26++3EIiswJkkWr0mnn6OUdspKo="
   crossorigin="anonymous"
 ></script>
 ```
@@ -214,20 +214,21 @@ A `property` can have the following configurations:
 
 The default value for the property. It can be a primitive value, or callback which computes the final value. The callback receives the `this` of your element, aka the HTML element itself.
 
-##### `type` 
+##### `type`
 
 > Value type: String
 
 Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD. Here is a full list of types:
-  - `string`
-  - `number`
-  - `symbol`
-  - `object`
-  - `array`
-  - `function`
-  - `boolean`
-  - `bigint`
-  
+
+- `string`
+- `number`
+- `symbol`
+- `object`
+- `array`
+- `function`
+- `boolean`
+- `bigint`
+
 ##### `reflected`
 
 > Value type: Boolean
@@ -455,7 +456,7 @@ A few quick points on the design of `UpgradedElement`:
 
 1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef) with some optimizations specific to shadow DOM concerns. The main reasoning here is to reduce package size and make rendering cheap and fast.
 
-2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested, they are batched to reduce having multiple renders. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser). 
+2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested, they are batched to reduce having multiple renders. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser).
 
 ## Goals
 
