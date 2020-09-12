@@ -53,9 +53,9 @@ class NestedElementTest extends UpgradedElement {
   render() {
     return `
       <div>
-        <p>This one is nested with inline styles.</p>
-        <button id="clicker">Click to update</button>
-        <div class="border" style="border-color: ${this.borderColor}">
+        <p key="lede">This one is nested with inline styles.</p>
+        <button key="updater" id="clicker">Click to update</button>
+        <div key="nested" class="border" style="border-color: ${this.borderColor}">
           <kitchen-sink-test first-name="Chaos" description="I'm nested!">
             <slot></slot>
           </kitchen-sink-test>

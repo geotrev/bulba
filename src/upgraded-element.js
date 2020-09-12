@@ -1,9 +1,4 @@
-import {
-  createVNode,
-  stringToHTML,
-  diffVNode,
-  renderToDOM,
-} from "./renderer/om-dom-dom"
+import { createNode, createHTML, diff, render } from "omdomdom"
 import {
   isEmptyObject,
   isString,
@@ -265,7 +260,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getVDOM]() {
-    return createVNode(stringToHTML(this[internal.getDOMString]()))
+    return createNode(createHTML(this[internal.getDOMString]()))
   }
 
   /**
@@ -288,7 +283,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getInitialRenderState]() {
     this[internal.vDOM] = this[internal.getVDOM]()
-    renderToDOM(this[internal.vDOM], this[internal.shadowRoot])
+    render(this[internal.vDOM], this[internal.shadowRoot])
     this[internal.runLifecycle](external.elementDidMount)
     this[internal.isFirstRender] = false
   }
@@ -299,7 +294,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diffVNode(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
+    diff(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }

@@ -4,7 +4,7 @@
   "description": "A simple base class for using native web components",
   "main": "lib/upgraded-element.cjs.js",
   "module": "lib/upgraded-element.es.js",
-  "browser": "lib/upgraded-element.js",
+  "browser": "dist/upgraded-element.min.js",
   "type": "module",
   "scripts": {
     "watch": "rollup -c rollup.config.demo.js -w",
@@ -30,6 +30,7 @@
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.4.2",
     "jshashes": "^1.0.8",
+    "omdomdom": "^0.1.4",
     "prettier": "^2.0.5",
     "rollup": "^2.26.1",
     "rollup-plugin-livereload": "^1.3.0",

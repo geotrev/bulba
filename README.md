@@ -1,16 +1,17 @@
-# \<upgraded-element\>
+# <🔼> Upgraded Element
 
-`UpgradedElement` is an accessible base class enabling modern component authoring techniques in custom elements. It weighs just 3kb minified + gzipped. Partially inspired by [LitElement](https://github.com/polymer/lit-element).
+`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 4kb minified + gzipped. Partially inspired by [LitElement](https://github.com/polymer/lit-element) and a renderer largely inspired by [reef](https://github.com/cferdinandi/reef), modified slightly to form [OmDomDom](https://github.com/geotrev/omdomdom).
 
-How does `upgraded-element` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots, custom elements, making it lightning fast. Reconciliation (DOM updates) are restricted to shadow root contexts; this means a parent component re-rendering will not, by default, re-render its children (unless those children have [reflected properties](#configuration-options)), which significantly reduces render times. The reconciliation strategy is forked from [reefjs](https://github.com/cferdinandi/reef) by Chris Ferdinandi.
+How does `UpgradedElement` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots and custom elements, making it standards-centric. Additionally, DOM updates are restricted to shadow root contexts, but can be chained to child custom elements if their [properties](#properties) are modified; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
+
+For more information on the renderer and its reconciliation, see [OmDomDom](https://github.com/geotrev/omdomdom), which is used internally in this package.
 
 What you get:
 
 1. Encapsulated [styles](#styles) and [view](#render) in a shadow root.
-2. State management via [upgraded properties](#properties)
-3. Predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for custom render logic.
-
-The class extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
+2. State management via [upgraded properties](#properties).
+3. Predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for more fine-tuned control of render-sensitive changes.
+4. `UpgradedElement` extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
 
 **Table of Contents**
 
@@ -422,11 +423,13 @@ elementWillUnmount() {
 }
 ```
 
+NOTE: Make sure elements with event listeners have a `key` attribute to ensure the original node is preserved between state updates/renders.
+
 ## Browser Support
 
-`UpgradedElement` uses symbols, ES6 classes, and the various features within the web component standard. The decision to not polyfill or transpile is deliberate in order to get the performance boost of browsers, which _by default_, support the newer features. Custom distributions will be made soon.
+`UpgradedElement` uses symbols, ES6 classes, and features within the web component standard. The decision to not polyfill is deliberate in order to get the performance boost of browsers, which by default, support these newer features. Custom bundles with polyfills will be made in the future.
 
-In the mean time, to get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and/or a comprehensive [custom element polyfill solution](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
+In the mean time, to get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and a [custom element polyfill](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
 
 For more details on current web component spec support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks support by sub-feature.
 
@@ -450,21 +453,19 @@ module.exports = {
 
 ## Under the Hood
 
-A few quick points on the design of `UpgradedElement`:
-
 ### Rendering
 
-1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, nearly identical to the one used in [reef](https://github.com/cferdinandi/reef) with some optimizations specific to shadow DOM concerns. The main reasoning here is to reduce package size and make rendering cheap and fast.
+1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, largely based on [reef](https://github.com/cferdinandi/reef), but with changes and optimizations to improve the algorithm.
 
-2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested, they are batched to reduce having multiple renders. If `requestAnimationFrame` is not available, `setTimeout` with the minimum-allowed wait time is used (2-4 milliseconds depending on the browser).
+2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested in the same frame, the last request made (with the most recent data) is used. If `requestAnimationFrame` is not available, `setTimeout` is used with an approximate frame calculation (`1000 / 60` in milliseconds).
 
 ## Goals
 
-- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful methods at all stages of an element's lifecycle.
+- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful lifecycle methods for modern, state-based component design.
 
-- **Consistent expectations.** Unexpected behavior, like `connectedCallback` being triggered when the element is disconnected, are guarded against so contracts are guaranteed. Escape hatches are provided for advanced control.
+- **Consistent expectations.** Unexpected behavior, like `connectedCallback` being triggered when the element is disconnected, are guarded against so behavior is consistent. Escape hatches are still provided for advanced control.
 
-- **No magic.** Code that's required to use `UpgradedElement` is with existing technologies in the browser. Custom features are transparent with necessary documentation.
+- **No magic.** All the technologies necessary to understand `UpgradedElement` are already in the browser, including its [renderer](https://github.com/geotrev/omdomdom).
 
 ## Contribute
 

@@ -51,12 +51,12 @@ class CustomAccessorTest extends UpgradedElement {
   render() {
     return `
       <div>
-        <p>Update text with custom accessors:</p>
-        <button id="update">This is:&nbsp;<span id='text'>${
+        <p key="lede">Update text with custom accessors:</p>
+        <button key="update-text" id="update">This is:&nbsp;<span key="cool-text" id='text'>${
           this.text || "(uh oh, no text)"
         }</span></button>
-        <p>Stop updates from happening:</p>
-        <button id="cancel-updates">Disable updates</button>
+        <p key="stop-text">Stop updates from happening:</p>
+        <button key="stop-updates" id="cancel-updates">Disable updates</button>
       </div>
     `
   }
