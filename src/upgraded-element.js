@@ -294,7 +294,7 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diff(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
+    diff(nextVDOM, this[internal.vDOM])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }
