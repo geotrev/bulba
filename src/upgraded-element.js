@@ -1,4 +1,7 @@
 import { createNode, createHTML, diff, render } from "omdomdom"
+import { getScheduler } from "./renderer/scheduler"
+import * as internal from "./internal"
+import * as external from "./external"
 import {
   isEmptyObject,
   isString,
@@ -6,12 +9,10 @@ import {
   isUndefined,
   isSymbol,
   getTypeTag,
-} from "./utilities/is-type"
-import { createUUID } from "./utilities/create-uuid"
-import { toKebabCase } from "./utilities/transform-case"
-import { getScheduler } from "./renderer/scheduler"
-import * as internal from "./internal"
-import * as external from "./external"
+  toKebabCase,
+  createUUID,
+  forEach,
+} from "./utilities"
 
 /**
  * @module UpgradedElement
@@ -30,9 +31,9 @@ export class UpgradedElement extends HTMLElement {
     let attributes = []
 
     if (!isEmptyObject(this.properties)) {
-      Object.keys(this.properties).forEach((property) => {
-        if (this.properties[property].reflected)
-          attributes.push(toKebabCase(property))
+      forEach(Object.keys(this.properties), (property) => {
+        if (!this.properties[property].reflected) return
+        attributes.push(toKebabCase(property))
       })
     }
 
@@ -148,9 +149,9 @@ export class UpgradedElement extends HTMLElement {
     const { properties } = this.constructor
     if (isEmptyObject(properties)) return
 
-    Object.keys(properties).forEach((property) => {
+    forEach(Object.keys(properties), (property) =>
       this[internal.upgradeProperty](property, properties[property])
-    })
+    )
   }
 
   /**
