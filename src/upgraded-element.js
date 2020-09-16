@@ -1,4 +1,4 @@
-import { createNode, createHTML, diff, render } from "omdomdom"
+import { createNode, diff, render } from "omdomdom"
 import { getScheduler } from "./renderer/scheduler"
 import * as internal from "./internal"
 import * as external from "./external"
@@ -261,7 +261,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getVDOM]() {
-    return createNode(createHTML(this[internal.getDOMString]()))
+    return createNode(this[internal.getDOMString]())
   }
 
   /**

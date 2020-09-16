@@ -455,17 +455,17 @@ module.exports = {
 
 ### Rendering
 
-1. **Diffing the DOM:** Rendering is handled using a small DOM-diffing implementation, largely based on [reef](https://github.com/cferdinandi/reef), but with changes and optimizations to improve the algorithm.
+1. **Rendering + Patching:** Rendering is handled using a small virtual DOM implementation as a fork of [reef](https://github.com/cferdinandi/reef), called [OmDomDom](https://github.com/geotrev/omdomdom).
 
-2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested in the same frame, the last request made (with the most recent data) is used. If `requestAnimationFrame` is not available, `setTimeout` is used with an approximate frame calculation (`1000 / 60` in milliseconds).
+2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested in the same frame, the last request made (with the most recent data) is used. If `requestAnimationFrame` is not available, `setTimeout` is used with an approximate frame calculation (`1000 / 60` in milliseconds). This isn't very sophisticated, but is intended not to block higher priority things in the browser's main thread.
 
 ## Goals
 
 - **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful lifecycle methods for modern, state-based component design.
 
-- **Consistent expectations.** Unexpected behavior, like `connectedCallback` being triggered when the element is disconnected, are guarded against so behavior is consistent. Escape hatches are still provided for advanced control.
+- **Consistent expectations.** The API is designed to provide sensible default use-cases. Escape hatches are still provided for advanced control.
 
-- **No magic.** All the technologies necessary to understand `UpgradedElement` are already in the browser, including its [renderer](https://github.com/geotrev/omdomdom).
+- **No magic.** My hope is that this custom element wrapper Just Works™, and requires minimal effort to understand. That said, web components are fairly speculative despite being around for nearly a decade.
 
 ## Contribute
 

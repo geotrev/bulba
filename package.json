@@ -30,7 +30,7 @@
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.4.2",
     "jshashes": "^1.0.8",
-    "omdomdom": "^0.1.6",
+    "omdomdom": "^0.1.7",
     "prettier": "^2.1.1",
     "rollup": "^2.26.11",
     "rollup-plugin-livereload": "^2.0.0",
