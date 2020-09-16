@@ -7,6 +7,8 @@
   "browser": "dist/upgraded-element.min.js",
   "type": "module",
   "scripts": {
+    "test": "BABEL_ENV=test jest",
+    "test:watch": "BABEL_ENV=test jest --watch",
     "watch": "rollup -c rollup.config.demo.js -w",
     "build": "BABEL_ENV=build rollup -c",
     "build:publish": "BABEL_ENV=publish rollup -c",
