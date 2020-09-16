@@ -1,6 +1,6 @@
 {
   "name": "upgraded-element",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A simple base class for using native web components",
   "main": "lib/upgraded-element.cjs.js",
   "module": "lib/upgraded-element.es.js",
@@ -13,7 +13,7 @@
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
     "node:prepare": "node build/prepare-metadata.js && node build/prepare-cdn-tags.js",
     "git:update-origin": "git add . && git commit -m 'update metadata & cdn tags' && git push && git push --tags",
-    "prepublishOnly": "node:prepare && npm run git:update-origin",
+    "prepublishOnly": "npm run node:prepare && npm run git:update-origin",
     "postversion": "npm run build:publish"
   },
   "homepage": "https://github.com/geotrev/upgraded-element",
