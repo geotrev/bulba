@@ -5,7 +5,6 @@
     "\\.(css|scss)$": "<rootDir>/.jest/empty-mock.js"
   },
   "testMatch": ["<rootDir>/src/__tests__/*.spec.js"],
-  "setupFiles": ["<rootDir>/.jest/jest.setup.js"],
   "testURL": "http://localhost/",
   "modulePaths": ["src/"],
   "verbose": true
