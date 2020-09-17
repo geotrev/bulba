@@ -205,7 +205,7 @@ export class UpgradedElement extends HTMLElement {
 
         const oldValue = this[privateName]
 
-        if (typeof value !== "undefined") {
+        if (!isUndefined(value)) {
           this[privateName] = value
           this[internal.runLifecycle](
             external.elementPropertyChanged,
