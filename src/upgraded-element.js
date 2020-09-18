@@ -1,4 +1,4 @@
-import { createNode, diff, render } from "omdomdom"
+import { create, update, render } from "omdomdom"
 import { getScheduler } from "./renderer/scheduler"
 import * as internal from "./internal"
 import * as external from "./external"
@@ -23,8 +23,6 @@ export class UpgradedElement extends HTMLElement {
     super()
     this[internal.initialize]()
   }
-
-  // Public
 
   // Retrieve defined properties from the extender.
   static get observedAttributes() {
@@ -69,6 +67,8 @@ export class UpgradedElement extends HTMLElement {
     // Clean up detached nodes and data.
     this[internal.vDOM] = null
   }
+
+  // Public
 
   /**
    * Returns the internal element id.
@@ -261,7 +261,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getVDOM]() {
-    return createNode(this[internal.getDOMString]())
+    return create(this[internal.getDOMString]())
   }
 
   /**
@@ -291,11 +291,11 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * All renders after initial render:
-   * Create a new virtual DOM and diff it against the existing virtual DOM.
+   * Create a new vdom and update the existing one.
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diff(nextVDOM, this[internal.vDOM])
+    update(nextVDOM, this[internal.vDOM])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }

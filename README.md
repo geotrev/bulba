@@ -1,17 +1,17 @@
 # <🔼> Upgraded Element
 
-`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 4kb minified + gzipped. Partially inspired by [LitElement](https://github.com/polymer/lit-element) and a renderer largely inspired by [reef](https://github.com/cferdinandi/reef), modified slightly to form [OmDomDom](https://github.com/geotrev/omdomdom).
+`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 4kb minified + gzipped.
 
-How does `UpgradedElement` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies: shadow roots and custom elements, making it standards-centric. Additionally, DOM updates are restricted to shadow root contexts, but can be chained to child custom elements if their [properties](#properties) are modified; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
+It implements a virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom) for lightning fast renders. ⚡ DOM updates are restricted to shadow root contexts, but can be chained to child UpgradedElement instances if their [properties](#properties) are modified by a parent; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
 
-For more information on the renderer and its reconciliation, see [OmDomDom](https://github.com/geotrev/omdomdom), which is used internally in this package.
+How does `UpgradedElement` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies--shadow roots and custom elements--making it standards-centric.
 
-What you get:
+Some notable features:
 
 1. Encapsulated [styles](#styles) and [view](#render) in a shadow root.
 2. State management via [upgraded properties](#properties).
 3. Predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for more fine-tuned control of render-sensitive changes.
-4. `UpgradedElement` extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), too.
+4. `UpgradedElement` extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), in addition to all the goodness of web components.
 
 **Table of Contents**
 
@@ -22,18 +22,17 @@ What you get:
   - [Styles](#styles)
   - [Properties](#properties)
     - [Configuration Options](#configuration-options)
-    - [Managed Properties](#managed-properties)
+    - [Custom Properties](#custom-properties)
     - [Updating a Property](#updating-a-property)
   - [Lifecycle](#lifecycle)
     - [Methods](#methods)
     - [Using Custom Element Lifecycle Callbacks](#using-custom-element-lifecycle-callbacks)
   - [Internal Methods and Hooks](#internal-methods-and-hooks)
-    - [requestRender](#requestRender)
-    - [elementId](#elementId)
-    - [validateType](#validatetypepropertyname-value-type)
+    - [`requestRender`](#requestRender)
+    - [`elementId`](#elementId)
+    - [`validateType`](#validatetypepropertyname-value-type)
   - [DOM Events](#dom-events)
 - 🌍 [Browser Support](#browser-support)
-- 🔎 [Under the Hood](#under-the-hood)
 - 🏆 [Goals](#goals)
 - 🤝 [Contribute](#contribute)
 
@@ -42,9 +41,7 @@ What you get:
 Creating a new element is easy. Once you've [installed](#install) the package, extend `UpgradedElement`:
 
 ```js
-// fancy-header.js
-
-import { UpgradedElement, register } from "upgraded-element" // using node module
+import { UpgradedElement, register } from "upgraded-element"
 
 class FancyHeader extends UpgradedElement {
   static get styles() {
@@ -60,8 +57,6 @@ class FancyHeader extends UpgradedElement {
     return `<h1 class='is-fancy'><slot></slot></h1>`
   }
 }
-
-// No need to export anything as custom elements aren't modules.
 
 register("fancy-header", FancyHeader)
 ```
@@ -133,8 +128,6 @@ When linking to the source file with a `script` tag, be sure to include `integri
 Import directly:
 
 ```js
-// fancy-header.js
-
 import { UpgradedElement, register } from "./upgraded-element.js"
 ```
 
@@ -188,13 +181,19 @@ Define your `properties` using the static getter. Each entry is the property nam
 Example:
 
 ```js
+// Some variable
+
+const symbolPropName = Symbol()
+
+// In your element
+
 static get properties() {
   return {
     myFavoriteNumber: {
       default: 12,
       type: "number",
     },
-    myOtherCoolProp: {
+    [symbolPropName]: {
       default: (element) => element.getAttribute("some-attribute"),
       type: "string",
       reflected: true,
@@ -207,7 +206,7 @@ static get properties() {
 
 Configuration is optional. Simply setting the property configuration to an empty object - `{}` - will be enough to upgrade it.
 
-A `property` can have the following configurations:
+A `property` can have the below additional configuration:
 
 ##### `default`
 
@@ -219,7 +218,7 @@ The default value for the property. It can be a primitive value, or callback whi
 
 > Value type: String
 
-Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object enumeration support TBD. Here is a full list of types:
+Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object shape and enum support TBD. Here is a full list of types:
 
 - `string`
 - `number`
@@ -249,76 +248,95 @@ Every time an upgraded property changes it will trigger the following steps (in 
 
 See [lifecycle](#lifecycle) methods below.
 
-#### Managed Properties
+#### Custom Properties
 
-There's also the option to skip accessor upgrading if you prefer to implement more custom functionality. This is referred to as a 'managed' property.
+Since an UpgradedElement instance is still just an ES6 class, you can define your own properties if you want, too.
 
 Here's a quick example for an `isOpen` property:
 
 ```js
-static get properties() {
-  return {
-    // Hmm, what will this do?
-    isOpen: { type: "boolean", default: false }
+class MyCoolElement extends UpgradedElement {
+  static get properties() {
+    return {
+      // Hmm, what will this do?
+      isOpen: {
+        type: "boolean",
+        default: false,
+      },
+    }
   }
-}
 
-constructor() {
-  super()
+  constructor() {
+    super()
 
-  // provide a default value for the internal property
-  this._isOpen = false
-}
+    // provide a default value for the internal property
+    this._isOpen = false
+  }
 
-// Define accessors
+  // Define accessors:
 
-set isOpen(value) {
-  if (value === this.isOpen) return
-  this._isOpen = value
-}
+  set isOpen(value) {
+    if (value === this.isOpen) return
+    this._isOpen = value
+  }
 
-get isOpen() {
-  return this._isOpen
+  get isOpen() {
+    return this._isOpen
+  }
+
+  // ...
 }
 ```
 
-Tips:
+**Tips:**
 
-1. Adding a managed property into the `properties` object **won't do anything so long as you've declared custom accessors.**
-2. Always name the internal property something different than the accessor methods that get/set its value. In other words, `isOpen` gets and sets the property `_isOpen`. _Technically_ both are properties on the class, therefore if both are the same name, an error will be thrown later.
-3. You can tap into the render lifecycle in your managed property's accessors. Let's try that out...
+1. Adding a custom property into the `properties` object **won't do anything so long as you've declared your own accessors.**
+2. Always name the internal property something different than the accessor methods that get/set its value. In other words, `isOpen` gets and sets the property `_isOpen`.
+3. You can tap into the render lifecycle in your custom property's accessors, too!
 
-To achieve the existing behavior of an upgraded property, you can add in upgraded-element's [internal methods](#internal-methods-and-hooks). Using the previous `isOpen` as a base, let's add some more logic to our setter:
+**Custom Properties + Internal Methods**
+
+To achieve the existing behavior of an upgraded property _without_ declaring one via the `properties` getter, you can add in upgraded-element's [internal methods](#internal-methods-and-hooks) to your custom property.
+
+Using the previous `isOpen` example as a base, let's add some more logic to our setter:
 
 ```js
-if (value === this.isOpen) return
+class MyCoolElement extends UpgradedElement {
+  // ...
 
-// Validate type, will print a warning if incorrect
-this.validateType("isOpen", value, "boolean")
+  set isOpen(value) {
+    if (value === this.isOpen) return
 
-const oldValue = this.isOpen
-this._isOpen = value
+    // Validate the type is correct
+    this.validateType("isOpen", value, "boolean")
 
-// Reflect property to an attribute, if desired:
-this.setAttribute("is-open", String(value))
+    // Get the old value before we set the new one
+    const oldValue = this.isOpen
+    this._isOpen = value
 
-// Trigger elementPropertyChanged():
-this.elementPropertyChanged("isOpen", oldValue, value)
+    // Reflect the property, if you want
+    this.setAttribute("is-open", String(value))
 
-// Render the updated values to the shadow root, which
-// will later trigger elementDidUpdate():
-this.requestRender()
+    // Trigger the lifecycle callback
+    this.elementPropertyChanged("isOpen", oldValue, value)
+
+    // Update your view with the new state
+    this.requestRender()
+  }
+
+  // ...
+}
 ```
 
-With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but with your own prescriptions.
+With that, you'll have created a custom workflow very similar to what comes out of the box with an upgraded property, but with your own prescriptions!
 
-Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track it using `elementDidUpdate`.
+Note that `requestRender` is asynchronous. See [Internal Methods and Hooks](#internal-methods-and-hooks) below on how you can track render-state using `elementDidUpdate`.
 
 ### Lifecycle
 
 As mentioned previously, `UpgradedElement` provides its own custom lifecycle methods, but also gives you the option to use the [built-in callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks) as well. There is [one caveat](#using-custom-element-lifecycle-callbacks) to using the native callbacks, though.
 
-The purpose of these is to add more developer fidelity to the existing callbacks as it pertains to the render lifecycle.
+The purpose of these is to add more fidelity to the render lifecycle.
 
 #### Methods
 
@@ -328,25 +346,22 @@ The purpose of these is to add more developer fidelity to the existing callbacks
 
 - `elementDidUpdate`: Called on each render after `elementDidMount`. This includes: when an upgraded property has been set or `requestRender` was called.
 
-- `elementPropertyChanged(name, oldValue, newValue)`: Called each time a property gets changed. Provides the property name (as a string), the old value, and the new value. If the old value matches the new value, this method is not triggered. Create a [managed property](#managed-properties) to customize this behavior.
+- `elementPropertyChanged(name, oldValue, newValue)`: Called each time a property gets changed. Provides the property name (as a string), the old value, and the new value. If the old value matches the new value, this method is not triggered. Create a [custom property](#custom-properties) to customize this behavior.
 
-- `elementAttributeChanged(name, oldValue, newValue)`: Called each time an attribute is changed. If the old value matches the new value, this method is not triggered. Call `attributeChangedCallback` directly to customize this behavior.
+- `elementAttributeChanged(name, oldValue, newValue)`: Called each time an attribute is changed. If the old value matches the new value, this method is not triggered. Set `attributeChangedCallback` directly to customize this behavior.
 
-- `elementWillUnmount`: Called by `disconnectedCallback`, right before the internal DOM nodes have been cleaned up. Ideal for unregistering event listeners, timers, or the like.
-
-**Q:** "Why does `UpgradedElement` use lifecycle methods which seemingly duplicate the existing native callbacks?"
-
-**A:** The primary purpose, as mentioned above, is adding more fidelity to the element render/update lifecycle in general. Another reason is for naming consistency. I borrowed similar naming conventions from React as they are already established and focus around state, similar to what `UpgradedComponent` does.
+- `elementWillUnmount`: Called by `disconnectedCallback`, right before the element's virtual DOM tree is cleaned up. Ideal for unregistering event listeners, timers, or the like.
 
 #### Using Custom Element Lifecycle Callbacks
 
 `UpgradedElement` piggybacks off the native lifecycle callbacks, which means if you use them, you should also call `super` to get the custom logic added by the base class. **This is especially true of `connectedCallback` and `disconnectedCallback`, which triggers the initial render and DOM cleanup steps, respectively.**
 
-Here's a quick reference for which lifecycle methods are dependent on the native callbacks:
+Here's a quick reference for which methods and features are dependent on the native callbacks:
 
 - 🚨 `connectedCallback`: **`super` required**
   - Calls `elementDidConnect`
   - Calls `elementDidMount`
+  - Also note if you override this method without super, no shadow root / styles / content will be rendered. :)
 - 🏳 `attributeChangedCallback`: `super` optional
   - Calls `elementAttributeChanged`
 - 🏳 `adoptedCallback` `super` recommended for future support
@@ -354,11 +369,9 @@ Here's a quick reference for which lifecycle methods are dependent on the native
 - 🚨 `disconnectedCallback`: **`super` required**
   - Calls `elementWillUnmount`
 
-In general, calling these with `super` is a safe bet.
-
 ### Internal Methods and Hooks
 
-Because of the escape hatches that exist with managed properties and native lifecycle callbacks, it's necessary to provide hooks to access the methods which handle renders, type checking, and the like.
+Because not all technical designs in the wild can service every use-case, here are some hooks to access the methods which handle renders, type checking, and the like.
 
 #### `requestRender`
 
@@ -369,7 +382,8 @@ To track the results of the manual render, you can set an internal property and 
 ```js
 elementDidUpdate() {
   if (this._renderRequested) {
-    // Set tracker to false to prevent other renders from reaching this `if` branch
+    // Set tracker to false to prevent unrelated renders
+    // from reaching this block by accident
     this._renderRequested = false
     doSomeOtherStuff()
   }
@@ -388,17 +402,17 @@ someCallbackMethod() {
 
 This is an internal accessor that returns a unique identifier. E.g., `252u296xs51k7p6ph6v`.
 
-You can access the id using the `element-id` attribute attached to any upgraded element.
+You can access the id using the `element-id` attribute on the host.
 
 #### `validateType(propertyName, value, type)`
 
 The internal method which compares your property type. Useful if you are doing computations or other manipulations involving a reflected property.
 
-**Use this method with caution for reflected properties.** You run the risk of an XSS attack. A future enhancement will provide a `sanitize` option which will encode the string to prevent this risk.
+**Use this method with caution for reflected properties.** You run the risk of an XSS attack. A future enhancement will provide a `sanitize` option which will ensure the value is safe.
 
 ### DOM Events
 
-To add event listeners, it's like you would do in any ES6 class. First, bind the callback in your element's `constructor`.
+To add event listeners, it's like you would do in any ES6 class. First, bind the handler in your element's `constructor`.
 
 ```js
 constructor() {
@@ -423,41 +437,11 @@ elementWillUnmount() {
 }
 ```
 
-NOTE: Make sure elements with event listeners have a `key` attribute to ensure the original node is preserved between state updates/renders.
-
 ## Browser Support
 
 `UpgradedElement` uses symbols, ES6 classes, and features within the web component standard. The decision to not polyfill is deliberate in order to get the performance boost of browsers, which by default, support these newer features. Custom bundles with polyfills will be made in the future.
 
-In the mean time, to get support in IE11, you will need some combination of Babel polyfill, `@babel/preset-env`, and a [custom element polyfill](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
-
-For more details on current web component spec support, check out the [caniuse](https://caniuse.com/#search=components) article which breaks support by sub-feature.
-
-**Transpiling & Bundling:** If you use a bundler like webpack with `babel-loader`, you'll need to flag this package as needing processing in your config. For example, you can update your `exclude` option in your script processing rule like so:
-
-```js
-module.exports = {
-  // ...
-  module: {
-    rules: [
-      // ...
-      {
-        test: /\.js$/,
-        exclude: /node_modules\/(?!upgraded-element)/, // <-- exclude this package
-        loader: "babel-loader",
-      },
-    ],
-  },
-}
-```
-
-## Under the Hood
-
-### Rendering
-
-1. **Rendering + Patching:** Rendering is handled using a small virtual DOM implementation as a fork of [reef](https://github.com/cferdinandi/reef), called [OmDomDom](https://github.com/geotrev/omdomdom).
-
-2. **Render Batching:** All renders are asynchronously requested to happen at the next animation frame. If multiple renders are requested in the same frame, the last request made (with the most recent data) is used. If `requestAnimationFrame` is not available, `setTimeout` is used with an approximate frame calculation (`1000 / 60` in milliseconds). This isn't very sophisticated, but is intended not to block higher priority things in the browser's main thread.
+In the mean time, to get support in IE11 and Edge classic, you will need to polyfill symbols and [web components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs) (custom elements and shadow roots, specifically).
 
 ## Goals
 
