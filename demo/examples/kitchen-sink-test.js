@@ -63,18 +63,22 @@ export class KitchenSinkTest extends UpgradedElement {
   render() {
     return `
       <div>
-        <p key="lede" style="${this.highlight}">
+        <p data-key="lede" style="${this.highlight}">
           You've changed names ${this.changeCount} times
         </p>
-        <p key="comp" class="compliments" ${this.dataAttr} data-empty="${
+        <p data-key="comp" class="compliments" ${this.dataAttr} data-empty="${
       this.dataAttr
     }">You're awesome, ${this.firstName}!</p>
-        <p key='desc'>${this.getAttribute("description")}</p>
-        ${this.dataAttr === "" ? "<div key='rem'>Removed attribute</div>" : ""}
-        <button key="name-btn" id="update-name-btn">Change Name</button>
-        <button key="hl-btn" id="update-hl-btn">Remove Highlights</button>
-        <button key="attr-btn" id="update-attr-btn">Remove Attribute</button>
-        <slot key="slot"></slot>
+        <p data-key='desc'>${this.getAttribute("description")}</p>
+        ${
+          this.dataAttr === ""
+            ? "<div data-key='rem'>Removed attribute</div>"
+            : ""
+        }
+        <button data-key="name-btn" id="update-name-btn">Change Name</button>
+        <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>
+        <button data-key="attr-btn" id="update-attr-btn">Remove Attribute</button>
+        <slot data-key="slot"></slot>
       </div>
     `
   }
