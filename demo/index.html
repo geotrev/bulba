@@ -10,10 +10,7 @@
   <body style="max-width: 800px;">
     <slot-test>Just chillin at the top of the page</slot-test>
     <hr />
-    <reflect-properties-test
-      first-name="Silver"
-      description="This is my favorite group of people."
-    ></reflect-properties-test>
+    <kitchen-sink-test first-name="Silver" description="This is my favorite group of people."></kitchen-sink-test>
     <hr />
     <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
     <br />
@@ -31,5 +28,21 @@
         testElement.parentNode.removeChild(testElement)
       })
     </script>
+
+    <!-- Uncomment bundle.js and comment in one of these to test CDN: -->
+
+    <!-- <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.1/dist/upgraded-element.js"
+      integrity="sha256-r6BiP2qVaxNsuzg2aCR1Et6S2k+WLhqLCdNiI4n0vF8="
+      crossorigin="anonymous"
+    ></script> -->
+
+    <!-- <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.1/dist/upgraded-element.min.js"
+      integrity="sha256-XjyhS//4+GkAnZDpP4gB9F1NAE63kUMlYyDguYuTD+c="
+      crossorigin="anonymous"
+    ></script> -->
   </body>
 </html>

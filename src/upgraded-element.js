@@ -1,17 +1,18 @@
-import { createVDOM, stringToHTML, diffVDOM, renderToDOM } from "./reef-dom"
+import { create, update, render } from "omdomdom"
+import { getScheduler } from "./renderer/scheduler"
+import * as internal from "./internal"
+import * as external from "./external"
 import {
-  createUUID,
-  toKebabCase,
   isEmptyObject,
   isString,
   isFunction,
   isUndefined,
   isSymbol,
   getTypeTag,
+  toKebabCase,
+  createUUID,
+  forEach,
 } from "./utilities"
-import { getScheduler } from "./scheduler"
-import * as internal from "./internal"
-import * as external from "./external"
 
 /**
  * @module UpgradedElement
@@ -23,16 +24,14 @@ export class UpgradedElement extends HTMLElement {
     this[internal.initialize]()
   }
 
-  // Public
-
   // Retrieve defined properties from the extender.
   static get observedAttributes() {
     let attributes = []
 
     if (!isEmptyObject(this.properties)) {
-      Object.keys(this.properties).forEach((property) => {
-        if (this.properties[property].reflected)
-          attributes.push(toKebabCase(property))
+      forEach(Object.keys(this.properties), (property) => {
+        if (!this.properties[property].reflected) return
+        attributes.push(toKebabCase(property))
       })
     }
 
@@ -69,6 +68,8 @@ export class UpgradedElement extends HTMLElement {
     this[internal.vDOM] = null
   }
 
+  // Public
+
   /**
    * Returns the internal element id.
    * @returns {string}
@@ -96,6 +97,7 @@ export class UpgradedElement extends HTMLElement {
     const evaluatedType = getTypeTag(value)
     if (type === undefined || evaluatedType === type) return
 
+    // eslint-disable-next-line no-console
     console.warn(
       `Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
@@ -128,10 +130,15 @@ export class UpgradedElement extends HTMLElement {
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
+    // Set id as an attribute
     this.setAttribute(
       external.elementIdAttribute,
       this[external.elementIdProperty]
     )
+
+    // Set document direction for reflow support in shadow roots
+    this.setAttribute("dir", String(document.dir || "ltr"))
+
     this[internal.performUpgrade]()
   }
 
@@ -142,9 +149,9 @@ export class UpgradedElement extends HTMLElement {
     const { properties } = this.constructor
     if (isEmptyObject(properties)) return
 
-    Object.keys(properties).forEach((property) => {
+    forEach(Object.keys(properties), (property) =>
       this[internal.upgradeProperty](property, properties[property])
-    })
+    )
   }
 
   /**
@@ -196,10 +203,9 @@ export class UpgradedElement extends HTMLElement {
         if (value === this[privateName]) return
         if (type) this[external.validateType](property, value, type)
 
-        const attribute = toKebabCase(property)
         const oldValue = this[privateName]
 
-        if (value) {
+        if (!isUndefined(value)) {
           this[privateName] = value
           this[internal.runLifecycle](
             external.elementPropertyChanged,
@@ -207,16 +213,22 @@ export class UpgradedElement extends HTMLElement {
             oldValue,
             value
           )
-          if (reflected) this.setAttribute(attribute, value)
+          if (reflected) {
+            const attribute = toKebabCase(property)
+            this.setAttribute(attribute, value)
+          }
         } else {
-          this[privateName] = undefined
+          delete this[privateName]
           this[internal.runLifecycle](
             external.elementPropertyChanged,
             property,
             oldValue,
             value
           )
-          if (reflected) this.removeAttribute(attribute)
+          if (reflected) {
+            const attribute = toKebabCase(property)
+            this.removeAttribute(attribute)
+          }
         }
 
         this[external.requestRender]()
@@ -249,7 +261,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   [internal.getVDOM]() {
-    return createVDOM(stringToHTML(this[internal.getDOMString]()))
+    return create(this[internal.getDOMString]())
   }
 
   /**
@@ -272,18 +284,18 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.getInitialRenderState]() {
     this[internal.vDOM] = this[internal.getVDOM]()
-    renderToDOM(this[internal.vDOM], this[internal.shadowRoot])
+    render(this[internal.vDOM], this[internal.shadowRoot])
     this[internal.runLifecycle](external.elementDidMount)
     this[internal.isFirstRender] = false
   }
 
   /**
    * All renders after initial render:
-   * Create a new virtual DOM and diff it against the existing virtual DOM.
+   * Create a new vdom and update the existing one.
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    diffVDOM(nextVDOM, this[internal.vDOM], this[internal.shadowRoot])
+    update(nextVDOM, this[internal.vDOM])
     nextVDOM = null
     this[internal.runLifecycle](external.elementDidUpdate)
   }

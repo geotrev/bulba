@@ -1,4 +1,4 @@
-import "./examples/reflect-properties-test"
+import "./examples/kitchen-sink-test"
 import "./examples/lifecycle-test"
 import "./examples/slot-test"
 import "./examples/custom-accessor-test"

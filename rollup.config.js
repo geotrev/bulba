@@ -1,14 +1,16 @@
 import path from "path"
-import commonjs from "@rollup/plugin-commonjs"
-import resolve from "@rollup/plugin-node-resolve"
 import babel from "@rollup/plugin-babel"
+import resolve from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
 import { banner } from "./build/banner"
 
-const FORMAT_TYPES = ["cjs", "es"]
-const FORMAT_UMD = "umd"
+const Formats = {
+  CJS: "cjs",
+  ES: "es",
+  UMD: "umd",
+}
 const input = path.resolve(__dirname, "src/index.js")
-const basePlugins = [resolve(), commonjs(), babel({ babelHelpers: "bundled" })]
+const basePlugins = [resolve(), babel({ babelHelpers: "bundled" })]
 
 const terserPlugin = terser({
   output: {
@@ -30,7 +32,7 @@ const baseOutput = (format) => ({
   sourcemap: true,
 })
 
-const moduleOutputs = FORMAT_TYPES.map((format) => ({
+const moduleOutputs = [Formats.ES, Formats.CJS].map((format) => ({
   ...baseOutput(format),
   plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : undefined,
   file: path.resolve(__dirname, `lib/upgraded-element.${format}.js`),
@@ -38,11 +40,11 @@ const moduleOutputs = FORMAT_TYPES.map((format) => ({
 
 const umdOutputs = [
   {
-    ...baseOutput(FORMAT_UMD),
+    ...baseOutput(Formats.UMD),
     file: path.resolve(__dirname, `dist/upgraded-element.js`),
   },
   {
-    ...baseOutput(FORMAT_UMD),
+    ...baseOutput(Formats.UMD),
     plugins: [terserPlugin],
     file: path.resolve(__dirname, `dist/upgraded-element.min.js`),
   },

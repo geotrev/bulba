@@ -1,7 +1,9 @@
 import { register } from "../../src"
-import { ReflectPropertiesTest } from "./reflect-properties-test"
+import { KitchenSinkTest } from "./kitchen-sink-test"
 
-class LifecycleTest extends ReflectPropertiesTest {
+/* eslint-disable no-console */
+
+class LifecycleTest extends KitchenSinkTest {
   /**
    * Two types of properties: `generated` and `managed`.
    * - A `generated` property is similar to that in LitElement. When you declare a property here, it
@@ -100,6 +102,7 @@ class LifecycleTest extends ReflectPropertiesTest {
 
   elementDidUpdate() {
     console.log("elementDidUpdate")
+    console.log("====================")
   }
 
   /**
@@ -110,6 +113,7 @@ class LifecycleTest extends ReflectPropertiesTest {
   elementDidMount() {
     super.elementDidMount()
     console.log("elementDidMount")
+    console.log("====================")
   }
 
   /**

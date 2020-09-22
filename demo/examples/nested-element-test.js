@@ -1,5 +1,5 @@
 import { UpgradedElement, register } from "../../src"
-import "./reflect-properties-test"
+import "./kitchen-sink-test"
 
 class NestedElementTest extends UpgradedElement {
   static get properties() {
@@ -18,7 +18,7 @@ class NestedElementTest extends UpgradedElement {
       }
 
       .border {
-        border-width: 1px;
+        border-width: 3px;
         border-style: solid;
       }
     `
@@ -39,8 +39,10 @@ class NestedElementTest extends UpgradedElement {
   }
 
   handleClick() {
-    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][Math.floor(Math.random() * 5)]
-    this.shadowRoot.querySelector("reflect-properties-test").firstName = [
+    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
+      Math.floor(Math.random() * 5)
+    ]
+    this.shadowRoot.querySelector("kitchen-sink-test").firstName = [
       "Mario",
       "Samus",
       "Luigi",
@@ -50,12 +52,14 @@ class NestedElementTest extends UpgradedElement {
 
   render() {
     return `
-      <p>This one is nested.</p>
-      <button id="clicker">Click to update</button>
-      <div class="border" style="border-color: ${this.borderColor}">
-        <reflect-properties-test first-name="Chaos" description="I'm nested!">
-          <slot></slot>
-        </reflect-properties-test>
+      <div>
+        <p data-key="lede">This one is nested with inline styles.</p>
+        <button data-key="updater" id="clicker">Click to update</button>
+        <div data-key="nested" class="border" style="border-color: ${this.borderColor}">
+          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
+            <slot></slot>
+          </kitchen-sink-test>
+        </div>
       </div>
     `
   }
