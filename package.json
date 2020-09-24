@@ -21,6 +21,9 @@
   "homepage": "https://github.com/geotrev/upgraded-element",
   "author": "George Treviranus <hello@geotrev.com>",
   "license": "MIT",
+  "dependencies": {
+    "omdomdom": "^0.1.10"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
@@ -32,7 +35,6 @@
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.4.2",
     "jshashes": "^1.0.8",
-    "omdomdom": "^0.1.10",
     "prettier": "^2.1.2",
     "rollup": "^2.27.1",
     "rollup-plugin-livereload": "^2.0.0",
