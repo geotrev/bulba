@@ -1,6 +1,6 @@
-# <🔼> Upgraded Element
+# <🔼>UpgradedElement</🔼>
 
-`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 4kb minified + gzipped.
+`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 5KB, minified + gzipped.
 
 It implements a virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom) for lightning fast renders. ⚡ DOM updates are restricted to shadow root contexts, but can be chained to child UpgradedElement instances if their [properties](#properties) are modified by a parent; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
 
