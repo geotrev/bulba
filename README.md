@@ -1,6 +1,6 @@
 # <🔼>UpgradedElement</🔼>
 
-![minified + gzip size](https://badgen.net/bundlephobia/minzip/upgraded-element) ![npm version](https://badgen.net/npm/v/upgraded-element) ![dependencies](https://badgen.net/david/dep/geotrev/upgraded-element) ![devDependencies](https://badgen.net/david/dev/geotrev/upgraded-element)
+![CircleCI status (master)](https://badgen.net/circleci/github/geotrev/upgraded-element/master) ![minified + gzip size](https://badgen.net/bundlephobia/minzip/upgraded-element) ![npm version](https://badgen.net/npm/v/upgraded-element) ![dependencies](https://badgen.net/david/dep/geotrev/upgraded-element) ![devDependencies](https://badgen.net/david/dev/geotrev/upgraded-element)
 
 `UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 5KB, minified + gzipped.
 
