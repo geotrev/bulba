@@ -113,16 +113,16 @@ When linking to the source file with a `script` tag, be sure to include `integri
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.2/dist/upgraded-element.js"
-  integrity="sha256-1Q6hq02uKWuKbg1q+SLXspiQeAf0a9EBCRllTl5/2rw="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.3/dist/upgraded-element.js"
+  integrity="sha256-5fo/feskDBlZqMTUy8UbxR16Q/rUY3dcF7sYFmjoQxE="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.2/dist/upgraded-element.min.js"
-  integrity="sha256-vxdZU39/pGzXK6gFJsPRtN0O7++/1NzXRICdYk70My4="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.3/dist/upgraded-element.min.js"
+  integrity="sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
   crossorigin="anonymous"
 ></script>
 ```
