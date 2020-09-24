@@ -1,6 +1,8 @@
-# <🔼> Upgraded Element
+# <🔼>UpgradedElement</🔼>
 
-`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 4kb minified + gzipped.
+![CircleCI status (master)](https://badgen.net/circleci/github/geotrev/upgraded-element/master) ![minified + gzip size](https://badgen.net/bundlephobia/minzip/upgraded-element) ![npm version](https://badgen.net/npm/v/upgraded-element) ![dependencies](https://badgen.net/david/dep/geotrev/upgraded-element) ![devDependencies](https://badgen.net/david/dev/geotrev/upgraded-element)
+
+`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 5KB, minified + gzipped.
 
 It implements a virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom) for lightning fast renders. ⚡ DOM updates are restricted to shadow root contexts, but can be chained to child UpgradedElement instances if their [properties](#properties) are modified by a parent; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
 
@@ -111,16 +113,16 @@ When linking to the source file with a `script` tag, be sure to include `integri
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.2/dist/upgraded-element.js"
-  integrity="sha256-1Q6hq02uKWuKbg1q+SLXspiQeAf0a9EBCRllTl5/2rw="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.3/dist/upgraded-element.js"
+  integrity="sha256-5fo/feskDBlZqMTUy8UbxR16Q/rUY3dcF7sYFmjoQxE="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.2/dist/upgraded-element.min.js"
-  integrity="sha256-vxdZU39/pGzXK6gFJsPRtN0O7++/1NzXRICdYk70My4="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.3/dist/upgraded-element.min.js"
+  integrity="sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
   crossorigin="anonymous"
 ></script>
 ```

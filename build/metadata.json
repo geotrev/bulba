@@ -1,10 +1,10 @@
 [
   {
     "name": "upgraded-element",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "sri": {
-      "bundle": "sha256-1Q6hq02uKWuKbg1q+SLXspiQeAf0a9EBCRllTl5/2rw=",
-      "bundleMin": "sha256-vxdZU39/pGzXK6gFJsPRtN0O7++/1NzXRICdYk70My4="
+      "bundle": "sha256-5fo/feskDBlZqMTUy8UbxR16Q/rUY3dcF7sYFmjoQxE=",
+      "bundleMin": "sha256-M+QI2BA3OVos8+cu/I6VpedoCT2nH7Ik0B2C/r2Yf5c="
     }
   }
 ]
