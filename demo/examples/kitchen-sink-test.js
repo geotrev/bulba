@@ -7,24 +7,16 @@ export class KitchenSinkTest extends UpgradedElement {
         type: "string",
         default: (element) => element.getAttribute("first-name"),
         reflected: true,
-
-        // Sets the property in public `properties` object
-        public: true,
       },
       dataAttr: {
         type: "string",
         default: (element) =>
           `data-removes='${element.getAttribute("first-name")}'`,
-
-        // Property value can never be changed.
-        frozen: true,
+        safe: true,
       },
       changeCount: {
         type: "number",
         default: 0,
-
-        // Added layer of security for string values.
-        sanitize: true,
       },
       highlight: {
         type: "string",

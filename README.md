@@ -177,10 +177,18 @@ Example:
 class MyCoolElement extends UpgradedElement {
   static get properties() {
     return {
-      myFavoriteNumber: {
-        default: 12,
+      propertyCount: {
+        default: 2,
         type: "number",
         reflected: true,
+      },
+      countTag: {
+        default: (this) => {
+          const count = this.getAttribute("property-count")
+          return `<div>There's ${count} properties</div>`
+        },
+        type: "string",
+        safe: true,
       },
     }
   }
@@ -205,7 +213,7 @@ The default value for the property. It can be a primitive value, or callback whi
 
 > Value type: String
 
-Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object shape and enum support TBD. Here is a full list of types:
+Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object shape and enum support TBD. Here is a mostly-complete list of types:
 
 - `string`
 - `number`
@@ -221,6 +229,10 @@ Describes the data type for the property value. Default values are checked, too.
 > Value type: Boolean
 
 Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
+
+##### `safe`
+
+If you're using a string as the property value, this will tell `UpgradedElement` to sanitize it and replace unsafe special characters with [HTML-safe values](https://www.w3schools.com/html/html_entities.asp).
 
 #### Updating a Property
 

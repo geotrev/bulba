@@ -10,6 +10,7 @@ import {
   getTypeTag,
   toKebabCase,
   createUUID,
+  sanitizeString,
 } from "./utilities"
 
 /**
@@ -168,7 +169,12 @@ export class UpgradedElement extends HTMLElement {
     }
 
     const privateName = Symbol(propName)
-    const { default: defaultValue, type, reflected = false } = configuration
+    const {
+      default: defaultValue,
+      type,
+      reflected = false,
+      safe = false,
+    } = configuration
 
     let initialValue = isFunction(defaultValue)
       ? defaultValue(this)
@@ -178,7 +184,12 @@ export class UpgradedElement extends HTMLElement {
     // Initialize the private property
 
     if (!isUndefined(initialValue)) {
+      if (safe && (type === "string" || typeof initialvalue === "string")) {
+        initialValue = sanitizeString(initialValue)
+      }
+
       if (type) this[external.validateType](propName, initialValue, type)
+
       this[privateName] = initialValue
     }
 
