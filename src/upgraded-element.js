@@ -184,12 +184,12 @@ export class UpgradedElement extends HTMLElement {
     // Initialize the private property
 
     if (!isUndefined(initialValue)) {
-      if (safe && (type === "string" || typeof initialvalue === "string")) {
+      if (type) {
+        this[external.validateType](propName, initialValue, type)
+      }
+      if (safe && (type === "string" || typeof initialValue === "string")) {
         initialValue = sanitizeString(initialValue)
       }
-
-      if (type) this[external.validateType](propName, initialValue, type)
-
       this[privateName] = initialValue
     }
 
@@ -263,13 +263,13 @@ export class UpgradedElement extends HTMLElement {
       domString = this.render()
     } else {
       throw new Error(
-        `You must include a render method in component: '${this.constructor.name}'`
+        `You must include a render method in element: '${this.constructor.name}'`
       )
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in component: '${this.constructor.name}'.`
+        `You attempted to render a non-string template in element: '${this.constructor.name}'.`
       )
     }
 
