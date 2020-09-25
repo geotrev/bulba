@@ -37,9 +37,6 @@ describe("type checking", () => {
   it("isUndefined: returns true if the value is undefined", () => {})
   it("isUndefined: returns false if the value is anything else", () => {})
 
-  it("isSymbol: returns true if the value is a symbol", () => {})
-  it("isSymbol: returns false if the value is anything else", () => {})
-
   it("isEmptyObject: returns true if the object is empty", () => {})
   it("isEmptyObject: returns false if the object has entries", () => {})
   it("isEmptyObject: returns false if the value isn't an object", () => {})

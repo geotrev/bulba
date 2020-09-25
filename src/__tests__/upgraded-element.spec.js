@@ -5,7 +5,7 @@ import { getElement } from "./helpers/get-element"
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 window.cancelAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
-describe.only("UpgradedElement", () => {
+describe("UpgradedElement", () => {
   afterEach(() => (document.innerHTML = ""))
 
   it("upgrades the element", () => {
@@ -47,8 +47,6 @@ describe.only("UpgradedElement", () => {
   })
 
   describe("properties", () => {
-    it("sets static properties to observedAttributes", () => {})
-
     it("upgrades properties", () => {
       // Given
       const properties = {
@@ -84,9 +82,61 @@ describe.only("UpgradedElement", () => {
       expect(getElement("no-upgrade", false).count).toEqual(1)
     })
 
+    describe("reflected", () => {
+      it("reflects property to attribute", () => {
+        // Given
+        const properties = {
+          reflectedProp: { reflected: true },
+        }
+        basicFixture("reflect-one", { properties })
+        // Then
+        const element = getElement("reflect-one", false)
+        expect(element.hasAttribute("reflected-prop")).toBe(true)
+        expect(element.getAttribute("reflected-prop")).toEqual("")
+      })
+
+      it("reflects property to attribute with value, if given", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        basicFixture("reflect-two", { properties })
+        // Then
+        const element = getElement("reflect-two", false)
+        expect(element.hasAttribute("reflected-prop")).toBe(true)
+        expect(element.getAttribute("reflected-prop")).toEqual("foo")
+      })
+
+      it("updates attribute if reflected property value is changed", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        basicFixture("reflect-three", { properties })
+        const element = getElement("reflect-three", false)
+        element.reflectedProp = "bar"
+        // Then
+        expect(element.getAttribute("reflected-prop")).toEqual("bar")
+      })
+
+      it("removes attribute if set as undefined", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        basicFixture("reflect-four", { properties })
+        const element = getElement("reflect-four", false)
+        element.reflectedProp = undefined
+        // Then
+        expect(element.reflectedProp).toBeUndefined()
+        expect(element.hasAttribute("reflected-prop")).toBe(false)
+      })
+    })
+
+    /* eslint-disable no-console */
+    console.warn = jest.fn()
+
     describe("warnings", () => {
-      /* eslint-disable no-console */
-      console.warn = jest.fn()
       const warningMessage = `[UpgradedElement]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
 
       it("will print warning on upgrade if assigned type doesn't match", () => {
@@ -97,7 +147,7 @@ describe.only("UpgradedElement", () => {
             default: "foo",
           },
         }
-        basicFixture("upgrade-warn", { properties })
+        basicFixture("upgrade-type-warn", { properties })
         // Then
         expect(console.warn).toBeCalledWith(warningMessage)
       })
@@ -110,15 +160,15 @@ describe.only("UpgradedElement", () => {
             default: true,
           },
         }
-        basicFixture("change-warn", { properties })
+        basicFixture("change-type-warn", { properties })
         // When
-        getElement("change-warn", false).testProp1 = "foo"
+        getElement("change-type-warn", false).testProp1 = "foo"
         // Then
         expect(console.warn).toBeCalledWith(warningMessage)
       })
-
-      console.warn.mockClear()
-      /* eslint-enable no-console */
     })
+
+    console.warn.mockClear()
+    /* eslint-enable no-console */
   })
 })
