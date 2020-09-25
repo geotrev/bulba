@@ -99,7 +99,7 @@ export class UpgradedElement extends HTMLElement {
 
     // eslint-disable-next-line no-console
     console.warn(
-      `Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
+      `[UpgradedElement]: Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
   }
 
