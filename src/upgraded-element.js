@@ -176,27 +176,29 @@ export class UpgradedElement extends HTMLElement {
       safe = false,
     } = configuration
 
-    let initialValue = isFunction(defaultValue)
+    let initializedValue = isFunction(defaultValue)
       ? defaultValue(this)
       : defaultValue
 
     // Validate the property's default value type, if given
     // Initialize the private property
 
-    if (!isUndefined(initialValue)) {
+    if (!isUndefined(initializedValue)) {
       if (type) {
-        this[external.validateType](propName, initialValue, type)
+        this[external.validateType](propName, initializedValue, type)
       }
-      if (safe && (type === "string" || typeof initialValue === "string")) {
-        initialValue = sanitizeString(initialValue)
+
+      if (safe && (type === "string" || typeof initializedValue === "string")) {
+        initializedValue = sanitizeString(initializedValue)
       }
-      this[privateName] = initialValue
+
+      this[privateName] = initializedValue
     }
 
     // If the value is reflected, set its attribute.
 
     if (reflected) {
-      const initialAttrValue = initialValue ? String(initialValue) : ""
+      const initialAttrValue = initializedValue ? String(initializedValue) : ""
       const attribute = toKebabCase(propName)
       this.setAttribute(attribute, initialAttrValue)
     }
@@ -217,7 +219,10 @@ export class UpgradedElement extends HTMLElement {
         const oldValue = this[privateName]
 
         if (!isUndefined(value)) {
-          this[privateName] = value
+          this[privateName] =
+            safe && (type === "string" || typeof value === "string")
+              ? sanitizeString(value)
+              : value
 
           this[internal.runLifecycle](
             external.elementPropertyChanged,

@@ -6,5 +6,5 @@
 export const sanitizeString = (value) => {
   const dump = document.createElement("div")
   dump.textContent = value
-  return dump.innerHTML
+  return "" + dump.innerHTML
 }
