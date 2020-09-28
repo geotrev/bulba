@@ -1,9 +1,6 @@
 {
   "clearMocks": true,
   "restoreMocks": true,
-  "moduleNameMapper": {
-    "\\.(css|scss)$": "<rootDir>/.jest/empty-mock.js"
-  },
   "testMatch": ["<rootDir>/src/__tests__/*.spec.js"],
   "testURL": "http://localhost/",
   "modulePaths": ["src/"],

@@ -13,13 +13,18 @@ export class KitchenSinkTest extends UpgradedElement {
         default: (element) =>
           `data-removes='${element.getAttribute("first-name")}'`,
       },
+      changeCount: {
+        type: "number",
+        default: 0,
+      },
       highlight: {
         type: "string",
         default: "color: white; background-color: blue",
       },
-      changeCount: {
-        type: "number",
-        default: 0,
+      safeString: {
+        type: "string",
+        default: "<span>function() { console.log('no work') }</span>",
+        safe: true,
       },
     }
   }
@@ -75,6 +80,7 @@ export class KitchenSinkTest extends UpgradedElement {
             ? "<div data-key='rem'>Removed attribute</div>"
             : ""
         }
+        <p data-key="safe">Sanitized content: ${this.safeString}</p>
         <button data-key="name-btn" id="update-name-btn">Change Name</button>
         <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>
         <button data-key="attr-btn" id="update-attr-btn">Remove Attribute</button>

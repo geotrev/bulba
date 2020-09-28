@@ -18,8 +18,17 @@ export const isPlainObject = (value) => getTypeTag(value) === "object"
  * @param {*} value
  * @returns {boolean}
  */
-export const isEmptyObject = (value) =>
-  !isPlainObject(value) || !Object.keys(value).length
+export const isEmptyObject = (value) => {
+  if (!isPlainObject(value)) return false
+
+  for (let key in value) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
+      return false
+    }
+  }
+
+  return true
+}
 
 /**
  * Checks if the value is a function.
@@ -41,10 +50,3 @@ export const isString = (value) => getTypeTag(value) === "string"
  * @returns {boolean}
  */
 export const isUndefined = (value) => getTypeTag(value) === "undefined"
-
-/**
- * Checks if the value is a symbol.
- * @param {*} value
- * @returns {boolean}
- */
-export const isSymbol = (value) => getTypeTag(value) === "symbol"

@@ -21,11 +21,15 @@ export function basicFixture(id, options = {}) {
     }
 
     render() {
-      if (options.properties && Object.keys(options.properties).length) {
+      if (options.properties) {
         const propertiesToString = () => {
-          return Object.keys(options.properties).reduce((res, prop) => {
-            return res + " " + this[prop].toString()
-          }, "")
+          let result = ""
+
+          for (let propName in options.properties) {
+            result += " " + this[propName]
+          }
+
+          return result
         }
 
         return `<div>${propertiesToString()}</div>`

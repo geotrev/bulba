@@ -7,11 +7,10 @@ import {
   isString,
   isFunction,
   isUndefined,
-  isSymbol,
   getTypeTag,
   toKebabCase,
   createUUID,
-  forEach,
+  sanitizeString,
 } from "./utilities"
 
 /**
@@ -26,13 +25,13 @@ export class UpgradedElement extends HTMLElement {
 
   // Retrieve defined properties from the extender.
   static get observedAttributes() {
+    if (isEmptyObject(this.properties)) return []
+
     let attributes = []
 
-    if (!isEmptyObject(this.properties)) {
-      forEach(Object.keys(this.properties), (property) => {
-        if (!this.properties[property].reflected) return
-        attributes.push(toKebabCase(property))
-      })
+    for (let propName in this.properties) {
+      if (!this.properties[propName].reflected) continue
+      attributes.push(toKebabCase(propName))
     }
 
     return attributes
@@ -89,17 +88,17 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * Validates a property's value.
-   * @param {string} property
+   * @param {string} propName
    * @param {string} value
    * @param {string} type
    */
-  [external.validateType](property, value, type) {
+  [external.validateType](propName, value, type) {
     const evaluatedType = getTypeTag(value)
     if (type === undefined || evaluatedType === type) return
 
     // eslint-disable-next-line no-console
     console.warn(
-      `[UpgradedElement]: Property '${property}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
+      `[UpgradedElement]: Property '${propName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
     )
   }
 
@@ -147,86 +146,108 @@ export class UpgradedElement extends HTMLElement {
    */
   [internal.performUpgrade]() {
     const { properties } = this.constructor
+
     if (isEmptyObject(properties)) return
 
-    forEach(Object.keys(properties), (property) =>
-      this[internal.upgradeProperty](property, properties[property])
-    )
+    for (let propName in properties) {
+      this[internal.upgradeProperty](propName, properties[propName])
+    }
   }
 
   /**
    * Upgrade a property based on its configuration. If accessors are detected in
    * the extender, skip the upgrade.
-   * @param {string} property - name of the upgraded property.
-   * @param {{value, default, reflected}} configuration - property definition of the extender.
+   * @param {string} propName
+   * @param {{value, default, reflected}} configuration
    */
-  [internal.upgradeProperty](property, configuration = {}) {
+  [internal.upgradeProperty](propName, configuration = {}) {
     // If the constructor class is using its own setter/getter, bail
-    if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), property))
+    if (
+      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), propName)
+    ) {
       return
+    }
 
-    const privateName = isSymbol(property)
-      ? Symbol()
-      : `__private_${property}__`
-    const { default: defaultValue, type, reflected = false } = configuration
+    const privateName = Symbol(propName)
+    const {
+      default: defaultValue,
+      type,
+      reflected = false,
+      safe = false,
+    } = configuration
+
+    let initializedValue = isFunction(defaultValue)
+      ? defaultValue(this)
+      : defaultValue
 
     // Validate the property's default value type, if given
     // Initialize the private property
 
-    let initialValue = isFunction(defaultValue)
-      ? defaultValue(this)
-      : defaultValue
-    if (!isUndefined(initialValue)) {
-      if (type) this[external.validateType](property, initialValue, type)
-      this[privateName] = initialValue
+    if (!isUndefined(initializedValue)) {
+      if (type) {
+        this[external.validateType](propName, initializedValue, type)
+      }
+
+      if (safe && (type === "string" || typeof initializedValue === "string")) {
+        initializedValue = sanitizeString(initializedValue)
+      }
+
+      this[privateName] = initializedValue
+    }
+
+    // If the value is reflected, set its attribute.
+
+    if (reflected) {
+      const initialAttrValue = initializedValue ? String(initializedValue) : ""
+      const attribute = toKebabCase(propName)
+      this.setAttribute(attribute, initialAttrValue)
     }
 
     // Finally, declare its accessors
 
-    Object.defineProperty(this, property, {
+    Object.defineProperty(this, propName, {
       configurable: true,
       enumerable: true,
       get() {
         return this[privateName]
       },
-
-      /**
-       * Set a new value:
-       * - If the value is the same as before, exit
-       * - Validate the type
-       * - If elementPropertyChanged is defined, call it
-       * - If reflected, call setAttribute
-       * - Request a new render.
-       */
       set(value) {
         // Don't set if the value is the same to prevent unnecessary re-renders.
         if (value === this[privateName]) return
-        if (type) this[external.validateType](property, value, type)
+        if (type) this[external.validateType](propName, value, type)
 
         const oldValue = this[privateName]
 
         if (!isUndefined(value)) {
-          this[privateName] = value
+          this[privateName] =
+            safe && (type === "string" || typeof value === "string")
+              ? sanitizeString(value)
+              : value
+
           this[internal.runLifecycle](
             external.elementPropertyChanged,
-            property,
+            propName,
             oldValue,
             value
           )
+
           if (reflected) {
-            const attribute = toKebabCase(property)
-            this.setAttribute(attribute, value)
+            const attribute = toKebabCase(propName)
+            const attrValue = String(value)
+            this.setAttribute(attribute, attrValue)
           }
         } else {
           delete this[privateName]
+
           this[internal.runLifecycle](
             external.elementPropertyChanged,
-            property,
+            propName,
             oldValue,
             value
           )
+
           if (reflected) {
-            const attribute = toKebabCase(property)
+            const attribute = toKebabCase(propName)
             this.removeAttribute(attribute)
           }
         }
@@ -247,13 +268,13 @@ export class UpgradedElement extends HTMLElement {
       domString = this.render()
     } else {
       throw new Error(
-        `You must include a render method in component: '${this.constructor.name}'`
+        `You must include a render method in element: '${this.constructor.name}'`
       )
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in component: '${this.constructor.name}'.`
+        `You attempted to render a non-string template in element: '${this.constructor.name}'.`
       )
     }
 

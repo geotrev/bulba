@@ -2,23 +2,21 @@
 
 ![CircleCI status (master)](https://badgen.net/circleci/github/geotrev/upgraded-element/master) ![minified + gzip size](https://badgen.net/bundlephobia/minzip/upgraded-element) ![npm version](https://badgen.net/npm/v/upgraded-element) ![dependencies](https://badgen.net/david/dep/geotrev/upgraded-element) ![devDependencies](https://badgen.net/david/dev/geotrev/upgraded-element)
 
-`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements. It weighs just 5KB, minified + gzipped.
+`UpgradedElement` is a base class enabling modern component authoring techniques in custom elements.
 
-It implements a virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom) for lightning fast renders. ⚡ DOM updates are restricted to shadow root contexts, but can be chained to child UpgradedElement instances if their [properties](#properties) are modified by a parent; this can greatly improve the performance of re-renders by stopping the DOM-diffing process from unnecessarily continuing down the tree.
+Why would you use `UpgradedElement`, you ask?
 
-How does `UpgradedElement` stand apart from other UI libraries/frameworks? It's built on top of native browser technologies--shadow roots and custom elements--making it standards-centric.
+1. Uses fragment-based rendering to keep rerenders concise.
+2. Create [styles](#styles) and [view](#render) in a shadow root.
+3. Manage state via [upgraded properties](#properties).
+4. Use predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for render-sensitive logic.
 
-Some notable features:
+`UpgradedElement` uses a lightweight virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom), a string-based renderer.
 
-1. Encapsulated [styles](#styles) and [view](#render) in a shadow root.
-2. State management via [upgraded properties](#properties).
-3. Predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for more fine-tuned control of render-sensitive changes.
-4. `UpgradedElement` extends `HTMLElement` to give you [custom element callbacks](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#Using_the_lifecycle_callbacks), in addition to all the goodness of web components.
+**🧾 Table of Contents**
 
-**Table of Contents**
-
-- 📜 [Getting Started](#getting-started)
 - 📥 [Install](#install)
+- 🔎 [Getting Started](#getting-started)
 - 🎮 [API](#api)
   - [Render](#render)
   - [Styles](#styles)
@@ -38,58 +36,11 @@ Some notable features:
 - 🏆 [Goals](#goals)
 - 🤝 [Contribute](#contribute)
 
-## Getting Started
-
-Creating a new element is easy. Once you've [installed](#install) the package, extend `UpgradedElement`:
-
-```js
-import { UpgradedElement, register } from "upgraded-element"
-
-class FancyHeader extends UpgradedElement {
-  static get styles() {
-    return `
-      .is-fancy {
-        font-family: Baskerville; 
-        color: fuchsia; 
-      }
-    `
-  }
-
-  render() {
-    return `<h1 class='is-fancy'><slot></slot></h1>`
-  }
-}
-
-register("fancy-header", FancyHeader)
-```
-
-**Tip:** You can use all the expected features of web components here, including the `:host` CSS selector and slots (as shown above)!
-
-Import or link to your element file, then use it:
-
-```html
-<fancy-header>Do you like my style?</fancy-header>
-```
-
-You can even use it in React:
-
-```js
-import React from "react"
-import "./fancy-header"
-
-const SiteBanner = (props) => (
-  <div class="site-banner">
-    <img src={props.src} alt="banner" />
-    <fancy-header>{props.heading}</fancy-header>
-  </div>
-)
-```
-
 ## Install
 
 You can install either by grabbing the source file or with npm/yarn.
 
-**NPM or Yarn**
+### NPM or Yarn
 
 Install it like you would any other package:
 
@@ -101,13 +52,13 @@ $ npm i upgraded-element
 $ yarn i upgraded-element
 ```
 
-Then import the package and create your new element, per [Getting Started](#getting-started) above. 🎉
+Then import the package and create your new element. See [Getting Started](#getting-started) on building your first element!
 
-**Source**
+### Source
 
-[ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js) / [Standalone Bundle](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.js) / [Standalone Bundle (minified)](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.min.js)
+[ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js) / [Browser Bundle](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.js) / [Browser Bundle (minified)](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.min.js)
 
-When linking to the source file with a `script` tag, be sure to include `integrity` and `crossorigin` attributes:
+### CDN Links
 
 ```html
 <!-- Use the unminified bundle in development -->
@@ -127,32 +78,68 @@ When linking to the source file with a `script` tag, be sure to include `integri
 ></script>
 ```
 
-Import directly:
+## Getting Started
+
+Creating a new element is easy. Once you've [installed](#install) the package, import and extend `UpgradedElement`, and then `register` the element:
 
 ```js
-import { UpgradedElement, register } from "./upgraded-element.js"
+import { UpgradedElement, register } from "upgraded-element"
+
+class FancyHeader extends UpgradedElement {
+  static get styles() {
+    return `
+      :host {
+        display: inline-block;
+      }
+
+      .is-fancy {
+        font-family: Baskerville; 
+        color: fuchsia; 
+      }
+    `
+  }
+
+  render() {
+    return `
+      <h1 class='is-fancy'>
+        <slot></slot>
+      </h1>
+    `
+  }
+}
+
+register("fancy-header", FancyHeader)
 ```
 
-Then link to your script or module:
+**Note:** You can use all the expected features of web components here, including the `:host` CSS selector and slots (as shown above).
+
+Import or link to your element file in your project or page, then use it:
 
 ```html
-<script type="module" defer src="path/to/fancy-header.js"></script>
+<div>
+  <fancy-header>Am I fancy enough yet?</fancy-header>
+  <p>I was fancy before everyone else.</p>
+</div>
 ```
 
 ## API
 
-`UpgradedElement` has its own API to more tightly control things like rendering encapsulated HTML and styles, tracking renders via custom lifecycle methods, and using built-in state via upgraded class properties.
+`UpgradedElement` extends the native web component functionality to provide more fine-tuned control over the element's lifecycle.
 
-As mentioned in the beginning, the class extends `HTMLElement`, enabling access to custom element lifecycle callbacks. Be sure to read [notes on how to use them](#using-custom-element-lifecycle-callbacks) first, as `UpgradedElement` functionality piggy backs off of a few in particular.
+While it isn't absolutely required to know them on a deep level, it wouldn't hurt to [read an overview](#using-custom-element-lifecycle-callbacks) to get the basics.
 
 ### Render
 
 Use the `render` method and return stringified HTML (it can also be a template string):
 
 ```js
-render() {
-  const details = { name: "Joey", location: "Nebraska" }
-  return `Greetings from ${details.location}! My name is ${details.name}.`
+class MyCoolElement extends UpgradedElement {
+  // ...
+
+  render() {
+    const details = { name: "Joey", location: "Nebraska" }
+    return `Greetings from ${details.location}! My name is ${details.name}.`
+  }
 }
 ```
 
@@ -161,8 +148,9 @@ render() {
 Use the static `styles` getter and return your stringified stylesheet:
 
 ```js
-static get styles() {
-  return `
+class MyCoolElement extends UpgradedElement {
+  static get styles() {
+    return `
     :host {
       display: block;
     }
@@ -171,6 +159,9 @@ static get styles() {
       font-family: Comic Sans MS;
     }
   `
+  }
+
+  // ...
 }
 ```
 
@@ -183,24 +174,26 @@ Define your `properties` using the static getter. Each entry is the property nam
 Example:
 
 ```js
-// Some variable
-
-const symbolPropName = Symbol()
-
-// In your element
-
-static get properties() {
-  return {
-    myFavoriteNumber: {
-      default: 12,
-      type: "number",
-    },
-    [symbolPropName]: {
-      default: (element) => element.getAttribute("some-attribute"),
-      type: "string",
-      reflected: true,
+class MyCoolElement extends UpgradedElement {
+  static get properties() {
+    return {
+      propertyCount: {
+        default: 2,
+        type: "number",
+        reflected: true,
+      },
+      countTag: {
+        default: (this) => {
+          const count = this.getAttribute("property-count")
+          return `<div>There's ${count} properties</div>`
+        },
+        type: "string",
+        safe: true,
+      },
     }
   }
+
+  // ...
 }
 ```
 
@@ -220,7 +213,7 @@ The default value for the property. It can be a primitive value, or callback whi
 
 > Value type: String
 
-Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object shape and enum support TBD. Here is a full list of types:
+Describes the data type for the property value. Default values are checked, too. All primitive values are accepted as a valid type. Object shape and enum support TBD. Here is a mostly-complete list of types:
 
 - `string`
 - `number`
@@ -236,6 +229,10 @@ Describes the data type for the property value. Default values are checked, too.
 > Value type: Boolean
 
 Indicates if the property should reflect onto the host as an attribute. If `true`, the property name will reflect in kebab-case. E.g., `myProp` becomes `my-prop`.
+
+##### `safe`
+
+If you're using a string as the property value, this will tell `UpgradedElement` to sanitize it and replace unsafe special characters with [HTML-safe values](https://www.w3schools.com/html/html_entities.asp).
 
 #### Updating a Property
 
