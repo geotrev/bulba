@@ -1,16 +1,15 @@
 import { create, update, render } from "omdomdom"
 import { getScheduler } from "./renderer/scheduler"
+import { upgradeProperty } from "./properties"
 import * as internal from "./internal"
 import * as external from "./external"
 import {
   isEmptyObject,
   isString,
   isFunction,
-  isUndefined,
   getTypeTag,
   toKebabCase,
   createUUID,
-  sanitizeString,
 } from "./utilities"
 
 /**
@@ -150,111 +149,8 @@ export class UpgradedElement extends HTMLElement {
     if (isEmptyObject(properties)) return
 
     for (let propName in properties) {
-      this[internal.upgradeProperty](propName, properties[propName])
+      upgradeProperty(this, propName, properties[propName])
     }
-  }
-
-  /**
-   * Upgrade a property based on its configuration. If accessors are detected in
-   * the extender, skip the upgrade.
-   * @param {string} propName
-   * @param {{value, default, reflected}} configuration
-   */
-  [internal.upgradeProperty](propName, configuration = {}) {
-    // If the constructor class is using its own setter/getter, bail
-    if (
-      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), propName)
-    ) {
-      return
-    }
-
-    const privateName = Symbol(propName)
-    const {
-      default: defaultValue,
-      type,
-      reflected = false,
-      safe = false,
-    } = configuration
-
-    let initializedValue = isFunction(defaultValue)
-      ? defaultValue(this)
-      : defaultValue
-
-    // Validate the property's default value type, if given
-    // Initialize the private property
-
-    if (!isUndefined(initializedValue)) {
-      if (type) {
-        this[external.validateType](propName, initializedValue, type)
-      }
-
-      if (safe && (type === "string" || typeof initializedValue === "string")) {
-        initializedValue = sanitizeString(initializedValue)
-      }
-
-      this[privateName] = initializedValue
-    }
-
-    // If the value is reflected, set its attribute.
-
-    if (reflected) {
-      const initialAttrValue = initializedValue ? String(initializedValue) : ""
-      const attribute = toKebabCase(propName)
-      this.setAttribute(attribute, initialAttrValue)
-    }
-
-    // Finally, declare its accessors
-
-    Object.defineProperty(this, propName, {
-      configurable: true,
-      enumerable: true,
-      get() {
-        return this[privateName]
-      },
-      set(value) {
-        // Don't set if the value is the same to prevent unnecessary re-renders.
-        if (value === this[privateName]) return
-        if (type) this[external.validateType](propName, value, type)
-
-        const oldValue = this[privateName]
-
-        if (!isUndefined(value)) {
-          this[privateName] =
-            safe && (type === "string" || typeof value === "string")
-              ? sanitizeString(value)
-              : value
-
-          this[internal.runLifecycle](
-            external.elementPropertyChanged,
-            propName,
-            oldValue,
-            value
-          )
-
-          if (reflected) {
-            const attribute = toKebabCase(propName)
-            const attrValue = String(value)
-            this.setAttribute(attribute, attrValue)
-          }
-        } else {
-          delete this[privateName]
-
-          this[internal.runLifecycle](
-            external.elementPropertyChanged,
-            propName,
-            oldValue,
-            value
-          )
-
-          if (reflected) {
-            const attribute = toKebabCase(propName)
-            this.removeAttribute(attribute)
-          }
-        }
-
-        this[external.requestRender]()
-      },
-    })
   }
 
   /**

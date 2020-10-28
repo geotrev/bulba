@@ -4,14 +4,13 @@
 
 `UpgradedElement` is a base class enabling modern component authoring techniques in custom elements.
 
-Why would you use `UpgradedElement`, you ask?
+Why would you use `UpgradedElement`?
 
-1. Uses fragment-based rendering to keep rerenders concise.
-2. Create [styles](#styles) and [view](#render) in a shadow root.
-3. Manage state via [upgraded properties](#properties).
-4. Use predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for render-sensitive logic.
+1. Create [styles](#styles) and [view](#render) in a shadow root.
+2. Manage state via [upgraded properties](#properties).
+3. Use predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for render-sensitive logic.
 
-`UpgradedElement` uses a lightweight virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom), a string-based renderer.
+`UpgradedElement` uses a lightweight virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom), a string-based renderer. Combined with shadow roots, the result is fragment-based renders to keep rerenders concise and isolated. In other words: a parent component's state update won't trigger a rerender for its children, unless a [property](#properties) changed.
 
 **🧾 Table of Contents**
 
