@@ -10,7 +10,7 @@ Why would you use `UpgradedElement`?
 2. Manage state via [upgraded properties](#properties).
 3. Use predictable and familiar [lifecycle methods](#lifecycle), plus [public methods](#internal-methods-and-hooks) for render-sensitive logic.
 
-`UpgradedElement` uses a lightweight virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom), a string-based renderer. Combined with shadow roots, the result is fragment-based renders to keep rerenders concise and isolated. In other words: a parent component's state update won't trigger a rerender for its children, unless a [property](#properties) changed.
+`UpgradedElement` uses a lightweight virtual DOM library called [OmDomDom](https://github.com/geotrev/omdomdom), a string-based renderer. Combined with shadow roots, the result is a shallow view. In other words: a parent component's state update won't trigger a rerender for its children, unless a [property](#properties) changed on that child. Convenient and performant!
 
 **🧾 Table of Contents**
 
@@ -340,7 +340,7 @@ The purpose of these is to add more fidelity to the render lifecycle.
 
 - `elementDidConnect`: Called at the beginning of `connectedCallback`, when the element has been attached to the DOM, but before the shadow root's HTML/styles have been rendered. Ideal for initializing any internal properties or data that need to be ready before the first render.
 
-- `elementDidMount`: Called at the end of `connectedCallback`, once the shadow root / DOM is ready. Ideal for registering DOM events or performing other DOM-sensitive actions.
+- `elementDidMount`: Called at the end of `connectedCallback`, once the shadow root / DOM is ready. Ideal for registering DOM events or performing other DOM-sensitive actions. Note that this **does not guarantee** child shadow roots are rendered.
 
 - `elementDidUpdate`: Called on each render after `elementDidMount`. This includes: when an upgraded property has been set or `requestRender` was called.
 
