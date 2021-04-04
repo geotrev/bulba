@@ -24,8 +24,7 @@ While it isn't absolutely required to know web components on a deep level, it wo
 **🧾 Explore**
 
 - 📥 [Install](#install)
-- 🔎 [Getting Started](#getting-started)
-- 🎮 [API](#api)
+- 🎮 [Getting Started](#getting-started)
 - 🌍 [Browser Support](#browser-support)
 - 🤝 [Contribute](#contribute)
 
@@ -71,63 +70,16 @@ $ yarn i upgraded-element
 
 ## Getting Started
 
-Creating a new element is easy. Once you've [installed](#install) the package, import and extend UpgradedElement, and then `register` the element.
+So you're ready to take the dive? Awesome! Check out the wiki articles below on getting started. If you run into any problems or simply have ideas and suggestions, don't be shy about submitting an issue or pull request!
 
-Here's a quick example component to demonstrate:
-
-```js
-import { UpgradedElement, register } from "upgraded-element"
-
-class FancyHeading extends UpgradedElement {
-  static get styles() {
-    return `
-      :host {
-        display: inline-block;
-      }
-
-      .is-fancy {
-        font-family: Baskerville; 
-        color: fuchsia; 
-      }
-    `
-  }
-
-  render() {
-    return `
-      <h2 class='is-fancy'>
-        <slot></slot>
-      </h2>
-    `
-  }
-}
-
-register("fancy-heading", FancyHeading)
-```
-
-That's it! Although the methods above (and much of the API) is custom, it's still just a hollow wrapper around the custom element API.
-
-Import or link to your element file in your project or page, then use it:
-
-```html
-<div>
-  <fancy-header>Am I fancy enough yet?</fancy-header>
-  <p>I was fancy before everyone else.</p>
-</div>
-```
-
-## API
-
-The API is broken down in detail in this repo's wiki.
-
-Jump to the section you need answers on:
-
-- [Render a view]()
-- [Add styles]()
-- [Use DOM events]()
-- [Use properties & state]()
-- [Use custom properties]()
-- [Use lifecycle methods]()
-- [Advanced render controls]()
+- [Getting started](https://github.com/geotrev/upgraded-element/wiki/Getting-Started)
+- [Add a view](https://github.com/geotrev/upgraded-element/wiki/Add-a-view)
+- [Add styles](https://github.com/geotrev/upgraded-element/wiki/Add-styles)
+- [Properties & state](https://github.com/geotrev/upgraded-element/wiki/Properties-&-state)
+- [Custom properties](https://github.com/geotrev/upgraded-element/wiki/Custom-properties)
+- [Lifecycle methods](https://github.com/geotrev/upgraded-element/wiki/Lifecycle-methods)
+- [DOM events](https://github.com/geotrev/upgraded-element/wiki/DOM-events)
+- [Internal methods](https://github.com/geotrev/upgraded-element/wiki/Internal-methods)
 
 ## Browser Support
 
