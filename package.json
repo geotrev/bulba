@@ -1,6 +1,6 @@
 {
   "name": "upgraded-element",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A simple base class for using Web Components",
   "main": "lib/upgraded-element.cjs.js",
   "module": "lib/upgraded-element.es.js",
