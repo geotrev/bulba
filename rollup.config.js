@@ -32,9 +32,8 @@ const baseOutput = (format) => ({
   sourcemap: true,
 })
 
-const moduleOutputs = [Formats.ES, Formats.CJS].map((format) => ({
+let moduleOutputs = [Formats.ES, Formats.CJS].map((format) => ({
   ...baseOutput(format),
-  plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : undefined,
   file: path.resolve(__dirname, `lib/upgraded-element.${format}.js`),
 }))
 
@@ -43,12 +42,24 @@ const umdOutputs = [
     ...baseOutput(Formats.UMD),
     file: path.resolve(__dirname, `dist/upgraded-element.js`),
   },
-  {
+]
+
+if (process.env.BABEL_ENV === "publish") {
+  moduleOutputs = [
+    ...moduleOutputs,
+    ...[Formats.ES, Formats.CJS].map((format) => ({
+      ...baseOutput(format),
+      plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : [],
+      file: path.resolve(__dirname, `lib/upgraded-element.${format}.min.js`),
+    })),
+  ]
+
+  umdOutputs.push({
     ...baseOutput(Formats.UMD),
     plugins: [terserPlugin],
     file: path.resolve(__dirname, `dist/upgraded-element.min.js`),
-  },
-]
+  })
+}
 
 export default {
   input,
