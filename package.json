@@ -22,7 +22,7 @@
   "author": "George Treviranus <hello@geotrev.com>",
   "license": "MIT",
   "dependencies": {
-    "omdomdom": "^0.1.10"
+    "omdomdom": "^0.1.11"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
