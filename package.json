@@ -22,7 +22,7 @@
   "author": "George Treviranus <hello@geotrev.com>",
   "license": "MIT",
   "dependencies": {
-    "omdomdom": "^0.1.11"
+    "omdomdom": "^0.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
@@ -33,7 +33,7 @@
     "babel-jest": "^26.6.3",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-jest": "^24.3.3",
+    "eslint-plugin-jest": "^24.3.4",
     "jest": "^26.6.3",
     "paopu": "0.0.6",
     "prettier": "^2.2.1",
