@@ -83,7 +83,7 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 ## Browser Support
 
-This library doesn't include any polyfills.
+UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package won't include any polyfills on its own.
 
 If you need to polyfill, here are the features worth including:
 
