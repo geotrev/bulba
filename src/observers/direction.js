@@ -1,14 +1,14 @@
-if (!window.__ROTOM__DIR_OBSERVER__) {
-  window.__ROTOM__DIR_OBSERVER__ = true
+if (!window.__UPGRADED_ELEMENT__DIR_OBSERVER__) {
+  window.__UPGRADED_ELEMENT__DIR_OBSERVER__ = true
 
   /**
    * Search for other upgraded elements, denoted by the
-   * presence of `rotom-id` on the element, and update
+   * presence of `element-id` on the element, and update
    * its document direction.
    * @param {HTMLElement|ShadowRoot} context
    */
   const updateDirection = (context = document) => {
-    const nodes = context.querySelectorAll("[rotom-id]")
+    const nodes = context.querySelectorAll("[element-id]")
     if (!nodes.length) return
 
     nodes.forEach((node) => {
