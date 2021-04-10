@@ -49,7 +49,7 @@ if (process.env.BABEL_ENV === "publish") {
     ...moduleOutputs,
     ...[Formats.ES, Formats.CJS].map((format) => ({
       ...baseOutput(format),
-      plugins: process.env.BABEL_ENV === "publish" ? [terserPlugin] : [],
+      plugins: [terserPlugin],
       file: path.resolve(__dirname, `lib/upgraded-element.${format}.min.js`),
     })),
   ]

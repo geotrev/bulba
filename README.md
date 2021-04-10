@@ -54,16 +54,16 @@ $ yarn i upgraded-element
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.5/dist/upgraded-element.js"
-  integrity="sha256-NCCAyI5YOPWktOgpriaGyLM+cGw1nJNEjJ5E8AAFJag="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.7/dist/upgraded-element.js"
+  integrity="sha256-sQooQj/YjjjplKDEofO9lNu52zBX9i/9m1BtssVzBk4="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.5/dist/upgraded-element.min.js"
-  integrity="sha256-HvViyGvk6kv7XHIdXRW64FX2QxjAlgvcYckrI8U6TW4="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.4.7/dist/upgraded-element.min.js"
+  integrity="sha256-LMW8MWRQd6iNi/VHRxLK5xSVilZqAAASGfK1cE1cebA="
   crossorigin="anonymous"
 ></script>
 ```
@@ -83,7 +83,7 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 ## Browser Support
 
-This library doesn't include any polyfills.
+UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package won't include any polyfills on its own.
 
 If you need to polyfill, here are the features worth including:
 
