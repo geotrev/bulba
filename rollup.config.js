@@ -10,7 +10,10 @@ const Formats = {
   UMD: "umd",
 }
 const input = path.resolve(__dirname, "src/index.js")
-const basePlugins = [nodeResolve(), babel({ babelHelpers: "bundled" })]
+const basePlugins = [
+  nodeResolve(),
+  babel({ babelHelpers: "bundled", comments: false }),
+]
 
 const terserPlugin = terser({
   output: {
