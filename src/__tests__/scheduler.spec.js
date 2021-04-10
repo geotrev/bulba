@@ -2,12 +2,13 @@ import { getScheduler } from "../renderer/scheduler"
 
 /* eslint-disable no-console */
 console.info = jest.fn()
-const testFnFirst = () => console.info("nice")
-const testFnSecond = () => console.info("cool")
 const nextFrame = async () =>
   await new Promise((done) => requestAnimationFrame(done))
 const timeout = async () =>
   await new Promise((done) => setTimeout(done, 1000 / 60))
+
+const testFnFirst = () => console.info("nice")
+const testFnSecond = () => console.info("cool")
 
 describe("scheduler", () => {
   describe("requestAnimationFrame + cancelAnimationFrame", () => {
@@ -30,7 +31,7 @@ describe("scheduler", () => {
       await nextFrame()
       // Then
       expect(console.info).toBeCalledTimes(1)
-      expect(console.info).toBeCalledWith("cool")
+      expect(console.info).toBeCalledWith("nice")
     })
   })
 
@@ -58,7 +59,7 @@ describe("scheduler", () => {
       await timeout()
       // Then
       expect(console.info).toBeCalledTimes(1)
-      expect(console.info).toBeCalledWith("cool")
+      expect(console.info).toBeCalledWith("nice")
     })
   })
 })
