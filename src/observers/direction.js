@@ -1,5 +1,5 @@
-if (!window.__UPGRADED_ELEMENT__RTL_OBSERVER__) {
-  window.__UPGRADED_ELEMENT__RTL_OBSERVER__ = true
+if (!window.__UPGRADED_ELEMENT__DIR_OBSERVER__) {
+  window.__UPGRADED_ELEMENT__DIR_OBSERVER__ = true
 
   /**
    * Search for other upgraded elements, denoted by the

@@ -1,37 +1,37 @@
 import { isFunction } from "../utilities/is-type"
 
 /**
- * This scheduler uses either requestAnimationFrame or setTimeout to schedule
- * a rerender at approximately the next frame. These need to be async because
- * a renderer shouldn't block other operations before updating.
+ * This scheduler uses either requestAnimationFrame or setTimeout
+ * to schedule a function at approximately the next frame.
+ *
+ * These need to be async because the function may block other
+ * operations before updating.
  */
 
 export function getScheduler() {
   // Store these in case for some reason they are reassigned later during the page lifecycle.
   const requestAnimationFrame = window.requestAnimationFrame
-  const cancelAnimationFrame = window.cancelAnimationFrame
   const setTimeout = window.setTimeout
-  const clearTimeout = window.clearTimeout
+  const FRAME_DURATION = 1000 / 60
+  let scheduled = null
 
-  // Reference of the scheduler
-  let debounced = null
-
-  function runSchedule(fn, requestFn, cancelFn, timeout) {
-    if (debounced) {
-      debounced = cancelFn(debounced)
-    }
-
-    debounced = requestFn(() => {
-      fn()
-      debounced = null
-    }, timeout)
-  }
-
+  /**
+   * Executes a rAF or timeout (depending on which is available)
+   * If a fn is already scheduled, nothing happens.
+   */
   function schedule(fn) {
+    if (scheduled) return
+
     if (isFunction(requestAnimationFrame)) {
-      runSchedule(fn, requestAnimationFrame, cancelAnimationFrame)
+      scheduled = requestAnimationFrame(() => {
+        fn()
+        scheduled = null
+      })
     } else if (isFunction(setTimeout)) {
-      runSchedule(fn, setTimeout, clearTimeout, 1000 / 60)
+      scheduled = setTimeout(() => {
+        fn()
+        scheduled = null
+      }, FRAME_DURATION)
     }
   }
 
