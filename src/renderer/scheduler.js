@@ -12,8 +12,6 @@ export function getScheduler() {
   // Store these in case for some reason they are reassigned later during the page lifecycle.
   const requestAnimationFrame = window.requestAnimationFrame
   const setTimeout = window.setTimeout
-
-  // Reference of the scheduler
   const FRAME_DURATION = 1000 / 60
   let scheduled = null
 
