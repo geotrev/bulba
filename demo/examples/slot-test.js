@@ -1,4 +1,5 @@
-import { UpgradedElement, register } from "../../src"
+import { UpgradedElement, register } from "../../src/index.js"
+// const { UpgradedElement, register } = window.UpgradedElement
 
 class SlotTest extends UpgradedElement {
   static get styles() {

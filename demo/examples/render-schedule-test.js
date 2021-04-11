@@ -1,4 +1,5 @@
-import { UpgradedElement, register } from "../../src"
+import { UpgradedElement, register } from "../../src/index.js"
+// const { UpgradedElement, register } = window.UpgradedElement
 
 export class RenderScheduleTest extends UpgradedElement {
   static get properties() {

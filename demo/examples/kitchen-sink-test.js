@@ -1,4 +1,5 @@
-import { UpgradedElement, register } from "../../src"
+import { UpgradedElement, register } from "../../src/index.js"
+// const { UpgradedElement, register } = window.UpgradedElement
 
 export class KitchenSinkTest extends UpgradedElement {
   static get properties() {
@@ -23,7 +24,7 @@ export class KitchenSinkTest extends UpgradedElement {
       },
       safeString: {
         type: "string",
-        default: "<span>function() { console.log('no work') }</span>",
+        default: "<script>;(function(){console.log('sanitized')})()</script>",
         safe: true,
       },
     }
