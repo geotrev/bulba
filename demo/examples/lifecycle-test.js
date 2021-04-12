@@ -1,40 +1,10 @@
-import { register } from "../../src"
-import { KitchenSinkTest } from "./kitchen-sink-test"
+import { KitchenSinkTest } from "./kitchen-sink-test.js"
+import { register } from "../../src/index.js"
+// const register = window.UpgradedElement.register
 
 /* eslint-disable no-console */
 
 class LifecycleTest extends KitchenSinkTest {
-  /**
-   * Two types of properties: `generated` and `managed`.
-   * - A `generated` property is similar to that in LitElement. When you declare a property here, it
-   *   is 'generated' with lifecycle-connected accessors internally.
-   * - A 'managed' property is custom. If you 'handle` your property with a custom getter and/or setter
-   *   at the component level, UpgradedElement skips accessor generation. As a result, the lifecycle, `default`, and `reflected`
-   *   logic needs to be custom-specified as well.
-   *   NOTE: Hook into renders with `this.requestRender()`.
-   *
-   * Properties that are generated have these options:
-   * 1. `type`: Performs a simple `typeof` check on the value. If it there's a mismatch, a warning is logged
-   * 2. `reflected`: to set a kebab-case version of the property as an attribute
-   * 3. `default`: The default/initial value of the property.
-   *               If it's a function, it's evaluated (useful for setting the value based on an attribute).
-   *               The function receives one parameter, which is the the element itself.
-   */
-
-  // static get properties() {}
-
-  /**
-   * Styles are attached before any DOM has been rendered, but at the beginning of connected callback.
-   * `styles` must return CSS represented as a string.
-   */
-
-  // static get styles() {}
-
-  /**
-   * Custom properties and other handlers can be bound here. The component is not in the DOM but is
-   * bootstrapped with its id and shadow root.
-   */
-
   constructor() {
     super()
   }

@@ -16,22 +16,23 @@
     <hr />
     <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
     <br />
-    <button class="delete-btn">Remove element an element!</button>
+    <button class="delete-btn">Remove above element</button>
     <hr />
     <custom-accessor-test></custom-accessor-test>
     <hr />
     <nested-element-test>
-      <p>Twice removed, nested slot content.</p>
+      <p>This is forwarded slot content</p>
     </nested-element-test>
 
-    <script src="bundle.js"></script>
-    <!-- Test cleanup: -->
+    <!-- Test DOM cleanup: -->
     <script>
       document.querySelector(".delete-btn").addEventListener("click", () => {
         const testElement = document.querySelector("lifecycle-test")
         testElement.parentNode.removeChild(testElement)
       })
     </script>
+
+    <script src="bundle.js" defer></script>
 
     <!-- Uncomment bundle.js and comment in one of these to test CDN: -->
 

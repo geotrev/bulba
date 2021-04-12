@@ -1,5 +1,6 @@
-import { UpgradedElement, register } from "../../src"
-import "./kitchen-sink-test"
+import "./kitchen-sink-test.js"
+import { UpgradedElement, register } from "../../src/index.js"
+// const { UpgradedElement, register } = window.UpgradedElement
 
 class NestedElementTest extends UpgradedElement {
   static get properties() {

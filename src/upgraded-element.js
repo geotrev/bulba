@@ -1,5 +1,5 @@
 import { create, update, render } from "omdomdom"
-import { getScheduler } from "./renderer/scheduler"
+import { getScheduler } from "./scheduler"
 import { upgradeProperty } from "./properties"
 import * as internal from "./internal"
 import * as external from "./external"
