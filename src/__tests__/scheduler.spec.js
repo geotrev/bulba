@@ -1,4 +1,4 @@
-import { getScheduler } from "../renderer/scheduler"
+import { getScheduler } from "../scheduler"
 
 /* eslint-disable no-console */
 console.info = jest.fn()
