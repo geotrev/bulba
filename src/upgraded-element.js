@@ -52,7 +52,11 @@ export class UpgradedElement extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.isConnected) {
+    // If we were previously disconnected, then we shouldn't
+    // run this lifecycle. connectedCallback has a habit of
+    // being called despite the element being removed
+    // from the DOM.
+    if (this.isConnected && !this[internal.isDisconnected]) {
       this[internal.runLifecycle](external.elementDidConnect)
       this[internal.renderStyles]()
       this[external.requestRender]()
@@ -64,6 +68,10 @@ export class UpgradedElement extends HTMLElement {
 
     // Clean up detached nodes and data.
     this[internal.vDOM] = null
+
+    // We need to track this so `connectedCallback` isn't
+    // triggered again.
+    this[internal.isDisconnected] = true
   }
 
   // Public

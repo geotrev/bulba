@@ -3,6 +3,7 @@
 export const elementId = Symbol("#elementId")
 export const shadowRoot = Symbol("#shadowRoot")
 export const vDOM = Symbol("#vDOM")
+export const isDisconnected = Symbol("#isDisconnected")
 export const isFirstRender = Symbol("#isFirstRender")
 
 // Methods
