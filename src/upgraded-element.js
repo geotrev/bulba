@@ -38,7 +38,9 @@ export class UpgradedElement extends HTMLElement {
 
   // Keep adoptedCallback around in case it becomes useful later.
   // Consumers will need to call super() to remain compatible, in the mean time.
-  adoptedCallback() {}
+  adoptedCallback() {
+      this[internal.isDisconnected] = false
+  }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
@@ -132,6 +134,7 @@ export class UpgradedElement extends HTMLElement {
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.isFirstRender] = true
+    this[internal.isDisconnected] = false
     this[internal.vDOM] = []
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
