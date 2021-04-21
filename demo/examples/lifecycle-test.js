@@ -112,7 +112,6 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   render() {
-    console.log("render")
     return super.render()
   }
 }
