@@ -54,16 +54,16 @@ $ yarn i upgraded-element
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.5.1/dist/upgraded-element.js"
-  integrity="sha256-QymczvVa8VjdY9JjGax1beGdVugj8uX1ZVqBJX93/bw="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.5.2/dist/upgraded-element.js"
+  integrity="sha256-FN+F1rRDoDfPJcjTwCVEhoDtNScvAIh3JISlVeVaevM="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.5.1/dist/upgraded-element.min.js"
-  integrity="sha256-7r0iBgjI32dXcQV1iZApmbR73aeHC9iWp65MNVKNpwk="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.5.2/dist/upgraded-element.min.js"
+  integrity="sha256-iO51Oy5hzkwbIkvYIrLT7f3CraogEIR2OkJpHs7cASQ="
   crossorigin="anonymous"
 ></script>
 ```
