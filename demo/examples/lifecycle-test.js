@@ -5,6 +5,16 @@ import { register } from "../../src/index.js"
 /* eslint-disable no-console */
 
 class LifecycleTest extends KitchenSinkTest {
+  static get properties() {
+    return {
+      ...KitchenSinkTest.properties,
+      count: {
+        default: 0,
+        type: "number",
+      },
+    }
+  }
+
   constructor() {
     super()
   }
@@ -83,6 +93,7 @@ class LifecycleTest extends KitchenSinkTest {
   elementDidMount() {
     super.elementDidMount()
     console.log("elementDidMount")
+    this.count = this.count + 1
     console.log("====================")
   }
 
@@ -101,7 +112,6 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   render() {
-    console.log("render")
     return super.render()
   }
 }

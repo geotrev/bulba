@@ -24,13 +24,13 @@ export function getScheduler() {
 
     if (isFunction(requestAnimationFrame)) {
       scheduled = requestAnimationFrame(() => {
-        fn()
         scheduled = null
+        fn()
       })
     } else if (isFunction(setTimeout)) {
       scheduled = setTimeout(() => {
-        fn()
         scheduled = null
+        fn()
       }, FRAME_DURATION)
     }
   }

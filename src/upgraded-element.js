@@ -52,11 +52,7 @@ export class UpgradedElement extends HTMLElement {
   }
 
   connectedCallback() {
-    // If we were previously disconnected, then we shouldn't
-    // run this lifecycle. connectedCallback has a habit of
-    // being called despite the element being removed
-    // from the DOM.
-    if (this.isConnected && !this[internal.isDisconnected]) {
+    if (this.isConnected) {
       this[internal.runLifecycle](external.elementDidConnect)
       this[internal.renderStyles]()
       this[external.requestRender]()
@@ -65,12 +61,6 @@ export class UpgradedElement extends HTMLElement {
 
   disconnectedCallback() {
     this[internal.runLifecycle](external.elementWillUnmount)
-
-    // Clean up detached nodes and data.
-    this[internal.vDOM] = null
-
-    // We need to track this so `connectedCallback` isn't
-    // triggered again.
     this[internal.isDisconnected] = true
   }
 
@@ -132,7 +122,7 @@ export class UpgradedElement extends HTMLElement {
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.isFirstRender] = true
-    this[internal.vDOM] = []
+    this[internal.vDOM] = {}
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
     this[internal.elementId] = createUUID()
 
@@ -222,7 +212,16 @@ export class UpgradedElement extends HTMLElement {
     let nextVDOM = this[internal.getVDOM]()
     update(nextVDOM, this[internal.vDOM])
     nextVDOM = null
-    this[internal.runLifecycle](external.elementDidUpdate)
+
+    // If the component was disconnected from the DOM at
+    // some point, we need to re-run elementDidMount to
+    // re-instantiate any setup logic by authors
+    if (this[internal.isDisconnected]) {
+      this[internal.isDisconnected] = false
+      this[internal.runLifecycle](external.elementDidMount)
+    } else {
+      this[internal.runLifecycle](external.elementDidUpdate)
+    }
   }
 
   /**

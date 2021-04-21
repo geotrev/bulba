@@ -240,6 +240,25 @@ describe("UpgradedElement", () => {
       expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
     })
 
+    // whyyyyy
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip("calls elementDidUpdate if property updates in elementDidMount", async () => {
+      const [init, Cls] = lifecycleFixture("mount-update", true)
+      Cls.prototype[external.elementDidUpdate] = jest.fn()
+      Cls.prototype[external.elementDidMount] = () => {
+        getElement("mount-update").testProp = true
+      }
+      // Cls.prototype[external.elementDidMount] = () => {
+      //   console.log("Mounted!")
+      //   getElement("mount-update").testProp = true
+      // }
+      // Cls.prototype[external.elementDidUpdate] = () => {
+      //   console.log("Updated!")
+      // }
+      init()
+      expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
+    })
+
     it("calls elementDidConnect", () => {
       const [init, Cls] = lifecycleFixture("connect", true)
       Cls.prototype[external.elementDidConnect] = jest.fn()
@@ -259,6 +278,17 @@ describe("UpgradedElement", () => {
       Cls.prototype[external.elementWillUnmount] = jest.fn()
       document.body.removeChild(getElement("unmount"))
       expect(Cls.prototype[external.elementWillUnmount]).toBeCalled()
+    })
+
+    it("recalls elementDidMount if the component is disconnected and then reconnected", async () => {
+      const [init, Cls] = lifecycleFixture("remount", true)
+      Cls.prototype[external.elementDidMount] = jest.fn()
+      init()
+      const fixture = getElement("remount")
+      document.body.removeChild(fixture)
+      await new Promise((done) => setTimeout(done, 15))
+      document.body.appendChild(fixture)
+      expect(Cls.prototype[external.elementDidMount]).toBeCalledTimes(2)
     })
   })
 })
