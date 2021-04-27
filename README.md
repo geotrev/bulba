@@ -72,7 +72,7 @@ $ yarn i upgraded-element
 
 So you're ready to take the dive? Awesome! Check out the wiki articles below on getting started. If you run into any problems or simply have ideas and suggestions, don't be shy about submitting an issue or pull request!
 
-- [Getting started](https://github.com/geotrev/upgraded-element/wiki/Getting-Started)
+- [Getting started](https://github.com/geotrev/upgraded-element/wiki/)
 - [Add a view](https://github.com/geotrev/upgraded-element/wiki/Add-a-view)
 - [Add styles](https://github.com/geotrev/upgraded-element/wiki/Add-styles)
 - [Properties & state](https://github.com/geotrev/upgraded-element/wiki/Properties-&-state)
