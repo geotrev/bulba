@@ -158,17 +158,17 @@ export class UpgradedElement extends HTMLElement {
   [internal.getDOMString]() {
     let domString
 
-    if (isFunction(this.render)) {
-      domString = this.render()
+    if (isFunction(this[external.render])) {
+      domString = this[external.render]()
     } else {
       throw new Error(
-        `You must include a render method in element: '${this.constructor.name}'`
+        `[UpgradedElement]: You must include a render method in element: '${this.constructor.name}'`
       )
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in element: '${this.constructor.name}'.`
+        `[UpgradedElement]:  You attempted to render a non-string template in element: '${this.constructor.name}'.`
       )
     }
 
