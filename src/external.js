@@ -1,7 +1,8 @@
-// Properties
+// Properties & methods
 
 export const elementIdProperty = "elementId"
 export const requestRender = "requestRender"
+export const render = "render"
 export const validateType = "validateType"
 
 // Attributes

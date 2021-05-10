@@ -8,7 +8,7 @@ import { isFunction } from "../utilities/is-type"
  * operations before updating.
  */
 
-export function getScheduler() {
+export function createScheduler() {
   // Store these in case for some reason they are reassigned later during the page lifecycle.
   const requestAnimationFrame = window.requestAnimationFrame
   const setTimeout = window.setTimeout

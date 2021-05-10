@@ -1,4 +1,4 @@
-import { getScheduler } from "../scheduler"
+import { createScheduler } from "../scheduler"
 
 /* eslint-disable no-console */
 console.info = jest.fn()
@@ -14,7 +14,7 @@ describe("scheduler", () => {
   describe("requestAnimationFrame + cancelAnimationFrame", () => {
     it("schedules then runs the given function", async () => {
       // Given
-      const schedule = getScheduler()
+      const schedule = createScheduler()
       // When
       schedule(testFnFirst)
       await nextFrame()
@@ -24,7 +24,7 @@ describe("scheduler", () => {
 
     it("cancels scheduled function if another is called before the end of frame", async () => {
       // Given
-      const schedule = getScheduler()
+      const schedule = createScheduler()
       // When
       schedule(testFnFirst)
       schedule(testFnSecond)
@@ -42,7 +42,7 @@ describe("scheduler", () => {
 
     it("schedules then runs the given function", async () => {
       // Given
-      const schedule = getScheduler()
+      const schedule = createScheduler()
       // When
       schedule(testFnFirst)
       await timeout()
@@ -52,7 +52,7 @@ describe("scheduler", () => {
 
     it("cancels scheduled function if another is called before the end of frame", async () => {
       // Given
-      const schedule = getScheduler()
+      const schedule = createScheduler()
       // When
       schedule(testFnFirst)
       schedule(testFnSecond)

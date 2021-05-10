@@ -1,5 +1,5 @@
 import { create, update, render } from "omdomdom"
-import { getScheduler } from "./scheduler"
+import { createScheduler } from "./scheduler"
 import { upgradeProperty } from "./properties"
 import * as internal from "./internal"
 import * as external from "./external"
@@ -10,6 +10,7 @@ import {
   getTypeTag,
   toKebabCase,
   createUUID,
+  emptyVNode,
 } from "./utilities"
 
 /**
@@ -52,16 +53,19 @@ export class UpgradedElement extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.isConnected) {
-      this[internal.runLifecycle](external.elementDidConnect)
-      this[internal.renderStyles]()
-      this[external.requestRender]()
-    }
+    // It's possible for elements to queue this callback
+    // and then get disconnected before this callback is
+    // eventually resolved.
+    if (!this.isConnected) return
+
+    this[internal.runLifecycle](external.elementDidConnect)
+    this[internal.renderStyles]()
+    this[external.requestRender]()
   }
 
   disconnectedCallback() {
     this[internal.runLifecycle](external.elementWillUnmount)
-    this[internal.isDisconnected] = true
+    this[internal.cleanup]()
   }
 
   // Public
@@ -116,17 +120,16 @@ export class UpgradedElement extends HTMLElement {
    * Do initial setup work, then upgrade.
    */
   [internal.initialize]() {
-    // Append scheduler to the window
-    this[internal.schedule] = getScheduler()
+    this[internal.schedule] = createScheduler()
 
     // Internal properties and metadata
     this[internal.renderDOM] = this[internal.renderDOM].bind(this)
     this[internal.isFirstRender] = true
-    this[internal.vDOM] = {}
+    this[internal.vDOM] = null
     this[internal.shadowRoot] = this.attachShadow({ mode: "open" })
-    this[internal.elementId] = createUUID()
 
-    // Set id as an attribute
+    // Set id
+    this[internal.elementId] = createUUID()
     this.setAttribute(
       external.elementIdAttribute,
       this[external.elementIdProperty]
@@ -136,6 +139,27 @@ export class UpgradedElement extends HTMLElement {
     this.setAttribute("dir", String(document.dir || "ltr"))
 
     this[internal.performUpgrade]()
+  }
+
+  /**
+   * Called during disconnectedCallback. Clean up the vDOM
+   * and remove remaining nodes in the shadowRoot.
+   */
+  [internal.cleanup]() {
+    update(emptyVNode, this[internal.vDOM])
+    this[internal.vDOM] = null
+
+    // Clean up any other nodes in the shadow root
+    const children = this[internal.shadowRoot].childNodes
+    if (children.length) {
+      Array.prototype.forEach.call(children, (child) =>
+        this[internal.shadowRoot].removeChild(child)
+      )
+    }
+
+    // If the element is attached to the DOM again for any
+    // reason, treat it like the first render.
+    this[internal.isFirstRender] = true
   }
 
   /**
@@ -158,17 +182,17 @@ export class UpgradedElement extends HTMLElement {
   [internal.getDOMString]() {
     let domString
 
-    if (isFunction(this.render)) {
-      domString = this.render()
+    if (isFunction(this[external.render])) {
+      domString = this[external.render]()
     } else {
       throw new Error(
-        `You must include a render method in element: '${this.constructor.name}'`
+        `[UpgradedElement]: You must include a render method in element: '${this.constructor.name}'`
       )
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `You attempted to render a non-string template in element: '${this.constructor.name}'.`
+        `[UpgradedElement]:  You attempted to render a non-string template in element: '${this.constructor.name}'.`
       )
     }
 
@@ -211,27 +235,16 @@ export class UpgradedElement extends HTMLElement {
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
     update(nextVDOM, this[internal.vDOM])
+    this[internal.runLifecycle](external.elementDidUpdate)
     nextVDOM = null
-
-    // If the component was disconnected from the DOM at
-    // some point, we need to re-run elementDidMount to
-    // re-instantiate any setup logic by authors
-    if (this[internal.isDisconnected]) {
-      this[internal.isDisconnected] = false
-      this[internal.runLifecycle](external.elementDidMount)
-    } else {
-      this[internal.runLifecycle](external.elementDidUpdate)
-    }
   }
 
   /**
    * Runs either a new render or diffs the existing virtual DOM to a new one.
    */
   [internal.renderDOM]() {
-    if (this[internal.isFirstRender]) {
-      return this[internal.getInitialRenderState]()
-    }
-
-    this[internal.getNextRenderState]()
+    return this[internal.isFirstRender]
+      ? this[internal.getInitialRenderState]()
+      : this[internal.getNextRenderState]()
   }
 }
