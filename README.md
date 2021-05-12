@@ -1,4 +1,5 @@
 <h2 align="center"><code><🔼>UpgradedElement<&#47;🔼></code></h2>
+<p align="center">A base class enabling modern component authoring techniques in web components.</p>
 <br>
 <p align="center">
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/v/upgraded-element.svg?sanitize=true" alt="Version"></a>
@@ -9,17 +10,14 @@
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dev/geotrev/upgraded-element" alt="devDependencies" /></a>
 </p>
 
-UpgradedElement is a base class enabling modern component authoring techniques in custom elements.
-
 Why should you use UpgradedElement?
 
 1. Create dynamic, reactive components using modern web technology: Web Components!
 2. Get all your favorite component authoring tools: state, properties, lifecycles.
-3. It works in all modern browsers.
+3. Escape hatches for functionality not covered by the utility.
+4. It works in all modern browsers!
 
-UpgradedElement extends the native web component functionality to provide more fine-tuned control over the element's lifecycle.
-
-While it isn't absolutely required to know web components on a deep level, it wouldn't hurt to [read an overview](#using-custom-element-lifecycle-callbacks) to get the basics.
+While it isn't absolutely required to know web components on a deep level, it wouldn't hurt to [read an overview](#using-custom-element-lifecycle-callbacks) to get the basics first.
 
 **🧾 Explore**
 
@@ -94,9 +92,9 @@ If you need to polyfill, here are the features worth including:
 
 - **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful lifecycle methods for modern, state-based component design.
 
-- **Consistent expectations.** The API is designed to provide sensible default use-cases. Escape hatches are still provided for advanced control.
+- **Determinism everywhere.** No timing quirks. No gotchas.
 
-- **No magic.** My hope is that this custom element wrapper Just Works™, and requires minimal effort to understand. That said, web components are fairly speculative despite being around for nearly a decade.
+- **Extendable.** Escape hatches to get down to the bone for advanced functionality.
 
 ## Contribute
 
