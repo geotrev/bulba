@@ -1,5 +1,5 @@
 <h2 align="center"><code><🔼>UpgradedElement<&#47;🔼></code></h2>
-<p align="center">A base class enabling modern component authoring techniques in web components.</p>
+<p align="center">A base class enabling modern architecture strategies in Web Components.</p>
 <br>
 <p align="center">
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/v/upgraded-element.svg?sanitize=true" alt="Version"></a>
@@ -10,14 +10,9 @@
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dev/geotrev/upgraded-element" alt="devDependencies" /></a>
 </p>
 
-Why should you use UpgradedElement?
+UpgradedElement provides huge power in a small package. It's intuitive, deterministic, and easily extendable.
 
-1. Create dynamic, reactive components using modern web technology: Web Components!
-2. Get all your favorite component authoring tools: state, properties, lifecycles.
-3. Escape hatches for functionality not covered by the utility.
-4. It works in all modern browsers!
-
-While it isn't absolutely required to know web components on a deep level, it wouldn't hurt to [read an overview](#using-custom-element-lifecycle-callbacks) to get the basics first.
+Performance is taken seriously. Under the hood is a blazing fast [string-based renderer](https://github.com/geotrev/omdomdom) with a predictable batched rendering mechanism.
 
 **🧾 Explore**
 
@@ -87,14 +82,6 @@ If you need to polyfill, here are the features worth including:
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
-
-## Goals
-
-- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful lifecycle methods for modern, state-based component design.
-
-- **Determinism everywhere.** No timing quirks. No gotchas.
-
-- **Extendable.** Escape hatches to get down to the bone for advanced functionality.
 
 ## Contribute
 

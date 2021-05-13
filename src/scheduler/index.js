@@ -9,7 +9,7 @@ import { isFunction } from "../utilities/is-type"
  */
 
 export function createScheduler() {
-  // Store these in case for some reason they are reassigned later during the page lifecycle.
+  // Store these in case for some reason they are reassigned later.
   const requestAnimationFrame = window.requestAnimationFrame
   const setTimeout = window.setTimeout
   const FRAME_DURATION = 1000 / 60
