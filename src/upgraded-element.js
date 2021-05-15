@@ -220,18 +220,17 @@ export class UpgradedElement extends HTMLElement {
    * Create a virtual DOM from the external `render` method and patch
    * it into the shadow root. Triggers `elementDidMount`, if defined.
    */
-  [internal.getInitialRenderState]() {
+  [internal.setInitialRenderState]() {
     this[internal.vDOM] = this[internal.getVDOM]()
     render(this[internal.vDOM], this[internal.shadowRoot])
     this[internal.runLifecycle](external.elementDidMount)
-    this[internal.isFirstRender] = false
   }
 
   /**
    * All renders after initial render:
    * Create a new vdom and patch the existing one.
    */
-  [internal.getNextRenderState]() {
+  [internal.setNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
     patch(nextVDOM, this[internal.vDOM])
     this[internal.runLifecycle](external.elementDidUpdate)
@@ -242,8 +241,11 @@ export class UpgradedElement extends HTMLElement {
    * Runs either a new render or diffs the existing virtual DOM to a new one.
    */
   [internal.renderDOM]() {
-    return this[internal.isFirstRender]
-      ? this[internal.getInitialRenderState]()
-      : this[internal.getNextRenderState]()
+    if (this[internal.isFirstRender]) {
+      this[internal.isFirstRender] = false
+      this[internal.setInitialRenderState]()
+    } else {
+      this[internal.setNextRenderState]()
+    }
   }
 }

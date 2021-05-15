@@ -6,7 +6,7 @@ import { UpgradedElement, register } from "../.."
  * @param {string} id
  * @param {{content: string, properties: Object, styles: string}}
  */
-export function basicFixture(id, options = {}) {
+export function createBasicFixture(id, options = {}) {
   class TestElement extends UpgradedElement {
     constructor() {
       super()

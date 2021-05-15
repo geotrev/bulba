@@ -5,7 +5,7 @@ import { UpgradedElement, register } from "../.."
  * can't unregister custom elements from the DOM, even between tests.
  * @param {string} id
  */
-export function lifecycleFixture(id, wait = false) {
+export function createLifecycleFixture(id, wait = false) {
   class TestElement extends UpgradedElement {
     constructor() {
       super()
