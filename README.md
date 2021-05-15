@@ -73,9 +73,9 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 ## Browser Support
 
-UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package won't include any polyfills on its own.
+UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package contains no polyfills.
 
-If you need to polyfill, here are the features worth including:
+To polyfill the modern features, here are the necessary ones for at least IE11:
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
