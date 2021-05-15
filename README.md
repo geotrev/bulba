@@ -1,4 +1,5 @@
 <h2 align="center"><code><🔼>UpgradedElement<&#47;🔼></code></h2>
+<p align="center">Intuitive, deterministic, and extendable base class enabling modern architecture strategies in Web Components.</p>
 <br>
 <p align="center">
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/v/upgraded-element.svg?sanitize=true" alt="Version"></a>
@@ -9,23 +10,12 @@
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dev/geotrev/upgraded-element" alt="devDependencies" /></a>
 </p>
 
-UpgradedElement is a base class enabling modern component authoring techniques in custom elements.
-
-Why should you use UpgradedElement?
-
-1. Create dynamic, reactive components using modern web technology: Web Components!
-2. Get all your favorite component authoring tools: state, properties, lifecycles.
-3. It works in all modern browsers.
-
-UpgradedElement extends the native web component functionality to provide more fine-tuned control over the element's lifecycle.
-
-While it isn't absolutely required to know web components on a deep level, it wouldn't hurt to [read an overview](#using-custom-element-lifecycle-callbacks) to get the basics.
-
 **🧾 Explore**
 
 - 📥 [Install](#install)
 - 🎮 [Getting Started](#getting-started)
 - 🌍 [Browser Support](#browser-support)
+- 📈 [Performance](#performance)
 - 🤝 [Contribute](#contribute)
 
 ## Install
@@ -54,16 +44,16 @@ $ yarn i upgraded-element
 <!-- Use the unminified bundle in development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.0/dist/upgraded-element.js"
-  integrity="sha256-H4HeZcialyI4kLsDQDb52BBlRQ9KWWZmAAQfjPC/r84="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.2/dist/upgraded-element.js"
+  integrity="sha256-ZbpVjqgwTOwz+Lb5vUadv8TgeogxGQsrBrBwIMGq7HI="
   crossorigin="anonymous"
 ></script>
 
 <!-- Or use the minified/uglified bundle in production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.0/dist/upgraded-element.min.js"
-  integrity="sha256-GEFPc2tsrDFgDYBkf+rBIMhS+y7ypKvaEICpXklGtmA="
+  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.2/dist/upgraded-element.min.js"
+  integrity="sha256-/ON7MU2ezAVFCPpww5pg4ELQLSRajh6mlsBfzImeUGc="
   crossorigin="anonymous"
 ></script>
 ```
@@ -83,20 +73,16 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 ## Browser Support
 
-UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package won't include any polyfills on its own.
+UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package contains no polyfills.
 
-If you need to polyfill, here are the features worth including:
+To polyfill the modern features, here are the necessary ones for at least IE11:
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
 
-## Goals
+## Performance
 
-- **Intuitive API.** Provide an easy way to create a styled view in a shadow root and access useful lifecycle methods for modern, state-based component design.
-
-- **Consistent expectations.** The API is designed to provide sensible default use-cases. Escape hatches are still provided for advanced control.
-
-- **No magic.** My hope is that this custom element wrapper Just Works™, and requires minimal effort to understand. That said, web components are fairly speculative despite being around for nearly a decade.
+Performance is taken seriously. Under the hood is a blazing fast [string-based renderer](https://github.com/geotrev/omdomdom) with a predictable batched rendering mechanism.
 
 ## Contribute
 

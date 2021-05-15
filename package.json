@@ -1,6 +1,6 @@
 {
   "name": "upgraded-element",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "A simple base class for using Web Components",
   "main": "lib/upgraded-element.cjs.min.js",
   "module": "lib/upgraded-element.es.min.js",
@@ -22,7 +22,7 @@
   "author": "George Treviranus <hello@geotrev.com>",
   "license": "MIT",
   "dependencies": {
-    "omdomdom": "^0.1.15"
+    "omdomdom": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",

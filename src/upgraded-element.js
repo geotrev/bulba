@@ -1,4 +1,4 @@
-import { create, update, render } from "omdomdom"
+import { create, patch, render } from "omdomdom"
 import { createScheduler } from "./scheduler"
 import { upgradeProperty } from "./properties"
 import * as internal from "./internal"
@@ -146,7 +146,6 @@ export class UpgradedElement extends HTMLElement {
    * and remove remaining nodes in the shadowRoot.
    */
   [internal.cleanup]() {
-    update(emptyVNode, this[internal.vDOM])
     this[internal.vDOM] = null
 
     // Clean up any other nodes in the shadow root
@@ -230,11 +229,11 @@ export class UpgradedElement extends HTMLElement {
 
   /**
    * All renders after initial render:
-   * Create a new vdom and update the existing one.
+   * Create a new vdom and patch the existing one.
    */
   [internal.getNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
-    update(nextVDOM, this[internal.vDOM])
+    patch(nextVDOM, this[internal.vDOM])
     this[internal.runLifecycle](external.elementDidUpdate)
     nextVDOM = null
   }
