@@ -1,5 +1,5 @@
 <h2 align="center"><code><🔼>UpgradedElement<&#47;🔼></code></h2>
-<p align="center">A base class enabling modern architecture strategies in Web Components.</p>
+<p align="center">Intuitive, deterministic, and extendable base class enabling modern architecture strategies in Web Components.</p>
 <br>
 <p align="center">
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/v/upgraded-element.svg?sanitize=true" alt="Version"></a>
@@ -10,15 +10,12 @@
   <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dev/geotrev/upgraded-element" alt="devDependencies" /></a>
 </p>
 
-UpgradedElement provides huge power in a small package. It's intuitive, deterministic, and easily extendable.
-
-Performance is taken seriously. Under the hood is a blazing fast [string-based renderer](https://github.com/geotrev/omdomdom) with a predictable batched rendering mechanism.
-
 **🧾 Explore**
 
 - 📥 [Install](#install)
 - 🎮 [Getting Started](#getting-started)
 - 🌍 [Browser Support](#browser-support)
+- 📈 [Performance](#performance)
 - 🤝 [Contribute](#contribute)
 
 ## Install
@@ -76,12 +73,16 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 ## Browser Support
 
-UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package won't include any polyfills on its own.
+UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package contains no polyfills.
 
-If you need to polyfill, here are the features worth including:
+To polyfill the modern features, here are the necessary ones for at least IE11:
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
+
+## Performance
+
+Performance is taken seriously. Under the hood is a blazing fast [string-based renderer](https://github.com/geotrev/omdomdom) with a predictable batched rendering mechanism.
 
 ## Contribute
 
