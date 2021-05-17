@@ -146,6 +146,11 @@ export class UpgradedElement extends HTMLElement {
    * and remove remaining nodes in the shadowRoot.
    */
   [internal.cleanup]() {
+    // If the element is attached to the DOM again for any
+    // reason, treat it like the first render.
+    this[internal.isFirstRender] = true
+
+    patch(emptyVNode, this[internal.vDOM])
     this[internal.vDOM] = null
 
     // Clean up any other nodes in the shadow root
@@ -155,10 +160,6 @@ export class UpgradedElement extends HTMLElement {
         this[internal.shadowRoot].removeChild(child)
       )
     }
-
-    // If the element is attached to the DOM again for any
-    // reason, treat it like the first render.
-    this[internal.isFirstRender] = true
   }
 
   /**
