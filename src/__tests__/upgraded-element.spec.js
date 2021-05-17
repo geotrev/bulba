@@ -1,25 +1,24 @@
-import { basicFixture } from "./fixtures/basic-fixture"
-import { accessorFixture } from "./fixtures/accessor-fixture"
-import { lifecycleFixture } from "./fixtures/lifecycle-fixture"
+import { createBasicFixture } from "./fixtures/basic-fixture"
+import { createAccessorFixture } from "./fixtures/accessor-fixture"
+import { createLifecycleFixture } from "./fixtures/lifecycle-fixture"
 import { getElement } from "./fixtures/get-element"
 import * as external from "../external"
 
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
-window.cancelAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
 describe("UpgradedElement", () => {
   afterEach(() => (document.innerHTML = ""))
 
   it("upgrades the element", () => {
     // Given
-    basicFixture("upgraded")
+    createBasicFixture("upgraded")
     // Then
     expect(getElement("upgraded").hasAttribute("element-id")).toBe(true)
   })
 
   it("creates a shadow root", () => {
     // Given
-    basicFixture("creates-shadow")
+    createBasicFixture("creates-shadow")
     // Then
     expect(getElement("creates-shadow").shadowRoot).not.toBeNull()
   })
@@ -27,7 +26,7 @@ describe("UpgradedElement", () => {
   it("renders styles to shadow root", () => {
     // Given
     const styles = "div { display: block; }"
-    basicFixture("styles", { styles })
+    createBasicFixture("styles", { styles })
     // Then
     expect(
       getElement("styles").shadowRoot.querySelector("style")
@@ -40,7 +39,7 @@ describe("UpgradedElement", () => {
   it("assigns slots, if given", () => {
     // Given
     const slotName = "main"
-    basicFixture("slotted", {
+    createBasicFixture("slotted", {
       slotName,
       content: `<slot name='main'></slot>`,
     })
@@ -56,7 +55,7 @@ describe("UpgradedElement", () => {
       const properties = {
         testProp1: { default: "foo" },
       }
-      basicFixture("props", { properties })
+      createBasicFixture("props", { properties })
       // Then
       expect(getElement("props").testProp1).toEqual(
         properties.testProp1.default
@@ -69,7 +68,7 @@ describe("UpgradedElement", () => {
         testProp1: { default: "foo" },
       }
       const nextValue = "bar"
-      basicFixture("val-change", { properties })
+      createBasicFixture("val-change", { properties })
       // When
       getElement("val-change").testProp1 = nextValue
       // Then
@@ -81,7 +80,7 @@ describe("UpgradedElement", () => {
 
     it("doesn't upgrade properties if accessors already exist", () => {
       // Given
-      accessorFixture("no-upgrade")
+      createAccessorFixture("no-upgrade")
       // Then
       expect(getElement("no-upgrade").count).toEqual(1)
     })
@@ -96,7 +95,7 @@ describe("UpgradedElement", () => {
             safe: true,
           },
         }
-        basicFixture("safe-upgrade", { properties })
+        createBasicFixture("safe-upgrade", { properties })
         // Then
         const nextValue = "&lt;span&gt;unsafe&lt;/span&gt;"
         expect(getElement("safe-upgrade").safeString).toEqual(nextValue)
@@ -111,7 +110,7 @@ describe("UpgradedElement", () => {
             safe: true,
           },
         }
-        basicFixture("safe-change", { properties })
+        createBasicFixture("safe-change", { properties })
         // When
         getElement("safe-change").safeString = "&hello"
         // Then
@@ -126,7 +125,7 @@ describe("UpgradedElement", () => {
         const properties = {
           reflectedProp: { reflected: true },
         }
-        basicFixture("reflect-one", { properties })
+        createBasicFixture("reflect-one", { properties })
         // Then
         const element = getElement("reflect-one")
         expect(element.hasAttribute("reflected-prop")).toBe(true)
@@ -138,7 +137,7 @@ describe("UpgradedElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        basicFixture("reflect-two", { properties })
+        createBasicFixture("reflect-two", { properties })
         // Then
         const element = getElement("reflect-two")
         expect(element.hasAttribute("reflected-prop")).toBe(true)
@@ -150,7 +149,7 @@ describe("UpgradedElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        basicFixture("reflect-three", { properties })
+        createBasicFixture("reflect-three", { properties })
         const element = getElement("reflect-three")
         element.reflectedProp = "bar"
         // Then
@@ -162,7 +161,7 @@ describe("UpgradedElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        basicFixture("reflect-four", { properties })
+        createBasicFixture("reflect-four", { properties })
         const element = getElement("reflect-four")
         element.reflectedProp = undefined
         // Then
@@ -185,7 +184,7 @@ describe("UpgradedElement", () => {
             default: "foo",
           },
         }
-        basicFixture("upgrade-type-warn", { properties })
+        createBasicFixture("upgrade-type-warn", { properties })
         // Then
         expect(console.warn).toBeCalledWith(warningMessage)
       })
@@ -198,7 +197,7 @@ describe("UpgradedElement", () => {
             default: true,
           },
         }
-        basicFixture("change-type-warn", { properties })
+        createBasicFixture("change-type-warn", { properties })
         // When
         getElement("change-type-warn").testProp1 = "foo"
         // Then
@@ -212,7 +211,7 @@ describe("UpgradedElement", () => {
 
   describe("lifecycle methods", () => {
     it("calls elementPropertyChanged", () => {
-      const Cls = lifecycleFixture("prop-changed")
+      const Cls = createLifecycleFixture("prop-changed")
       Cls.prototype[external.elementPropertyChanged] = jest.fn()
       getElement("prop-changed").testProp = true
       expect(Cls.prototype[external.elementPropertyChanged]).toBeCalledWith(
@@ -223,7 +222,7 @@ describe("UpgradedElement", () => {
     })
 
     it("calls elementAttributeChanged", () => {
-      const Cls = lifecycleFixture("attr-changed")
+      const Cls = createLifecycleFixture("attr-changed")
       Cls.prototype[external.elementAttributeChanged] = jest.fn()
       getElement("attr-changed").testProp = true
       expect(Cls.prototype[external.elementAttributeChanged]).toBeCalledWith(
@@ -234,54 +233,45 @@ describe("UpgradedElement", () => {
     })
 
     it("calls elementDidUpdate", () => {
-      const Cls = lifecycleFixture("update")
+      const Cls = createLifecycleFixture("update")
       Cls.prototype[external.elementDidUpdate] = jest.fn()
       getElement("update").testProp = true
       expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
     })
 
-    // whyyyyy
-    // eslint-disable-next-line jest/no-disabled-tests
-    it.skip("calls elementDidUpdate if property updates in elementDidMount", async () => {
-      const [init, Cls] = lifecycleFixture("mount-update", true)
-      Cls.prototype[external.elementDidUpdate] = jest.fn()
+    it("calls elementDidUpdate if property updates in elementDidMount", async () => {
+      const [init, Cls] = createLifecycleFixture("mount-update", true)
       Cls.prototype[external.elementDidMount] = () => {
         getElement("mount-update").testProp = true
       }
-      // Cls.prototype[external.elementDidMount] = () => {
-      //   console.log("Mounted!")
-      //   getElement("mount-update").testProp = true
-      // }
-      // Cls.prototype[external.elementDidUpdate] = () => {
-      //   console.log("Updated!")
-      // }
+      Cls.prototype[external.elementDidUpdate] = jest.fn()
       init()
       expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
     })
 
     it("calls elementDidConnect", () => {
-      const [init, Cls] = lifecycleFixture("connect", true)
+      const [init, Cls] = createLifecycleFixture("connect", true)
       Cls.prototype[external.elementDidConnect] = jest.fn()
       init()
       expect(Cls.prototype[external.elementDidConnect]).toBeCalled()
     })
 
     it("calls elementDidMount", () => {
-      const [init, Cls] = lifecycleFixture("mount", true)
+      const [init, Cls] = createLifecycleFixture("mount", true)
       Cls.prototype[external.elementDidMount] = jest.fn()
       init()
       expect(Cls.prototype[external.elementDidMount]).toBeCalled()
     })
 
     it("calls elementWillUnmount", () => {
-      const Cls = lifecycleFixture("unmount")
+      const Cls = createLifecycleFixture("unmount")
       Cls.prototype[external.elementWillUnmount] = jest.fn()
       document.body.removeChild(getElement("unmount"))
       expect(Cls.prototype[external.elementWillUnmount]).toBeCalled()
     })
 
     it("recalls elementDidMount if the component is disconnected and then reconnected", async () => {
-      const [init, Cls] = lifecycleFixture("remount", true)
+      const [init, Cls] = createLifecycleFixture("remount", true)
       Cls.prototype[external.elementDidMount] = jest.fn()
       init()
       const fixture = getElement("remount")

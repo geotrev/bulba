@@ -146,6 +146,11 @@ export class UpgradedElement extends HTMLElement {
    * and remove remaining nodes in the shadowRoot.
    */
   [internal.cleanup]() {
+    // If the element is attached to the DOM again for any
+    // reason, treat it like the first render.
+    this[internal.isFirstRender] = true
+
+    patch(emptyVNode, this[internal.vDOM])
     this[internal.vDOM] = null
 
     // Clean up any other nodes in the shadow root
@@ -155,10 +160,6 @@ export class UpgradedElement extends HTMLElement {
         this[internal.shadowRoot].removeChild(child)
       )
     }
-
-    // If the element is attached to the DOM again for any
-    // reason, treat it like the first render.
-    this[internal.isFirstRender] = true
   }
 
   /**
@@ -220,18 +221,17 @@ export class UpgradedElement extends HTMLElement {
    * Create a virtual DOM from the external `render` method and patch
    * it into the shadow root. Triggers `elementDidMount`, if defined.
    */
-  [internal.getInitialRenderState]() {
+  [internal.setInitialRenderState]() {
     this[internal.vDOM] = this[internal.getVDOM]()
     render(this[internal.vDOM], this[internal.shadowRoot])
     this[internal.runLifecycle](external.elementDidMount)
-    this[internal.isFirstRender] = false
   }
 
   /**
    * All renders after initial render:
    * Create a new vdom and patch the existing one.
    */
-  [internal.getNextRenderState]() {
+  [internal.setNextRenderState]() {
     let nextVDOM = this[internal.getVDOM]()
     patch(nextVDOM, this[internal.vDOM])
     this[internal.runLifecycle](external.elementDidUpdate)
@@ -242,8 +242,11 @@ export class UpgradedElement extends HTMLElement {
    * Runs either a new render or diffs the existing virtual DOM to a new one.
    */
   [internal.renderDOM]() {
-    return this[internal.isFirstRender]
-      ? this[internal.getInitialRenderState]()
-      : this[internal.getNextRenderState]()
+    if (this[internal.isFirstRender]) {
+      this[internal.isFirstRender] = false
+      this[internal.setInitialRenderState]()
+    } else {
+      this[internal.setNextRenderState]()
+    }
   }
 }
