@@ -1,6 +1,28 @@
 {
-  "upgraded-element": {
-    "resources": ["dist/upgraded-element.js", "dist/upgraded-element.min.js"],
-    "targets": ["README.md", "demo/index.html"]
+  "rotom": {
+    "module": true,
+    "resources": ["dist/rotom.min.js"],
+    "targets": [
+      "packages/tooltip/public/index.html",
+      "packages/tooltip/README.md"
+    ]
+  },
+  "@spider-ui/global-event-registry": {
+    "resourceBasePath": "packages/global-event-registry",
+    "resources": [
+      "dist/global-event-registry.js",
+      "dist/global-event-registry.min.js"
+    ],
+    "targets": [
+      "packages/global-event-registry/README.md",
+      "packages/tooltip/README.md",
+      "packages/tooltip/public/index.html"
+    ]
+  },
+  "@spider-ui/tooltip": {
+    "resourceBasePath": "packages/tooltip",
+    "targetBasePath": "packages/tooltip",
+    "resources": ["dist/tooltip.js", "dist/tooltip.min.js"],
+    "targets": ["README.md", "public/index.html"]
   }
 }

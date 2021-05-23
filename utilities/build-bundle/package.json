@@ -1,0 +1,17 @@
+{
+  "name": "rotom-build-bundle",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Shared config for building packages",
+  "author": "George Treviranus <geotrev@icloud.com>",
+  "homepage": "https://github.com/geotrev/rotom",
+  "license": "MIT",
+  "main": "rollup.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/rotom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geotrev/rotom/issues"
+  }
+}

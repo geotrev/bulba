@@ -1,0 +1,14 @@
+{
+  "plugins": [["@babel/plugin-transform-react-jsx", { "pragma": "jsx" }]],
+  "env": {
+    "test": {
+      "presets": [["@babel/preset-env", { "targets": { "node": "current" } }]]
+    },
+    "build": {
+      "presets": ["@babel/preset-env"]
+    },
+    "publish": {
+      "presets": ["@babel/preset-env"]
+    }
+  }
+}

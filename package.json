@@ -1,70 +1,35 @@
 {
-  "name": "upgraded-element",
-  "version": "0.6.5",
-  "description": "A simple base class for using Web Components",
-  "main": "lib/upgraded-element.cjs.min.js",
-  "module": "lib/upgraded-element.es.min.js",
-  "browser": "dist/upgraded-element.min.js",
-  "type": "module",
+  "name": "rotom",
+  "author": "George Treviranus <geotrev@icloud.com>",
+  "private": true,
   "scripts": {
-    "test": "BABEL_ENV=test jest",
-    "test:watch": "BABEL_ENV=test jest --watch",
-    "watch": "rollup -c rollup.config.demo.js -w",
-    "build": "BABEL_ENV=build rollup -c",
-    "build:publish": "BABEL_ENV=publish rollup -c",
+    "purge-build": "rm -rf packages/*/lib packages/*/dist",
+    "bootstrap": "lerna clean --yes && lerna bootstrap --hoist",
+    "test": "lerna exec --parallel --ignore rotom-build-* -- npm run test",
+    "build": "lerna exec --parallel --ignore rotom-build-* -- npm run build",
+    "build:publish": "lerna exec --ignore rotom-build-* -- npm run build:publish",
+    "format": "prettier --write '**/*.js'",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
     "git:update-origin": "git add . && git commit -m '[npm publish] update metadata & cdn tags' && git push && git push --tags",
-    "preversion": "npm test",
-    "postversion": "npm run build:publish",
     "prepublishOnly": "paopu && npm run git:update-origin"
-  },
-  "homepage": "https://github.com/geotrev/upgraded-element",
-  "author": "George Treviranus <hello@geotrev.com>",
-  "license": "MIT",
-  "dependencies": {
-    "omdomdom": "^0.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.2",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
+    "@babel/eslint-parser": "^7.14.4",
     "eslint": "^7.27.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^24.3.6",
-    "jest": "^26.6.3",
-    "paopu": "0.0.6",
-    "prettier": "^2.3.0",
-    "rollup": "^2.49.0",
-    "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-serve": "^1.1.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^24.0.2",
+    "lerna": "^4.0.0",
+    "paopu": "^0.0.6",
+    "prettier": "^2.3.0"
   },
-  "engines": {
-    "node": ">=12.0.0",
-    "npm": ">=6.0.0"
-  },
-  "keywords": [
-    "javascript",
-    "js",
-    "frontend",
-    "web",
-    "components",
-    "web components",
-    "custom elements"
-  ],
-  "files": [
-    "lib/*.{js,map}",
-    "dist/*.{js,map}",
-    "src/*.js"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/upgraded-element.git"
+    "url": "git+https://github.com/geotrev/rotom.git"
   },
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/upgraded-element/issues"
-  }
+    "url": "https://github.com/geotrev/rotom/issues"
+  },
+  "homepage": "https://github.com/geotrev/rotom#readme"
 }

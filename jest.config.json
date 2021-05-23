@@ -1,8 +1,0 @@
-{
-  "clearMocks": true,
-  "restoreMocks": true,
-  "testMatch": ["<rootDir>/src/__tests__/*.spec.js"],
-  "testURL": "http://localhost/",
-  "modulePaths": ["src/"],
-  "verbose": true
-}

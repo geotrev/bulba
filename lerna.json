@@ -1,0 +1,13 @@
+{
+  "lerna": "4.0.0",
+  "version": "0.1.0",
+  "packages": ["packages/*", "utilities/*"],
+  "command": {
+    "bootstrap": {
+      "hoist": true
+    },
+    "version": {
+      "force-publish": true
+    }
+  }
+}
