@@ -22,22 +22,22 @@
   "author": "George Treviranus <hello@geotrev.com>",
   "license": "MIT",
   "dependencies": {
-    "omdomdom": "^0.2.0"
+    "omdomdom": "^0.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
-    "eslint": "^7.26.0",
+    "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^24.3.6",
     "jest": "^26.6.3",
     "paopu": "0.0.6",
     "prettier": "^2.3.0",
-    "rollup": "^2.47.0",
+    "rollup": "^2.49.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2"
