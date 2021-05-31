@@ -1,4 +1,4 @@
-<h2 align="center"><code><🔼>Rotom<&#47;🔼></code></h2>
+<h2 align="center">Rotom</h2>
 <p align="center">Intuitive, deterministic, and extendable base class enabling modern architecture strategies in Web Components.</p>
 <br>
 <p align="center">
@@ -13,6 +13,8 @@
 **🧾 Explore**
 
 - 📥 [Install](#install)
+  - [Write with Template Strings](#write-with-template-strings)
+  - [Write with JSX](#write-with-jsx)
 - 🎮 [Getting Started](#getting-started)
 - 🌍 [Browser Support](#browser-support)
 - 📈 [Performance](#performance)
@@ -20,75 +22,90 @@
 
 ## Install
 
-To get going, you need to install both `rotom` and one of two rendering packages: [`omdomdom`](https://www.github.com/geotrev/omdomdom) or [`snabbdom`](https://www.github.com/snabbdom/snabbdom).
+To get going, you have two html syntaxes to choose from when building Rotom elements: [String templates](#template-html) or [JSX](#jsx).
 
-Both use virtual DOMs. `omdomdom` is written with strings while `snabbdom` prefers JSX.
+See the [Getting started](https://github.com/geotrev/rotom/wiki/) page to learn more about creating Rotom elements.
 
-Note that even if you use the default renderer, you still need to install the package so `rotom` can fetch it.
+### Write with Template Strings
 
-### NPM or Yarn
+This is the default configuration and easiest way to start. It enables you to write HTML in your components as string templates.
 
-```sh
-$ npm i rotom omdomdom@2
-# or
-$ npm i rotom snabbdom@3
-```
-
-or
+Add the package:
 
 ```sh
-$ yarn i rotom omdomdom@2
-# or
-$ yarn i rotom snabbdom@3
+$ npm i rotom-element
 ```
 
-### Raw Files
+Set up a component:
 
-[ES Module](https://cdn.jsdelivr.net/npm/rotom/lib/rotom.esm.js) / [CommonJS Module](https://cdn.jsdelivr.net/npm/rotom/lib/rotom.cjs.js) / [Browser Bundle](https://cdn.jsdelivr.net/npm/rotom/dist/rotom.js) / [Browser Bundle (minified)](https://cdn.jsdelivr.net/npm/rotom/dist/rotom.min.js)
+```js
+import { Rotom, register } from "rotom-element"
 
-### CDN
-
-Use the appropriate bundle for your preferred implementation.
-
-#### `omdomdom`
-
-```html
-<!-- Use the unminified bundle in development -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.omdomdom.js"
-  integrity="sha256-o5M70VzBttd90Qm7sslE0bEmTgkJx155EC+WX7XuIXM="
-  crossorigin="anonymous"
-></script>
-
-<!-- Or use the minified/uglified bundle in production -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.omdomdom.min.js"
-  integrity="sha256-Qeu676eS2QkVwOf1m8cPBwNaV2pavLjUfLVeNx7XcUY="
-  crossorigin="anonymous"
-></script>
+class FirstComponent extends Rotom {
+  render() {
+    return `<p>What a cool component</p>`
+  }
+}
+register("first-component", FirstComponent)
 ```
 
-#### `snabbdom`
+### Write with JSX
 
-```html
-<!-- Use the unminified bundle in development -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.snabbdom.js"
-  integrity="sha256-o5M70VzBttd90Qm7sslE0bEmTgkJx155EC+WX7XuIXM="
-  crossorigin="anonymous"
-></script>
+Using Rotom with JSX requires additional configuration.
 
-<!-- Or use the minified/uglified bundle in production -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.snabbdom.min.js"
-  integrity="sha256-Qeu676eS2QkVwOf1m8cPBwNaV2pavLjUfLVeNx7XcUY="
-  crossorigin="anonymous"
-></script>
+In this mode, JSX is written with [`snabbdom`](https://github.com/snabbdom/snabbdom), so the below instructions follow [their recommendations](https://github.com/snabbdom/snabbdom#jsx) on setup.
+
+First, add these packages:
+
+```sh
+$ npm i rotom-element snabbdom
 ```
+
+Then your component:
+
+```js
+import { Rotom, register } from "rotom-element/jsx"
+// pragma to transform JSX into regular javascript
+import { jsx } from "snabbdom"
+
+class FirstComponent extends Rotom {
+  render() {
+    return (
+      <p
+        attrs={{ id: "foo" }}
+        className="bar"
+        on={{ mouseenter: this.handleMouseEnter }}
+      >
+        What a cool component
+      </p>
+    )
+  }
+}
+register("first-component", FirstComponent)
+```
+
+> NOTE: Rotom may provide its own pragma in the future to improve the prop signature.
+
+Next, you're going to need some way of transforming the JSX at build time.
+
+The easiest way is transpiling your code with Babel using `@babel/plugin-transform-react-jsx` given `snabbdom`'s pragma.
+
+Set up a `babel.config.json` like so (in addition to any plugins/presets you already have):
+
+```json
+{
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "jsx"
+      }
+    ]
+  ]
+}
+```
+
+Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
 
 ## Getting Started
 

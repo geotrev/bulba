@@ -22,7 +22,8 @@
   ],
   "globals": {
     "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
+    "SharedArrayBuffer": "readonly",
+    "TEMPLATE_RENDERER": "readonly"
   },
   "settings": {
     "import/resolver": {
