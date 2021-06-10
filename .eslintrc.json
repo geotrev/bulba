@@ -16,15 +16,9 @@
   "plugins": ["jest"],
   "extends": [
     "eslint:recommended",
-    "prettier",
-    "prettier/babel",
+    "plugin:prettier/recommended",
     "plugin:jest/recommended"
   ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly",
-    "TEMPLATE_RENDERER": "readonly"
-  },
   "settings": {
     "import/resolver": {
       "node": {
