@@ -20,7 +20,7 @@
     "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
     "format": "prettier --write '**/*.js'",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
-    "git:update-origin": "git add . && git commit -m '[npm publish] update metadata & cdn tags' && git push && git push --tags",
+    "git:update-origin": "git push && git push --tags",
     "preversion": "rm -rf lib && npm run build && npm test",
     "prepublishOnly": "npm run git:update-origin"
   },
