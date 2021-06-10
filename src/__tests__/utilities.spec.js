@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import * as utils from "../utilities"
 
 const Types = {

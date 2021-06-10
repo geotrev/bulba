@@ -1,4 +1,4 @@
-import { validateType } from "../external"
+import { External } from "../enums"
 import {
   isFunction,
   isUndefined,
@@ -7,7 +7,7 @@ import {
 } from "../utilities"
 
 export const initializePropertyValue = (
-  UpgradedInstance,
+  RotomInstance,
   propName,
   configuration,
   privateName
@@ -20,7 +20,7 @@ export const initializePropertyValue = (
   } = configuration
 
   let initializedValue = isFunction(defaultValue)
-    ? defaultValue(UpgradedInstance)
+    ? defaultValue(RotomInstance)
     : defaultValue
 
   // Validate the property's default value type, if given
@@ -28,14 +28,14 @@ export const initializePropertyValue = (
 
   if (!isUndefined(initializedValue)) {
     if (type) {
-      UpgradedInstance[validateType](propName, initializedValue, type)
+      RotomInstance[External.validateType](propName, initializedValue, type)
     }
 
     if (safe && (type === "string" || typeof initializedValue === "string")) {
       initializedValue = sanitizeString(initializedValue)
     }
 
-    UpgradedInstance[privateName] = initializedValue
+    RotomInstance[privateName] = initializedValue
   }
 
   // If the value is reflected, set its attribute.
@@ -43,6 +43,6 @@ export const initializePropertyValue = (
   if (reflected) {
     const initialAttrValue = initializedValue ? String(initializedValue) : ""
     const attribute = toKebabCase(propName)
-    UpgradedInstance.setAttribute(attribute, initialAttrValue)
+    RotomInstance.setAttribute(attribute, initialAttrValue)
   }
 }

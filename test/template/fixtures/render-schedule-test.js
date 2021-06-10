@@ -1,7 +1,7 @@
-import { UpgradedElement, register } from "../../src/index.js"
-// const { UpgradedElement, register } = window.UpgradedElement
+import { Rotom, register } from "../../../src/rotom.template"
+// const { RotomTemplate: Rotom, register } = window.Rotom
 
-export class RenderScheduleTest extends UpgradedElement {
+export class RenderScheduleTest extends Rotom {
   static get properties() {
     return {
       containerBorderColor: { default: "blue", type: "string" },

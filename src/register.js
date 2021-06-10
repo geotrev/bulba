@@ -1,10 +1,10 @@
 /**
  * Adds custom element to the global registry.
  * @param {string} tag
- * @param {module} UpgradedInstance
+ * @param {module} RotomInstance
  */
-export const register = (tag, UpgradedInstance) => {
+export const register = (tag, RotomInstance) => {
   if (!customElements.get(tag)) {
-    customElements.define(tag, UpgradedInstance)
+    customElements.define(tag, RotomInstance)
   }
 }

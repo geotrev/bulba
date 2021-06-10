@@ -1,7 +1,7 @@
-import { UpgradedElement, register } from "../../src/index.js"
-// const { UpgradedElement, register } = window.UpgradedElement
+import { Rotom, register } from "../../../src/rotom.template"
+// const { RotomTemplate: Rotom, register } = window.Rotom
 
-class SlotTest extends UpgradedElement {
+class SlotTest extends Rotom {
   static get styles() {
     return `
       ::slotted(*) { 

@@ -2,18 +2,19 @@ import { createBasicFixture } from "./fixtures/basic-fixture"
 import { createAccessorFixture } from "./fixtures/accessor-fixture"
 import { createLifecycleFixture } from "./fixtures/lifecycle-fixture"
 import { getElement } from "./fixtures/get-element"
-import * as external from "../external"
+import { External } from "../enums"
+import { jest } from "@jest/globals"
 
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
-describe("UpgradedElement", () => {
+describe("Rotom", () => {
   afterEach(() => (document.innerHTML = ""))
 
   it("upgrades the element", () => {
     // Given
-    createBasicFixture("upgraded")
+    createBasicFixture("rotom")
     // Then
-    expect(getElement("upgraded").hasAttribute("element-id")).toBe(true)
+    expect(getElement("rotom").hasAttribute("rotom-id")).toBe(true)
   })
 
   it("creates a shadow root", () => {
@@ -47,6 +48,13 @@ describe("UpgradedElement", () => {
     expect(
       getElement("slotted").shadowRoot.querySelector("slot").assignedNodes()
     ).toHaveLength(1)
+  })
+
+  it("applies default document direction via dir attribute", () => {
+    // Given
+    createBasicFixture("direction")
+    // Then
+    expect(getElement("direction").getAttribute("dir")).toEqual("ltr")
   })
 
   describe("properties", () => {
@@ -174,7 +182,7 @@ describe("UpgradedElement", () => {
     console.warn = jest.fn()
 
     describe("warnings", () => {
-      const warningMessage = `[UpgradedElement]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
+      const warningMessage = `[Rotom]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
 
       it("will print warning on upgrade if assigned type doesn't match", () => {
         // Given
@@ -212,9 +220,9 @@ describe("UpgradedElement", () => {
   describe("lifecycle methods", () => {
     it("calls elementPropertyChanged", () => {
       const Cls = createLifecycleFixture("prop-changed")
-      Cls.prototype[external.elementPropertyChanged] = jest.fn()
+      Cls.prototype[External.elementPropertyChanged] = jest.fn()
       getElement("prop-changed").testProp = true
-      expect(Cls.prototype[external.elementPropertyChanged]).toBeCalledWith(
+      expect(Cls.prototype[External.elementPropertyChanged]).toBeCalledWith(
         "testProp",
         false,
         true
@@ -223,9 +231,9 @@ describe("UpgradedElement", () => {
 
     it("calls elementAttributeChanged", () => {
       const Cls = createLifecycleFixture("attr-changed")
-      Cls.prototype[external.elementAttributeChanged] = jest.fn()
+      Cls.prototype[External.elementAttributeChanged] = jest.fn()
       getElement("attr-changed").testProp = true
-      expect(Cls.prototype[external.elementAttributeChanged]).toBeCalledWith(
+      expect(Cls.prototype[External.elementAttributeChanged]).toBeCalledWith(
         "test-prop",
         "",
         "true"
@@ -234,51 +242,51 @@ describe("UpgradedElement", () => {
 
     it("calls elementDidUpdate", () => {
       const Cls = createLifecycleFixture("update")
-      Cls.prototype[external.elementDidUpdate] = jest.fn()
+      Cls.prototype[External.elementDidUpdate] = jest.fn()
       getElement("update").testProp = true
-      expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
+      expect(Cls.prototype[External.elementDidUpdate]).toBeCalled()
     })
 
     it("calls elementDidUpdate if property updates in elementDidMount", async () => {
       const [init, Cls] = createLifecycleFixture("mount-update", true)
-      Cls.prototype[external.elementDidMount] = () => {
+      Cls.prototype[External.elementDidMount] = () => {
         getElement("mount-update").testProp = true
       }
-      Cls.prototype[external.elementDidUpdate] = jest.fn()
+      Cls.prototype[External.elementDidUpdate] = jest.fn()
       init()
-      expect(Cls.prototype[external.elementDidUpdate]).toBeCalled()
+      expect(Cls.prototype[External.elementDidUpdate]).toBeCalled()
     })
 
     it("calls elementDidConnect", () => {
       const [init, Cls] = createLifecycleFixture("connect", true)
-      Cls.prototype[external.elementDidConnect] = jest.fn()
+      Cls.prototype[External.elementDidConnect] = jest.fn()
       init()
-      expect(Cls.prototype[external.elementDidConnect]).toBeCalled()
+      expect(Cls.prototype[External.elementDidConnect]).toBeCalled()
     })
 
     it("calls elementDidMount", () => {
       const [init, Cls] = createLifecycleFixture("mount", true)
-      Cls.prototype[external.elementDidMount] = jest.fn()
+      Cls.prototype[External.elementDidMount] = jest.fn()
       init()
-      expect(Cls.prototype[external.elementDidMount]).toBeCalled()
+      expect(Cls.prototype[External.elementDidMount]).toBeCalled()
     })
 
     it("calls elementWillUnmount", () => {
       const Cls = createLifecycleFixture("unmount")
-      Cls.prototype[external.elementWillUnmount] = jest.fn()
+      Cls.prototype[External.elementWillUnmount] = jest.fn()
       document.body.removeChild(getElement("unmount"))
-      expect(Cls.prototype[external.elementWillUnmount]).toBeCalled()
+      expect(Cls.prototype[External.elementWillUnmount]).toBeCalled()
     })
 
     it("recalls elementDidMount if the component is disconnected and then reconnected", async () => {
       const [init, Cls] = createLifecycleFixture("remount", true)
-      Cls.prototype[external.elementDidMount] = jest.fn()
+      Cls.prototype[External.elementDidMount] = jest.fn()
       init()
       const fixture = getElement("remount")
       document.body.removeChild(fixture)
       await new Promise((done) => setTimeout(done, 15))
       document.body.appendChild(fixture)
-      expect(Cls.prototype[external.elementDidMount]).toBeCalledTimes(2)
+      expect(Cls.prototype[External.elementDidMount]).toBeCalledTimes(2)
     })
   })
 })

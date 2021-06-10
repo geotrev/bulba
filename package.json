@@ -1,70 +1,78 @@
 {
-  "name": "upgraded-element",
-  "version": "0.6.5",
-  "description": "A simple base class for using Web Components",
-  "main": "lib/upgraded-element.cjs.min.js",
-  "module": "lib/upgraded-element.es.min.js",
-  "browser": "dist/upgraded-element.min.js",
-  "type": "module",
+  "name": "rotom",
+  "version": "0.1.0",
+  "description": "A base class for using Web Components",
+  "main": "lib/element.template.cjs.js",
+  "module": "lib/element.template.es.js",
+  "exports": {
+    "./jsx": {
+      "require": "./lib/element.jsx.cjs.js",
+      "import": "./lib/element.jsx.es.js"
+    },
+    "./": "./"
+  },
   "scripts": {
-    "test": "BABEL_ENV=test jest",
-    "test:watch": "BABEL_ENV=test jest --watch",
-    "watch": "rollup -c rollup.config.demo.js -w",
-    "build": "BABEL_ENV=build rollup -c",
-    "build:publish": "BABEL_ENV=publish rollup -c",
+    "postinstall": "npm test && npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "rollup -c config/rollup.build.config.js",
+    "watch:template": "BABEL_ENV=build ENTRY=template rollup -c config/rollup.serve.config.js -w",
+    "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
+    "format": "prettier --write '**/*.js'",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
     "git:update-origin": "git add . && git commit -m '[npm publish] update metadata & cdn tags' && git push && git push --tags",
-    "preversion": "npm test",
-    "postversion": "npm run build:publish",
-    "prepublishOnly": "paopu && npm run git:update-origin"
+    "preversion": "rm -rf lib && npm run build && npm test",
+    "prepublishOnly": "npm run git:update-origin"
   },
-  "homepage": "https://github.com/geotrev/upgraded-element",
-  "author": "George Treviranus <hello@geotrev.com>",
-  "license": "MIT",
-  "dependencies": {
-    "omdomdom": "^0.2.2"
+  "optionalDependencies": {
+    "snabbdom": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.2",
+    "@babel/eslint-parser": "^7.14.4",
+    "@babel/plugin-transform-react-jsx": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
+    "@rollup/plugin-replace": "^2.4.2",
     "eslint": "^7.27.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^24.3.6",
-    "jest": "^26.6.3",
-    "paopu": "0.0.6",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-jest": "^24.0.2",
+    "babel-jest": "^27.0.2",
+    "jest": "^27.0.4",
+    "omdomdom": "^0.2.3",
+    "paopu": "^0.0.6",
     "prettier": "^2.3.0",
-    "rollup": "^2.49.0",
+    "rollup": "^2.50.4",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-serve": "^1.1.0",
-    "rollup-plugin-terser": "^7.0.2"
-  },
-  "engines": {
-    "node": ">=12.0.0",
-    "npm": ">=6.0.0"
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-unused": "^0.1.0"
   },
   "keywords": [
-    "javascript",
-    "js",
-    "frontend",
+    "component",
+    "web component",
+    "html",
     "web",
-    "components",
-    "web components",
-    "custom elements"
+    "rotom",
+    "element"
   ],
+  "directories": {
+    "lib": "lib",
+    "src": "src"
+  },
   "files": [
     "lib/*.{js,map}",
-    "dist/*.{js,map}",
-    "src/*.js"
+    "src/**/*.js"
   ],
+  "author": "George Treviranus <geotrev@icloud.com>",
+  "homepage": "https://github.com/geotrev/rotom#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/upgraded-element.git"
+    "url": "git+https://github.com/geotrev/rotom.git"
   },
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/upgraded-element/issues"
+    "url": "https://github.com/geotrev/rotom/issues"
   }
 }

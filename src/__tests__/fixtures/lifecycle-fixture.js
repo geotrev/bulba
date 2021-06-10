@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../.."
+import { Rotom, register } from "../../rotom.template"
 
 /**
  * Create a test fixture with custom accessors. The id must be unique as we
@@ -6,7 +6,7 @@ import { UpgradedElement, register } from "../.."
  * @param {string} id
  */
 export function createLifecycleFixture(id, wait = false) {
-  class TestElement extends UpgradedElement {
+  class TestElement extends Rotom {
     constructor() {
       super()
     }
