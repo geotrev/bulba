@@ -1,6 +1,6 @@
 {
   "name": "rotom",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A base class for using Web Components",
   "main": "lib/element.template.cjs.js",
   "module": "lib/element.template.es.js",
