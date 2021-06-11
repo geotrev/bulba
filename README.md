@@ -33,13 +33,13 @@ This is the default configuration and easiest way to start. It enables you to wr
 Add the package:
 
 ```sh
-$ npm i rotom-element
+$ npm i rotom
 ```
 
 Set up a component:
 
 ```js
-import { Rotom, register } from "rotom-element"
+import { Rotom, register } from "rotom"
 
 class FirstComponent extends Rotom {
   render() {
@@ -58,13 +58,13 @@ In this mode, JSX is written with [`snabbdom`](https://github.com/snabbdom/snabb
 First, add these packages:
 
 ```sh
-$ npm i rotom-element snabbdom
+$ npm i rotom snabbdom
 ```
 
 Then your component:
 
 ```js
-import { Rotom, register } from "rotom-element/jsx"
+import { Rotom, register } from "rotom/jsx"
 // pragma to transform JSX into regular javascript
 import { jsx } from "snabbdom"
 
