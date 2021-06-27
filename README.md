@@ -1,88 +1,125 @@
-<h2 align="center"><code><🔼>UpgradedElement<&#47;🔼></code></h2>
-<p align="center">Intuitive, deterministic, and extendable base class enabling modern architecture strategies in Web Components.</p>
+<h2 align="center">Rotom</h2>
+<p align="center">Write intuitive, deterministic, and extendable web components.</p>
 <br>
 <p align="center">
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/v/upgraded-element.svg?sanitize=true" alt="Version"></a>
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://img.shields.io/npm/l/upgraded-element.svg?sanitize=true" alt="License"></a>
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/circleci/github/geotrev/upgraded-element/master" alt="Circle CI status (master)" /></a>
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/bundlephobia/minzip/upgraded-element" alt="bundle size" /></a>
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dep/geotrev/upgraded-element" alt="dependencies" /></a>
-  <a href="https://www.npmjs.com/package/upgraded-element"><img src="https://badgen.net/david/dev/geotrev/upgraded-element" alt="devDependencies" /></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://img.shields.io/npm/v/rotom.svg?sanitize=true&style=flat-square" alt="Version"></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://img.shields.io/npm/l/rotom.svg?sanitize=true&style=flat-square" alt="License"></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/circleci/github/geotrev/rotom/master?style=flat-square" alt="Circle CI status (master)" /></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/bundlephobia/minzip/rotom?style=flat-square" alt="bundle size" /></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/david/dep/geotrev/rotom?style=flat-square" alt="dependencies" /></a>
+  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/david/dev/geotrev/rotom?style=flat-square" alt="devDependencies" /></a>
 </p>
 
 **🧾 Explore**
 
-- 📥 [Install](#install)
 - 🎮 [Getting Started](#getting-started)
+  - [Install](#install)
+  - [Write with Template Strings](#write-with-template-strings)
+  - [Write with JSX](#write-with-jsx)
 - 🌍 [Browser Support](#browser-support)
 - 📈 [Performance](#performance)
 - 🤝 [Contribute](#contribute)
-
-## Install
-
-You can use UpgradedElement through one of three ways.
-
-### NPM or Yarn
-
-```sh
-$ npm i upgraded-element
-```
-
-or
-
-```sh
-$ yarn i upgraded-element
-```
-
-### Raw Files
-
-[ES Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.esm.js) / [CommonJS Module](https://cdn.jsdelivr.net/npm/upgraded-element/lib/upgraded-element.cjs.js) / [Browser Bundle](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.js) / [Browser Bundle (minified)](https://cdn.jsdelivr.net/npm/upgraded-element/dist/upgraded-element.min.js)
-
-### CDN
-
-```html
-<!-- Use the unminified bundle in development -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.5/dist/upgraded-element.js"
-  integrity="sha256-o5M70VzBttd90Qm7sslE0bEmTgkJx155EC+WX7XuIXM="
-  crossorigin="anonymous"
-></script>
-
-<!-- Or use the minified/uglified bundle in production -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.5/dist/upgraded-element.min.js"
-  integrity="sha256-Qeu676eS2QkVwOf1m8cPBwNaV2pavLjUfLVeNx7XcUY="
-  crossorigin="anonymous"
-></script>
-```
 
 ## Getting Started
 
 So you're ready to take the dive? Awesome! Check out the wiki articles below on getting started. If you run into any problems or simply have ideas and suggestions, don't be shy about submitting an issue or pull request!
 
-- [Getting started](https://github.com/geotrev/upgraded-element/wiki/)
-- [Add a view](https://github.com/geotrev/upgraded-element/wiki/Add-a-view)
-- [Add styles](https://github.com/geotrev/upgraded-element/wiki/Add-styles)
-- [Properties & state](https://github.com/geotrev/upgraded-element/wiki/Properties-&-state)
-- [Custom properties](https://github.com/geotrev/upgraded-element/wiki/Custom-properties)
-- [Lifecycle methods](https://github.com/geotrev/upgraded-element/wiki/Lifecycle-methods)
-- [DOM events](https://github.com/geotrev/upgraded-element/wiki/DOM-events)
-- [Internal methods](https://github.com/geotrev/upgraded-element/wiki/Internal-methods)
+- [Getting started](https://github.com/geotrev/rotom/wiki/)
+- [Add a view](https://github.com/geotrev/rotom/wiki/Add-a-view)
+- [Add styles](https://github.com/geotrev/rotom/wiki/Add-styles)
+- [Properties & state](https://github.com/geotrev/rotom/wiki/Properties-&-state)
+- [Custom properties](https://github.com/geotrev/rotom/wiki/Custom-properties)
+- [Lifecycle methods](https://github.com/geotrev/rotom/wiki/Lifecycle-methods)
+- [DOM events](https://github.com/geotrev/rotom/wiki/DOM-events)
+- [Internal methods](https://github.com/geotrev/rotom/wiki/Internal-methods)
+
+### Install
+
+```sh
+$ npm i rotom
+```
+
+### Write with Template Strings
+
+This is the default configuration and easiest way to use Rotom. It enables you to write HTML in your components as string templates.
+
+Write your component:
+
+```js
+import { Rotom, register } from "rotom"
+
+class FirstComponent extends Rotom {
+  render() {
+    return `<p>What a cool component</p>`
+  }
+}
+
+register("first-component", FirstComponent)
+```
+
+### Write with JSX
+
+Using Rotom with JSX requires additional configuration.
+
+In this mode, JSX is written with [`snabbdom`](https://github.com/snabbdom/snabbdom), so the below instructions follow [their recommendations](https://github.com/snabbdom/snabbdom#jsx) on setup.
+
+First, install `snabbdom` as an additional dependency:
+
+```sh
+$ npm i snabbdom
+```
+
+When writing your component, ensure you specify `rotom/jsx` as the import path:
+
+```js
+import { Rotom, register } from "rotom/jsx"
+// pragma to transform JSX into regular javascript
+// you can declare this as a global in eslint to avoid no-unused errors
+import { jsx } from "snabbdom"
+
+class FirstComponent extends Rotom {
+  render() {
+    return (
+      <p
+        attrs={{ id: "foo" }}
+        className="bar"
+        on={{ mouseenter: handleMouseEnterFn }}
+      >
+        What a cool component
+      </p>
+    )
+  }
+}
+
+register("first-component", FirstComponent)
+```
+
+Next, you're going to need some way of transforming the JSX at build time. The easiest way is transpiling your code with Babel using `@babel/plugin-transform-react-jsx` with Snabbdom's pragma.
+
+Set up a `babel.config.json` like so (in addition to any plugins/presets you already have):
+
+```json
+{
+  "plugins": [["@babel/plugin-transform-react-jsx", { "pragma": "jsx" }]]
+}
+```
+
+Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
 
 ## Browser Support
 
-UpgradedElement will work as-is in all major browsers, except IE11 and Opera Mini. The package contains no polyfills.
+Rotom will work as-is in all major browsers, except IE11. The package contains no polyfills.
 
-To polyfill the modern features, here are the necessary ones for at least IE11:
+Use the below polyfills to achieve IE11 support. Include them once in your app (or page) before importing Rotom.
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
 
 ## Performance
 
-Performance is taken seriously. Under the hood is a blazing fast [string-based renderer](https://github.com/geotrev/omdomdom) with a predictable batched rendering mechanism.
+Performance is taken seriously. Both renderers use performant reconciliation algorithms to change content on a page.
+
+However, as good as the performance is, it isn't perfect, so changes are always welcome!
 
 ## Contribute
 

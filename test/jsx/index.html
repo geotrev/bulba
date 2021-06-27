@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>UpgradedElement demo</title>
+    <title>Rotom with snabbdom</title>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   </head>
   <body style="max-width: 800px">
-    <slot-test>UpgradedElement tests!</slot-test>
+    <slot-test>Rotom tests!</slot-test>
     <hr />
     <render-schedule-test></render-schedule-test>
     <hr />
@@ -26,9 +26,11 @@
 
     <!-- Test DOM cleanup: -->
     <script>
-      document.querySelector(".delete-btn").addEventListener("click", () => {
-        const testElement = document.querySelector("lifecycle-test")
-        testElement.parentNode.removeChild(testElement)
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".delete-btn").addEventListener("click", () => {
+          const testElement = document.querySelector("lifecycle-test")
+          testElement.parentNode.removeChild(testElement)
+        })
       })
     </script>
 
@@ -38,14 +40,14 @@
 
     <!-- <script
       type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.5/dist/upgraded-element.js"
+      src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.snabbdom.js"
       integrity="sha256-o5M70VzBttd90Qm7sslE0bEmTgkJx155EC+WX7XuIXM="
       crossorigin="anonymous"
     ></script> -->
 
     <!-- <script
       type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/upgraded-element@0.6.5/dist/upgraded-element.min.js"
+      src="https://cdn.jsdelivr.net/npm/rotom@0.6.5/dist/rotom.snabbdom.min.js"
       integrity="sha256-Qeu676eS2QkVwOf1m8cPBwNaV2pavLjUfLVeNx7XcUY="
       crossorigin="anonymous"
     ></script> -->

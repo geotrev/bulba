@@ -1,7 +1,7 @@
-import { UpgradedElement, register } from "../../src/index.js"
-// const { UpgradedElement, register } = window.UpgradedElement
+import { Rotom, register } from "../../../src/rotom.template"
+// const { RotomTemplate: Rotom, register } = window.Rotom
 
-class CustomAccessorTest extends UpgradedElement {
+class CustomAccessorTest extends Rotom {
   static get properties() {
     return {
       text: { type: "string" },

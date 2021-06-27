@@ -1,4 +1,5 @@
 import { createScheduler } from "../scheduler"
+import { jest } from "@jest/globals"
 
 /* eslint-disable no-console */
 console.info = jest.fn()

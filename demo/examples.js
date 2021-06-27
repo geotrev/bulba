@@ -1,6 +1,0 @@
-import "./examples/kitchen-sink-test.js"
-import "./examples/lifecycle-test.js"
-import "./examples/slot-test.js"
-import "./examples/custom-accessor-test.js"
-import "./examples/nested-element-test.js"
-import "./examples/render-schedule-test.js"

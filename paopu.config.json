@@ -1,6 +1,0 @@
-{
-  "upgraded-element": {
-    "resources": ["dist/upgraded-element.js", "dist/upgraded-element.min.js"],
-    "targets": ["README.md", "demo/index.html"]
-  }
-}

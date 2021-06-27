@@ -1,6 +1,6 @@
-import { KitchenSinkTest } from "./kitchen-sink-test.js"
-import { register } from "../../src/index.js"
-// const register = window.UpgradedElement.register
+import { KitchenSinkTest } from "./kitchen-sink-test"
+import { register } from "../../../src/register"
+// const register = window.Rotom.register
 
 /* eslint-disable no-console */
 
@@ -24,9 +24,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   connectedCallback() {
-    console.log("connectedCallback, before UpgradedElement callback")
+    console.log("connectedCallback, before Rotom callback")
     super.connectedCallback()
-    console.log("connectedCallback, after UpgradedElement callback")
+    console.log("connectedCallback, after Rotom callback")
   }
 
   /**
@@ -34,9 +34,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   disconnectedCallback() {
-    console.log("disconnectedCallback, before UpgradedElement callback")
+    console.log("disconnectedCallback, before Rotom callback")
     super.disconnectedCallback()
-    console.log("disconnectedCallback, after UpgradedElement callback")
+    console.log("disconnectedCallback, after Rotom callback")
   }
 
   /**
@@ -44,9 +44,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log("attributeChangedCallback, before UpgradedElement callback")
+    console.log("attributeChangedCallback, before Rotom callback")
     super.attributeChangedCallback(name, oldValue, newValue)
-    console.log("attributeChangedCallback, after UpgradedElement callback")
+    console.log("attributeChangedCallback, after Rotom callback")
   }
 
   /**

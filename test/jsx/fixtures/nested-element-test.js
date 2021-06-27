@@ -1,8 +1,9 @@
+import { jsx } from "snabbdom"
+import { Rotom, register } from "../../../src/rotom.jsx"
+// const { RotomJSX: Rotom, register } = window.Rotom
 import "./kitchen-sink-test.js"
-import { UpgradedElement, register } from "../../src/index.js"
-// const { UpgradedElement, register } = window.UpgradedElement
 
-class NestedElementTest extends UpgradedElement {
+class NestedElementTest extends Rotom {
   static get properties() {
     return {
       borderColor: {
@@ -30,15 +31,6 @@ class NestedElementTest extends UpgradedElement {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  elementDidMount() {
-    this.label = this.shadowRoot.querySelector("#clicker")
-    this.label.addEventListener("click", this.handleClick)
-  }
-
-  elementWillUnmount() {
-    this.label.removeEventListener("click", this.handleClick)
-  }
-
   handleClick() {
     this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
       Math.floor(Math.random() * 5)
@@ -52,17 +44,26 @@ class NestedElementTest extends UpgradedElement {
   }
 
   render() {
-    return `
+    return (
       <div>
-        <p data-key="lede">This one is nested with inline styles.</p>
-        <button data-key="updater" id="clicker">Click to update</button>
-        <div data-key="nested" class="border" style="border-color: ${this.borderColor}">
-          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
+        <p>This one is nested with inline styles.</p>
+        <button on={{ click: this.handleClick }}>Click to update</button>
+        <div
+          className="border"
+          style={{
+            borderWidth: "4px",
+            borderStyle: "solid",
+            borderColor: this.borderColor,
+          }}
+        >
+          <kitchen-sink-test
+            attrs={{ "first-name": "Chaos", description: "I'm nested!" }}
+          >
             <slot></slot>
           </kitchen-sink-test>
         </div>
       </div>
-    `
+    )
   }
 }
 

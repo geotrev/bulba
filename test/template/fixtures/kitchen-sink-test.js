@@ -1,7 +1,7 @@
-import { UpgradedElement, register } from "../../src/index.js"
-// const { UpgradedElement, register } = window.UpgradedElement
+import { Rotom, register } from "../../../src/rotom.template"
+// const { RotomTemplate: Rotom, register } = window.Rotom
 
-export class KitchenSinkTest extends UpgradedElement {
+export class KitchenSinkTest extends Rotom {
   static get properties() {
     return {
       firstName: {
@@ -43,12 +43,10 @@ export class KitchenSinkTest extends UpgradedElement {
 
   elementDidMount() {
     this.changeNameButton = this.shadowRoot.querySelector("#update-name-btn")
-    this.removeHighlightsButton = this.shadowRoot.querySelector(
-      "#update-hl-btn"
-    )
-    this.removeAttributeButton = this.shadowRoot.querySelector(
-      "#update-attr-btn"
-    )
+    this.removeHighlightsButton =
+      this.shadowRoot.querySelector("#update-hl-btn")
+    this.removeAttributeButton =
+      this.shadowRoot.querySelector("#update-attr-btn")
     this.changeNameButton.addEventListener("click", this.handleNameChange)
     this.removeHighlightsButton.addEventListener("click", this.handleRemoveHL)
     this.removeAttributeButton.addEventListener("click", this.handleRemoveAttr)

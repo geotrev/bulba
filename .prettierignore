@@ -1,3 +1,4 @@
-node_modules/
-demo/bundle.js
+dist/
 lib/
+node_modules/
+bundle.js

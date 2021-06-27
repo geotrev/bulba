@@ -1,8 +1,12 @@
 {
   "clearMocks": true,
   "restoreMocks": true,
-  "testMatch": ["<rootDir>/src/__tests__/*.spec.js"],
+  "testMatch": ["<rootDir>/src/__tests__/**/*.spec.js"],
   "testURL": "http://localhost/",
   "modulePaths": ["src/"],
-  "verbose": true
+  "verbose": true,
+  "transform": {
+    "\\.js$": "babel-jest"
+  },
+  "testEnvironment": "jsdom"
 }

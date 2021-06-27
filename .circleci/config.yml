@@ -4,7 +4,8 @@ jobs:
     docker:
       - image: circleci/node:14.7.0
 
-    working_directory: ~/upgraded-element
+    working_directory: ~/rotom
+
     steps:
       - checkout
       - restore_cache:
@@ -12,7 +13,6 @@ jobs:
             - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
 
-      - run: npm i
       - save_cache:
           paths:
             - node_modules

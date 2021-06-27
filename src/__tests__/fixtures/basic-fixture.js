@@ -1,4 +1,4 @@
-import { UpgradedElement, register } from "../.."
+import { Rotom, register } from "../../rotom.template"
 
 /**
  * Create a test fixture. The id must be unique as we can't unregister custom
@@ -7,7 +7,7 @@ import { UpgradedElement, register } from "../.."
  * @param {{content: string, properties: Object, styles: string}}
  */
 export function createBasicFixture(id, options = {}) {
-  class TestElement extends UpgradedElement {
+  class TestElement extends Rotom {
     constructor() {
       super()
     }
