@@ -3,15 +3,15 @@
   "version": "0.6.7",
   "description": "A base class for using Web Components",
   "main": "lib/rotom.template.cjs.js",
-  "module": "lib/rotom.template.es.js",
+  "module": "lib/rotom.template.esm.js",
   "exports": {
     ".": {
       "require": "./lib/rotom.template.cjs.js",
-      "import": "./lib/rotom.template.es.js"
+      "import": "./lib/rotom.template.esm.js"
     },
     "./jsx": {
       "require": "./lib/rotom.jsx.cjs.js",
-      "import": "./lib/rotom.jsx.es.js"
+      "import": "./lib/rotom.jsx.esm.js"
     },
     "./": "./"
   },
