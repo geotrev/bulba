@@ -12,7 +12,6 @@
     "./": "./"
   },
   "scripts": {
-    "postinstall": "npm test && npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "rollup -c config/rollup.build.config.js",
