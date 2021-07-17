@@ -14,24 +14,41 @@ export const initializePropertyValue = (
 ) => {
   const {
     default: defaultValue,
-    type,
+    type: propType,
     reflected = false,
     safe = false,
   } = configuration
 
-  let initializedValue = isFunction(defaultValue)
-    ? defaultValue(RotomInstance)
-    : defaultValue
+  // Initializing the property value:
+  //
+  // 1. If the default is a function, call it with the instance itself
+  //    as the only argument
+  // 2. If the prop name happens to be an existing property, use it
+  // 3. Otherwise, just set the value as the default
+
+  let initializedValue
+
+  if (isFunction(defaultValue)) {
+    initializedValue = defaultValue(RotomInstance)
+  } else if (typeof RotomInstance[propName] !== "undefined") {
+    initializedValue = RotomInstance[propName]
+
+    // Set aside the initial value to a new property, before it's
+    // deleted by the new accessors.
+    RotomInstance[`__${propName}_initial`] = initializedValue
+  } else {
+    initializedValue = defaultValue
+  }
 
   // Validate the property's default value type, if given
   // Initialize the private property
 
   if (!isUndefined(initializedValue)) {
-    if (type) {
-      RotomInstance[External.validateType](propName, initializedValue, type)
+    if (propType) {
+      RotomInstance[External.validateType](propName, initializedValue, propType)
     }
 
-    if (safe && (type === "string" || typeof initializedValue === "string")) {
+    if (safe && typeof initializedValue === "string") {
       initializedValue = sanitizeString(initializedValue)
     }
 

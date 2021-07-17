@@ -45,7 +45,7 @@ export function renderer({ Internal, External }) {
   function setInitialRenderState(element) {
     const vNode = toVNode(document.createElement("div"))
     element[Internal.vDOM] = patch(vNode, getNextRenderState(element))
-    element[Internal.shadowRoot].appendChild(vNode.elm)
+    element.shadowRoot.appendChild(vNode.elm)
   }
 
   return {

@@ -24,7 +24,7 @@ export function renderer({ Internal, External }) {
 
   function setInitialRenderState(element) {
     element[Internal.vDOM] = create(getRenderState(element))
-    render(element[Internal.vDOM], element[Internal.shadowRoot])
+    render(element[Internal.vDOM], element.shadowRoot)
     element[Internal.runPossibleConstructorMethod](External.elementDidMount)
   }
 
@@ -61,10 +61,10 @@ export function renderer({ Internal, External }) {
       patch(emptyVNode, element[Internal.vDOM])
       element[Internal.vDOM] = null
 
-      const children = element[Internal.shadowRoot].childNodes
+      const children = element.shadowRoot.childNodes
       if (children.length) {
         Array.prototype.forEach.call(children, (child) =>
-          element[Internal.shadowRoot].removeChild(child)
+          element.shadowRoot.removeChild(child)
         )
       }
     },
