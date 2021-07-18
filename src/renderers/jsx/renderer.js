@@ -1,4 +1,4 @@
-// import { denyUnlessSigned, signingH } from "snabbdom-signature"
+import { denyUnlessSigned, sign } from "snabbdom-signature"
 import {
   init,
   h,
@@ -28,13 +28,13 @@ const patch = init([
   eventListenersModule,
   attributesModule,
   datasetModule,
-  // denyUnlessSigned
+  denyUnlessSigned,
 ])
 
 export function renderer({ Internal, External }) {
   function getNextRenderState(element) {
     if (isFunction(element[External.render])) {
-      return element[External.render]()
+      return sign(element[External.render]())
     } else {
       throw new Error(
         `[Rotom]: You must include a render method in element: '${element.constructor.name}'`

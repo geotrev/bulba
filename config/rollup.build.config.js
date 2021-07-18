@@ -1,6 +1,7 @@
 import path from "path"
 import { terser } from "rollup-plugin-terser"
 import babel from "@rollup/plugin-babel"
+import commonjs from "@rollup/plugin-commonjs"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 
 const currentDir = process.cwd()
@@ -21,6 +22,7 @@ const plugins = [
     exclude: "node_modules",
   }),
   nodeResolve(),
+  commonjs(),
 ]
 
 // create outputs array
