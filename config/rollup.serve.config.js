@@ -4,6 +4,7 @@ import babel from "@rollup/plugin-babel"
 import serve from "rollup-plugin-serve"
 import livereload from "rollup-plugin-livereload"
 import findUnused from "rollup-plugin-unused"
+import commonjs from "@rollup/plugin-commonjs"
 
 const { ENTRY } = process.env
 const dirname = process.cwd()
@@ -22,6 +23,7 @@ export default {
     findUnused(),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),
     nodeResolve(),
+    commonjs(),
     livereload({ watch: TEST_PATH }),
     serve({
       open: true,

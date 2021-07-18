@@ -8,7 +8,7 @@ export const AttributeValues = {
 
 export const External = {
   // Properties & methods
-  elementIdProperty: "elementId",
+  rotomIdProperty: "rotomId",
   requestRender: "requestRender",
   render: "render",
   validateType: "validateType",
@@ -16,7 +16,7 @@ export const External = {
   staticStyles: "styles",
 
   // Attributes
-  elementIdAttribute: "rotom-id",
+  rotomIdAttribute: "rotom-id",
 
   // Lifecycle
   elementDidConnect: "elementDidConnect",
@@ -29,16 +29,13 @@ export const External = {
 
 export const Internal = {
   // Primitives
-  elementId: Symbol("#elementId"),
-  shadowRoot: Symbol("#shadowRoot"),
+  rotomId: Symbol("#rotomId"),
   vDOM: Symbol("#vDOM"),
   isFirstRender: Symbol("#isFirstRender"),
-  destroy: Symbol("#destroy"),
-  renderer: Symbol("#renderer"),
 
   // Methods
+  renderer: Symbol("#renderer"),
   initialize: Symbol("#initialize"),
-  setRenderer: Symbol("#setRenderer"),
   schedule: Symbol("#schedule"),
   runPossibleConstructorMethod: Symbol("#runPossibleConstructorMethod"),
   upgrade: Symbol("#upgrade"),
@@ -46,4 +43,5 @@ export const Internal = {
   renderStyles: Symbol("#renderStyles"),
   renderDOM: Symbol("#renderDOM"),
   patch: Symbol("#patch"),
+  destroy: Symbol("#destroy"),
 }

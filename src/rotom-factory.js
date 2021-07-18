@@ -25,11 +25,13 @@ export function rotomFactory(renderer) {
       // Internal methods, properties, and data
       this[Internal.schedule] = createScheduler()
       this[Internal.renderer] = renderer({ Internal, External })
-      this[Internal.shadowRoot] = this.attachShadow({ mode: SHADOW_ROOT_MODE })
-      this[Internal.renderDOM] = this[Internal.renderDOM].bind(this)
+
+      this.attachShadow({ mode: SHADOW_ROOT_MODE })
+
+      this[Internal.patch] = this[Internal.patch].bind(this)
       this[Internal.isFirstRender] = true
       this[Internal.vDOM] = null
-      this[Internal.elementId] = createUUID()
+      this[Internal.rotomId] = createUUID()
     }
 
     // Retrieve defined properties from the constructor.
@@ -85,17 +87,15 @@ export function rotomFactory(renderer) {
      * Returns the Internal element id.
      * @returns {string}
      */
-    get [External.elementIdProperty]() {
-      return this[Internal.elementId]
+    get [External.rotomIdProperty]() {
+      return this[Internal.rotomId]
     }
 
     /**
-     * Requests a new render at the next animation frame.
-     * Will batch subsequent renders if they are requested
-     * before the previous frame has completed (0-16/17 milliseconds)
+     * Requests a new render.
      */
     [External.requestRender]() {
-      this[Internal.schedule](this[Internal.renderDOM])
+      this[Internal.schedule](this[Internal.patch])
     }
 
     /**
@@ -130,8 +130,8 @@ export function rotomFactory(renderer) {
     [Internal.upgrade]() {
       // Set element id prop as an attribute
       this.setAttribute(
-        External.elementIdAttribute,
-        this[External.elementIdProperty]
+        External.rotomIdAttribute,
+        this[External.rotomIdProperty]
       )
 
       // Set document direction for reflow support in shadow roots
@@ -166,6 +166,14 @@ export function rotomFactory(renderer) {
     }
 
     /**
+     * Called during renderDOM. Runs reconciliation and updates
+     * the DOM with the new render state
+     */
+    [Internal.patch]() {
+      this[Internal.renderer].patch(this)
+    }
+
+    /**
      * Creates the style tag and appends styles as detected in the constructor.
      */
     [Internal.renderStyles]() {
@@ -176,14 +184,7 @@ export function rotomFactory(renderer) {
       const styleTag = document.createElement("style")
       styleTag.type = "text/css"
       styleTag.textContent = styles
-      this[Internal.shadowRoot].appendChild(styleTag)
-    }
-
-    /**
-     * Runs either a new render or diffs the existing virtual DOM to a new one.
-     */
-    [Internal.renderDOM]() {
-      this[Internal.renderer].patch(this)
+      this.shadowRoot.appendChild(styleTag)
     }
   }
 }
