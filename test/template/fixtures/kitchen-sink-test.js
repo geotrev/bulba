@@ -41,7 +41,7 @@ export class KitchenSinkTest extends Rotom {
     this.handleRemoveAttr = this.handleRemoveAttr.bind(this)
   }
 
-  elementDidMount() {
+  onMount() {
     this.changeNameButton = this.shadowRoot.querySelector("#update-name-btn")
     this.removeHighlightsButton =
       this.shadowRoot.querySelector("#update-hl-btn")
@@ -52,7 +52,7 @@ export class KitchenSinkTest extends Rotom {
     this.removeAttributeButton.addEventListener("click", this.handleRemoveAttr)
   }
 
-  elementWillUnmount() {
+  onUnmount() {
     this.changeNameButton.removeEventListener("click", this.handleNameChange)
     this.removeHighlightsButton.removeEventListener(
       "click",

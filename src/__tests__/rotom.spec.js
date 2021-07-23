@@ -218,75 +218,75 @@ describe("Rotom", () => {
   })
 
   describe("lifecycle methods", () => {
-    it("calls elementPropertyChanged", () => {
+    it("calls onPropertyChange", () => {
       const Cls = createLifecycleFixture("prop-changed")
-      Cls.prototype[External.elementPropertyChanged] = jest.fn()
+      Cls.prototype[External.onPropertyChange] = jest.fn()
       getElement("prop-changed").testProp = true
-      expect(Cls.prototype[External.elementPropertyChanged]).toBeCalledWith(
+      expect(Cls.prototype[External.onPropertyChange]).toBeCalledWith(
         "testProp",
         false,
         true
       )
     })
 
-    it("calls elementAttributeChanged", () => {
+    it("calls onAttributeChange", () => {
       const Cls = createLifecycleFixture("attr-changed")
-      Cls.prototype[External.elementAttributeChanged] = jest.fn()
+      Cls.prototype[External.onAttributeChange] = jest.fn()
       getElement("attr-changed").testProp = true
-      expect(Cls.prototype[External.elementAttributeChanged]).toBeCalledWith(
+      expect(Cls.prototype[External.onAttributeChange]).toBeCalledWith(
         "test-prop",
         "",
         "true"
       )
     })
 
-    it("calls elementDidUpdate", () => {
+    it("calls onUpdate", () => {
       const Cls = createLifecycleFixture("update")
-      Cls.prototype[External.elementDidUpdate] = jest.fn()
+      Cls.prototype[External.onUpdate] = jest.fn()
       getElement("update").testProp = true
-      expect(Cls.prototype[External.elementDidUpdate]).toBeCalled()
+      expect(Cls.prototype[External.onUpdate]).toBeCalled()
     })
 
-    it("calls elementDidUpdate if property updates in elementDidMount", async () => {
+    it("calls onUpdate if property updates in onMount", async () => {
       const [init, Cls] = createLifecycleFixture("mount-update", true)
-      Cls.prototype[External.elementDidMount] = () => {
+      Cls.prototype[External.onMount] = () => {
         getElement("mount-update").testProp = true
       }
-      Cls.prototype[External.elementDidUpdate] = jest.fn()
+      Cls.prototype[External.onUpdate] = jest.fn()
       init()
-      expect(Cls.prototype[External.elementDidUpdate]).toBeCalled()
+      expect(Cls.prototype[External.onUpdate]).toBeCalled()
     })
 
-    it("calls elementDidConnect", () => {
+    it("calls onConnect", () => {
       const [init, Cls] = createLifecycleFixture("connect", true)
-      Cls.prototype[External.elementDidConnect] = jest.fn()
+      Cls.prototype[External.onConnect] = jest.fn()
       init()
-      expect(Cls.prototype[External.elementDidConnect]).toBeCalled()
+      expect(Cls.prototype[External.onConnect]).toBeCalled()
     })
 
-    it("calls elementDidMount", () => {
+    it("calls onMount", () => {
       const [init, Cls] = createLifecycleFixture("mount", true)
-      Cls.prototype[External.elementDidMount] = jest.fn()
+      Cls.prototype[External.onMount] = jest.fn()
       init()
-      expect(Cls.prototype[External.elementDidMount]).toBeCalled()
+      expect(Cls.prototype[External.onMount]).toBeCalled()
     })
 
-    it("calls elementWillUnmount", () => {
+    it("calls onUnmount", () => {
       const Cls = createLifecycleFixture("unmount")
-      Cls.prototype[External.elementWillUnmount] = jest.fn()
+      Cls.prototype[External.onUnmount] = jest.fn()
       document.body.removeChild(getElement("unmount"))
-      expect(Cls.prototype[External.elementWillUnmount]).toBeCalled()
+      expect(Cls.prototype[External.onUnmount]).toBeCalled()
     })
 
-    it("recalls elementDidMount if the component is disconnected and then reconnected", async () => {
+    it("recalls onMount if the component is disconnected and then reconnected", async () => {
       const [init, Cls] = createLifecycleFixture("remount", true)
-      Cls.prototype[External.elementDidMount] = jest.fn()
+      Cls.prototype[External.onMount] = jest.fn()
       init()
       const fixture = getElement("remount")
       document.body.removeChild(fixture)
       await new Promise((done) => setTimeout(done, 15))
       document.body.appendChild(fixture)
-      expect(Cls.prototype[External.elementDidMount]).toBeCalledTimes(2)
+      expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
     })
   })
 })

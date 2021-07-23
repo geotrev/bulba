@@ -55,8 +55,8 @@ export function rotomFactory(renderer) {
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (oldValue !== newValue) {
-        this[Internal.runPossibleConstructorMethod](
-          External.elementAttributeChanged,
+        this[Internal.runLifecycle](
+          External.onAttributeChange,
           name,
           oldValue,
           newValue
@@ -71,13 +71,13 @@ export function rotomFactory(renderer) {
       if (!this.isConnected) return
 
       this[Internal.upgrade]()
-      this[Internal.runPossibleConstructorMethod](External.elementDidConnect)
+      this[Internal.runLifecycle](External.onConnect)
       this[Internal.renderStyles]()
       this[External.requestRender]()
     }
 
     disconnectedCallback() {
-      this[Internal.runPossibleConstructorMethod](External.elementWillUnmount)
+      this[Internal.runLifecycle](External.onUnmount)
       this[Internal.destroy]()
     }
 
@@ -121,7 +121,7 @@ export function rotomFactory(renderer) {
      * @param {string} methodName - name of the possible method
      * @param {arguments} args - args to pass along to the method, if any
      */
-    [Internal.runPossibleConstructorMethod](methodName, ...args) {
+    [Internal.runLifecycle](methodName, ...args) {
       if (isFunction(this[methodName])) {
         this[methodName](...args)
       }

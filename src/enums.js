@@ -19,12 +19,12 @@ export const External = {
   rotomIdAttribute: "rotom-id",
 
   // Lifecycle
-  elementDidConnect: "elementDidConnect",
-  elementDidMount: "elementDidMount",
-  elementDidUpdate: "elementDidUpdate",
-  elementPropertyChanged: "elementPropertyChanged",
-  elementAttributeChanged: "elementAttributeChanged",
-  elementWillUnmount: "elementWillUnmount",
+  onConnect: "onConnect",
+  onMount: "onMount",
+  onUpdate: "onUpdate",
+  onPropertyChange: "onPropertyChange",
+  onAttributeChange: "onAttributeChange",
+  onUnmount: "onUnmount",
 }
 
 export const Internal = {
@@ -37,7 +37,7 @@ export const Internal = {
   renderer: Symbol("#renderer"),
   initialize: Symbol("#initialize"),
   schedule: Symbol("#schedule"),
-  runPossibleConstructorMethod: Symbol("#runPossibleConstructorMethod"),
+  runLifecycle: Symbol("#runLifecycle"),
   upgrade: Symbol("#upgrade"),
   upgradeProperties: Symbol("#upgradeProperties"),
   renderStyles: Symbol("#renderStyles"),

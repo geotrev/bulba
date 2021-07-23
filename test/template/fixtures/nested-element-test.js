@@ -30,12 +30,12 @@ class NestedElementTest extends Rotom {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  elementDidMount() {
+  onMount() {
     this.label = this.shadowRoot.querySelector("#clicker")
     this.label.addEventListener("click", this.handleClick)
   }
 
-  elementWillUnmount() {
+  onUnmount() {
     this.label.removeEventListener("click", this.handleClick)
   }
 
