@@ -54,8 +54,8 @@ class LifecycleTest extends KitchenSinkTest {
    * to call this method manually.
    */
 
-  elementPropertyChanged(property, oldValue, newValue) {
-    console.log("elementPropertyChanged", property, oldValue, newValue)
+  onPropertyChange(property, oldValue, newValue) {
+    console.log("onPropertyChange", property, oldValue, newValue)
   }
 
   /**
@@ -63,8 +63,8 @@ class LifecycleTest extends KitchenSinkTest {
    * equal to the new value.
    */
 
-  elementAttributeChanged(attribute, oldValue, newValue) {
-    console.log("elementAttributeChanged", attribute, oldValue, newValue)
+  onAttributeChange(attribute, oldValue, newValue) {
+    console.log("onAttributeChange", attribute, oldValue, newValue)
   }
 
   /**
@@ -72,16 +72,16 @@ class LifecycleTest extends KitchenSinkTest {
    * have been patched.
    */
 
-  elementDidConnect() {
-    console.log("elementDidConnect")
+  onConnect() {
+    console.log("onConnect")
   }
 
   /**
    * Triggered after every render, excluding initial mount
    */
 
-  elementDidUpdate() {
-    console.log("elementDidUpdate")
+  onUpdate() {
+    console.log("onUpdate")
     console.log("====================")
   }
 
@@ -90,9 +90,9 @@ class LifecycleTest extends KitchenSinkTest {
    * Attributes are available and handlers can be registered.
    */
 
-  elementDidMount() {
-    super.elementDidMount()
-    console.log("elementDidMount")
+  onMount() {
+    super.onMount()
+    console.log("onMount")
     this.count = this.count + 1
     console.log("====================")
   }
@@ -102,8 +102,8 @@ class LifecycleTest extends KitchenSinkTest {
    * Handlers can be deregistered and timers can be cleared.
    */
 
-  elementWillUnmount() {
-    console.log("elementWillUnmount")
+  onUnmount() {
+    console.log("onUnmount")
   }
 
   /**

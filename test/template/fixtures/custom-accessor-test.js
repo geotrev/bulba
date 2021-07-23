@@ -27,7 +27,7 @@ class CustomAccessorTest extends Rotom {
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  elementDidMount() {
+  onMount() {
     this.text = "Cool"
     this.button = this.shadowRoot.querySelector("#update")
     this.button.addEventListener("click", this.handleUpdate)
@@ -35,7 +35,7 @@ class CustomAccessorTest extends Rotom {
     this.cancelButton.addEventListener("click", this.handleCancel)
   }
 
-  elementWillUnmount() {
+  onUnmount() {
     this.button.removeEventListener("click", this.handleUpdate)
     this.cancelButton.removeEventListener("click", this.handleCancel)
   }

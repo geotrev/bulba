@@ -50,8 +50,8 @@ export const upgradeProperty = (
             ? sanitizeString(value)
             : value
 
-        RotomInstance[Internal.runPossibleConstructorMethod](
-          External.elementPropertyChanged,
+        RotomInstance[Internal.runLifecycle](
+          External.onPropertyChange,
           propName,
           oldValue,
           value
@@ -65,8 +65,8 @@ export const upgradeProperty = (
       } else {
         delete RotomInstance[privateName]
 
-        RotomInstance[Internal.runPossibleConstructorMethod](
-          External.elementPropertyChanged,
+        RotomInstance[Internal.runLifecycle](
+          External.onPropertyChange,
           propName,
           oldValue,
           value

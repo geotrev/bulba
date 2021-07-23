@@ -25,13 +25,13 @@ export function renderer({ Internal, External }) {
   function setInitialRenderState(element) {
     element[Internal.vDOM] = create(getRenderState(element))
     render(element[Internal.vDOM], element.shadowRoot)
-    element[Internal.runPossibleConstructorMethod](External.elementDidMount)
+    element[Internal.runLifecycle](External.onMount)
   }
 
   function setNextRenderState(element) {
     let nextVDOM = create(getRenderState(element))
     patch(nextVDOM, element[Internal.vDOM])
-    element[Internal.runPossibleConstructorMethod](External.elementDidUpdate)
+    element[Internal.runLifecycle](External.onUpdate)
     nextVDOM = null
   }
 

@@ -28,7 +28,7 @@ class CustomAccessorTest extends Rotom {
     this.stopUpdates = this.stopUpdates.bind(this)
   }
 
-  elementDidMount() {
+  onMount() {
     this.coolText = "Cool"
   }
 

@@ -15,12 +15,12 @@ export class RenderScheduleTest extends Rotom {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  elementDidMount() {
+  onMount() {
     this.button = this.shadowRoot.querySelector("button")
     this.button.addEventListener("click", this.handleClick)
   }
 
-  elementWillUnmount() {
+  onUnmount() {
     this.button.addEventListener("click", this.handleClick)
   }
 
