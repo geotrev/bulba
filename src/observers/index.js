@@ -1,5 +1,6 @@
-if (!window.__UPGRADED_ELEMENT__DIR_OBSERVER__) {
-  window.__UPGRADED_ELEMENT__DIR_OBSERVER__ = true
+export function createDirectionObserver() {
+  if (window.__ROTOM_ELEMENT__DIR_OBSERVER__) return
+  window.__ROTOM_ELEMENT__DIR_OBSERVER__ = true
 
   /**
    * Search for other rotom elements, denoted by the
@@ -8,7 +9,7 @@ if (!window.__UPGRADED_ELEMENT__DIR_OBSERVER__) {
    * @param {HTMLElement|ShadowRoot} context
    */
   const updateDirection = (context = document) => {
-    const nodes = context.querySelectorAll("[rotom-id]")
+    const nodes = Array.apply(null, context.querySelectorAll("[rotom-id]"))
     if (!nodes.length) return
 
     nodes.forEach((node) => {
