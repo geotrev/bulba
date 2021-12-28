@@ -1,4 +1,4 @@
-import { External } from "../enums"
+import { typeIsValid } from "./type-is-valid"
 import {
   isFunction,
   isUndefined,
@@ -23,7 +23,9 @@ export const initializePropertyValue = (
   //
   // 1. If the default is a function, call it with the instance itself
   //    as the only argument
-  // 2. If the prop name happens to be an existing property, use it
+  // 2. If the prop name happens to be an existing property, set aside
+  //    the property's value to a separate prop and use its value on
+  //    the replacement
   // 3. Otherwise, just set the value as the default
 
   let initializedValue
@@ -45,7 +47,7 @@ export const initializePropertyValue = (
 
   if (!isUndefined(initializedValue)) {
     if (propType) {
-      RotomInstance[External.validateType](propName, initializedValue, propType)
+      typeIsValid(RotomInstance, propName, initializedValue, propType)
     }
 
     if (safe && typeof initializedValue === "string") {

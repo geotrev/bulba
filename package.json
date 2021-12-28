@@ -12,8 +12,7 @@
     "./jsx": {
       "require": "./lib/rotom.jsx.cjs.js",
       "import": "./lib/rotom.jsx.esm.js"
-    },
-    "./": "./"
+    }
   },
   "scripts": {
     "test": "jest",

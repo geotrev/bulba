@@ -5,10 +5,8 @@ import {
   isEmptyObject,
   isString,
   isFunction,
-  getTypeTag,
   toKebabCase,
   createUUID,
-  log,
 } from "./utilities"
 
 const SHADOW_ROOT_MODE = "open"
@@ -96,22 +94,6 @@ export function rotomFactory(renderer) {
      */
     [External.requestRender]() {
       this[Internal.schedule](this[Internal.patch])
-    }
-
-    /**
-     * Validates a property's value.
-     * @param {string} propName
-     * @param {string} value
-     * @param {string} type
-     */
-    [External.validateType](propName, value, type) {
-      const evaluatedType = getTypeTag(value)
-      if (type === undefined || evaluatedType === type) return
-
-      // TODO: this should probably only be bundled in a '.dev.js' bundle
-      log(
-        `Property '${propName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${this.constructor.name}.`
-      )
     }
 
     // Private
