@@ -6,8 +6,7 @@
   <a href="https://www.npmjs.com/package/rotom"><img src="https://img.shields.io/npm/l/rotom.svg?sanitize=true&style=flat-square" alt="License"></a>
   <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/circleci/github/geotrev/rotom/master?style=flat-square" alt="Circle CI status (master)" /></a>
   <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/bundlephobia/minzip/rotom?style=flat-square" alt="bundle size" /></a>
-  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/david/dep/geotrev/rotom?style=flat-square" alt="dependencies" /></a>
-  <a href="https://www.npmjs.com/package/rotom"><img src="https://badgen.net/david/dev/geotrev/rotom?style=flat-square" alt="devDependencies" /></a>
+  <a href="https://www.libraries.io/npm/rotom"><img src="https://img.shields.io/librariesio/release/npm/rotom" alt="dependency status" /></a>
 </p>
 
 **🧾 Explore**

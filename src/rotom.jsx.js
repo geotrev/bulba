@@ -1,7 +1,6 @@
-import { createDirectionObserver } from "./observers"
-
 import { rotomFactory } from "./rotom-factory"
 import { renderer } from "./renderers/jsx"
+import { createDirectionObserver } from "./observers"
 
 createDirectionObserver()
 

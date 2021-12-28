@@ -1,9 +1,8 @@
-import { createDirectionObserver } from "./observers"
-
 import { rotomFactory } from "./rotom-factory"
 import { renderer } from "./renderers/template"
+import { createDirectionObserver } from "./observers"
 
-createDirectionObserver
+createDirectionObserver()
 
 export const Rotom = rotomFactory(renderer)
 export { register } from "./register"
