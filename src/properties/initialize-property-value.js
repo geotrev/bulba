@@ -1,4 +1,4 @@
-import { typeIsValid } from "./type-is-valid"
+import { validateType } from "./validate-type"
 import {
   isFunction,
   isUndefined,
@@ -28,39 +28,39 @@ export const initializePropertyValue = (
   //    the replacement
   // 3. Otherwise, just set the value as the default
 
-  let initializedValue
+  let initialValue
 
   if (isFunction(defaultValue)) {
-    initializedValue = defaultValue(RotomInstance)
+    initialValue = defaultValue(RotomInstance)
   } else if (typeof RotomInstance[propName] !== "undefined") {
-    initializedValue = RotomInstance[propName]
+    initialValue = RotomInstance[propName]
 
     // Set aside the initial value to a new property, before it's
     // deleted by the new accessors.
-    RotomInstance[`__${propName}_initial`] = initializedValue
+    RotomInstance[`__${propName}_initial`] = initialValue
   } else {
-    initializedValue = defaultValue
+    initialValue = defaultValue
   }
 
   // Validate the property's default value type, if given
   // Initialize the private property
 
-  if (!isUndefined(initializedValue)) {
-    if (propType) {
-      typeIsValid(RotomInstance, propName, initializedValue, propType)
+  if (!isUndefined(initialValue)) {
+    if (BUILD_ENV === "development") {
+      validateType(RotomInstance, propName, initialValue, propType)
     }
 
-    if (safe && typeof initializedValue === "string") {
-      initializedValue = sanitizeString(initializedValue)
+    if (safe && typeof initialValue === "string") {
+      initialValue = sanitizeString(initialValue)
     }
 
-    RotomInstance[privateName] = initializedValue
+    RotomInstance[privateName] = initialValue
   }
 
   // If the value is reflected, set its attribute.
 
   if (reflected) {
-    const initialAttrValue = initializedValue ? String(initializedValue) : ""
+    const initialAttrValue = initialValue ? String(initialValue) : ""
     const attribute = toKebabCase(propName)
     RotomInstance.setAttribute(attribute, initialAttrValue)
   }

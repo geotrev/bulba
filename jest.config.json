@@ -8,5 +8,8 @@
   "transform": {
     "\\.js$": "babel-jest"
   },
-  "testEnvironment": "jsdom"
+  "testEnvironment": "jsdom",
+  "globals": {
+    "BUILD_ENV": "development"
+  }
 }

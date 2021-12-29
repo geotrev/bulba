@@ -4,6 +4,7 @@
   "description": "A base class for using Web Components",
   "main": "lib/rotom.template.cjs.js",
   "module": "lib/rotom.template.esm.js",
+  "browser": "dist/rotom.template.min.js",
   "exports": {
     ".": {
       "require": "./lib/rotom.template.cjs.js",
@@ -22,39 +23,39 @@
     "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
     "format": "prettier --write '**/*.js'",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
+    "preversion": "rm -rf lib dist && npm run build && npm test",
     "git:update-origin": "git push && git push --tags",
-    "preversion": "rm -rf lib && npm run build && npm test",
-    "prepublishOnly": "npm run git:update-origin"
+    "prepublishOnly": "paopu && npm run git:update-origin"
   },
   "optionalDependencies": {
-    "snabbdom": "^3.0.3"
+    "snabbdom": "^3.2.0",
+    "omdomdom": "^0.2.3"
   },
   "dependencies": {
     "snabbdom-signature": "^0.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.5",
-    "@babel/eslint-parser": "^7.14.5",
-    "@babel/plugin-transform-react-jsx": "^7.14.5",
-    "@babel/preset-env": "^7.14.5",
+    "@babel/core": "^7.16.7",
+    "@babel/eslint-parser": "^7.16.5",
+    "@babel/plugin-transform-react-jsx": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-replace": "^3.0.0",
-    "babel-jest": "^27.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-replace": "^3.0.1",
+    "babel-jest": "^27.4.5",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^25.3.2",
+    "eslint-plugin-jest": "^25.3.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^27.0.4",
-    "omdomdom": "^0.2.3",
+    "jest": "^27.4.5",
     "paopu": "^0.0.6",
-    "prettier": "^2.3.1",
-    "rollup": "^2.51.1",
-    "rollup-plugin-livereload": "^2.0.0",
+    "prettier": "^2.5.1",
+    "rollup": "^2.62.0",
+    "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-unused": "^0.1.0"
+    "rollup-plugin-unused": "^0.1.1"
   },
   "keywords": [
     "component",
@@ -62,14 +63,18 @@
     "html",
     "web",
     "rotom",
-    "element"
+    "element",
+    "snabbdom",
+    "jsx"
   ],
   "directories": {
+    "dist": "dist",
     "lib": "lib",
     "src": "src"
   },
   "files": [
     "lib/*.{js,map}",
+    "dist/*.{js,map}",
     "src/**/*.js"
   ],
   "author": "George Treviranus <geotrev@icloud.com>",
