@@ -33,6 +33,9 @@ export default {
       host: "localhost",
       port: 3000,
     }),
-    replace({ values: { BUILD_ENV: JSON.stringify("development") } }),
+    replace({
+      preventAssignment: true,
+      values: { BUILD_ENV: JSON.stringify("development") },
+    }),
   ],
 }

@@ -1,10 +1,12 @@
 import { Rotom, register } from "../../../src/rotom.template"
-// const { RotomTemplate: Rotom, register } = window.Rotom
+// const { Rotom, register } = window.rotom
 
 class CustomAccessorTest extends Rotom {
   static get properties() {
     return {
-      text: { type: "string" },
+      text: {
+        type: "string",
+      },
       preventUpdates: {
         type: "boolean",
         default: false,
@@ -52,12 +54,12 @@ class CustomAccessorTest extends Rotom {
   render() {
     return `
       <div>
-        <p data-key="lede">Update text with custom accessors:</p>
-        <button data-key="update-text" id="update">This is:&nbsp;<span data-key="cool-text" id='text'>${
+        <p>Update text with custom accessors:</p>
+        <button id="update">This is:&nbsp;${
           this.text || "(uh oh, no text)"
-        }</span></button>
-        <p data-key="stop-text">Stop updates from happening:</p>
-        <button data-key="stop-updates" id="cancel-updates">Disable updates</button>
+        }</button>
+        <p>Stop updates from happening:</p>
+        <button id="cancel-updates">Disable updates</button>
       </div>
     `
   }

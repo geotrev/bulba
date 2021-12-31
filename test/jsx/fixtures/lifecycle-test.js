@@ -1,6 +1,5 @@
 import { KitchenSinkTest } from "./kitchen-sink-test"
 import { register } from "../../../src/register"
-// const register = window.Rotom.register
 
 /* eslint-disable no-console */
 

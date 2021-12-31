@@ -1,5 +1,5 @@
 import { Rotom, register } from "../../../src/rotom.template"
-// const { RotomTemplate: Rotom, register } = window.Rotom
+// const { Rotom, register } = window.rotom
 
 export class RenderScheduleTest extends Rotom {
   static get properties() {

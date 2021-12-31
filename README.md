@@ -167,3 +167,5 @@ However, as good as the performance is, it isn't perfect, so changes are always 
 ## Contribute
 
 If you like the project or find issues, feel free to contribute!
+
+See [this SO answer](https://stackoverflow.com/a/63112599) on prerelease versioning.

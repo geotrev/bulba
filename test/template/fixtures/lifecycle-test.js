@@ -1,18 +1,12 @@
 import { KitchenSinkTest } from "./kitchen-sink-test"
 import { register } from "../../../src/register"
-// const register = window.Rotom.register
+// const { register } = window.rotom
 
 /* eslint-disable no-console */
 
 class LifecycleTest extends KitchenSinkTest {
   static get properties() {
-    return {
-      ...KitchenSinkTest.properties,
-      count: {
-        default: 0,
-        type: "number",
-      },
-    }
+    return { ...KitchenSinkTest.properties }
   }
 
   constructor() {
@@ -93,7 +87,6 @@ class LifecycleTest extends KitchenSinkTest {
   onMount() {
     super.onMount()
     console.log("onMount")
-    this.count = this.count + 1
     console.log("====================")
   }
 

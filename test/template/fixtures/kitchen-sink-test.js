@@ -1,5 +1,5 @@
 import { Rotom, register } from "../../../src/rotom.template"
-// const { RotomTemplate: Rotom, register } = window.Rotom
+// const { Rotom, register } = window.rotom
 
 export class KitchenSinkTest extends Rotom {
   static get properties() {
