@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('omdomdom')) :
   typeof define === 'function' && define.amd ? define(['exports', 'omdomdom'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.rotom = {}, global.omdomdom));
-}(this, (function (exports, omdomdom) { 'use strict';
+})(this, (function (exports, omdomdom) { 'use strict';
 
   const createUUID = () => {
     const base = Number.MAX_SAFE_INTEGER;
@@ -34,7 +34,8 @@
     return "" + dump.innerHTML;
   };
 
-  function log(msg, type = "warn") {
+  function log(msg) {
+    let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "warn";
     console[type]("[Rotom]: ".concat(msg));
   }
 
@@ -143,7 +144,9 @@
     }
   };
 
-  const upgradeProperty = (RotomInstance, propName, configuration = {}) => {
+  const upgradeProperty = function (RotomInstance, propName) {
+    let configuration = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
     if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(RotomInstance), propName)) {
       return;
     }
@@ -258,8 +261,12 @@
         this[Internal.schedule](this[Internal.patch]);
       }
 
-      [Internal.runLifecycle](methodName, ...args) {
+      [Internal.runLifecycle](methodName) {
         if (isFunction$1(this[methodName])) {
+          for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            args[_key - 1] = arguments[_key];
+          }
+
           this[methodName](...args);
         }
       }
@@ -304,10 +311,12 @@
   const isFunction = value => getTypeTag(value) === "function";
   const isString = value => getTypeTag(value) === "string";
 
-  function renderer({
-    Internal,
-    External
-  }) {
+  function renderer(_ref) {
+    let {
+      Internal,
+      External
+    } = _ref;
+
     function getRenderState(element) {
       let domString;
 
@@ -375,7 +384,8 @@
     if (window.__ROTOM_ELEMENT__DIR_OBSERVER__) return;
     window.__ROTOM_ELEMENT__DIR_OBSERVER__ = true;
 
-    const updateDirection = (context = document) => {
+    const updateDirection = function () {
+      let context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
       const nodes = Array.apply(null, context.querySelectorAll("[rotom-id]"));
       if (!nodes.length) return;
       nodes.forEach(node => {
@@ -414,5 +424,5 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=rotom.template.js.map

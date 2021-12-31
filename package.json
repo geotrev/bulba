@@ -1,6 +1,6 @@
 {
   "name": "rotom",
-  "version": "0.7.1",
+  "version": "0.8.0-alpha.0",
   "description": "A base class for using Web Components",
   "main": "lib/rotom.template.cjs.js",
   "module": "lib/rotom.template.esm.js",
@@ -23,9 +23,10 @@
     "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
     "format": "prettier --write '**/*.js'",
     "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
-    "preversion": "rm -rf lib dist && npm run build && npm test",
-    "git:update-origin": "git push && git push --tags",
-    "prepublishOnly": "paopu && npm run git:update-origin"
+    "git:update-origin": "git add . && git commit -m '[npm publish] update to $npm_package_version' && git push && git push --tags",
+    "prepublishOnly": "paopu && npm run git:update-origin",
+    "preversion": "npm test",
+    "postversion": "npm run build:publish"
   },
   "optionalDependencies": {
     "snabbdom": "^3.2.0",
