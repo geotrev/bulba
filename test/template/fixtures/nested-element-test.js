@@ -1,5 +1,5 @@
 import "./kitchen-sink-test.js"
-import { Rotom, register } from "../../../src/rotom.template"
+import { Rotom, register } from "../../../src/index.js"
 // const { Rotom, register } = window.rotom
 
 class NestedElementTest extends Rotom {

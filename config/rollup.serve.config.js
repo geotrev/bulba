@@ -7,19 +7,28 @@ import livereload from "rollup-plugin-livereload"
 import findUnused from "rollup-plugin-unused"
 import commonjs from "@rollup/plugin-commonjs"
 
-const { ENTRY } = process.env
+const { ENTRY, CDN } = process.env
+const isCdnMode = CDN === "true"
 const dirname = process.cwd()
 
 const TEST_PATH = path.resolve(dirname, ENTRY ? `test/${ENTRY}` : "test")
-const SOURCE_PATH = TEST_PATH + "/examples.js"
+const INPUT_PATH = TEST_PATH + "/examples.js"
 const OUTPUT_PATH = TEST_PATH + "/bundle.js"
+const ROTOM_EXTERNAL_ID = path.resolve(dirname, "src/index.js")
 
 export default {
-  input: SOURCE_PATH,
+  input: INPUT_PATH,
   output: {
     file: OUTPUT_PATH,
     format: "iife",
+    globals: isCdnMode
+      ? {
+          [ROTOM_EXTERNAL_ID]: "rotom",
+          omdomdom: "omdomdom",
+        }
+      : {},
   },
+  external: isCdnMode ? [ROTOM_EXTERNAL_ID, "omdomdom"] : [],
   plugins: [
     findUnused(),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),

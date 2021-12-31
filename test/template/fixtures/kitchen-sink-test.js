@@ -1,4 +1,4 @@
-import { Rotom, register } from "../../../src/rotom.template"
+import { Rotom, register } from "../../../src/index.js"
 // const { Rotom, register } = window.rotom
 
 export class KitchenSinkTest extends Rotom {
