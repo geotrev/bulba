@@ -1,7 +1,7 @@
 import { Internal, External } from "../enums"
 import { isUndefined, toKebabCase, sanitizeString } from "../utilities"
 import { initializePropertyValue } from "./initialize-property-value"
-import { typeIsValid } from "./type-is-valid"
+import { validateType } from "./validate-type"
 
 /**
  * Upgrade a property based on its configuration. If accessors are detected in
@@ -29,7 +29,6 @@ export const upgradeProperty = (
   const { type, reflected = false, safe = false } = configuration
 
   initializePropertyValue(RotomInstance, propName, configuration, privateName)
-
   // Finally, declare its accessors
 
   Object.defineProperty(RotomInstance, propName, {
@@ -41,7 +40,10 @@ export const upgradeProperty = (
     set(value) {
       // Don't set if the value is the same to prevent unnecessary re-renders.
       if (value === RotomInstance[privateName]) return
-      if (type) typeIsValid(RotomInstance, propName, value, type)
+
+      if (BUILD_ENV === "development") {
+        validateType(RotomInstance, propName, value, type)
+      }
 
       const oldValue = RotomInstance[privateName]
 

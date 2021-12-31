@@ -28,6 +28,9 @@
       }
     }
   },
+  "globals": {
+    "BUILD_ENV": "readonly"
+  },
   "rules": {
     "no-console": 2,
     "no-unused-vars": ["error", { "varsIgnorePattern": "jsx" }]

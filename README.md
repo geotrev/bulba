@@ -13,8 +13,10 @@
 
 - 🎮 [Getting Started](#getting-started)
   - [Install](#install)
+  - [CDN](#cdn)
   - [Write with Template Strings](#write-with-template-strings)
   - [Write with JSX](#write-with-jsx)
+  - [Type Checking and Debugging](#type-checking-and-debugging)
 - 🌍 [Browser Support](#browser-support)
 - 📈 [Performance](#performance)
 - 🤝 [Contribute](#contribute)
@@ -38,11 +40,51 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 $ npm i rotom
 ```
 
+### CDN
+
+Use the CDN to skip packaging. Attaches to the window under `window.rotom`.
+
+_NOTE: Only template rendering is supported via CDN._
+
+```html
+<!-- Peer dependency -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.2.3/dist/omdomdom.js"
+  integrity="sha256-HBLiViWpBlIc3sW3GXN1ZDGOqzCCZSzP4COMH2ToKrk="
+  crossorigin="anonymous"
+></script>
+
+<!-- The unminified bundle for development -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.7.1/dist/rotom.template.js"
+  integrity="sha256-YOoIDJkiKeDJY7cfhmhhN0oJNdT80uIxgG5Blq0WW80="
+  crossorigin="anonymous"
+></script>
+
+<!-- Minified/uglified bundle for production -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.7.1/dist/rotom.template.min.js"
+  integrity="sha256-moMAk2N6HiKynHja/j+I1MqRxo+xsv8qXaEzkzY648w="
+  crossorigin="anonymous"
+></script>
+```
+
+Note that omdomdom is a peer dependency of rotom (similar to `react-dom` for `react`). Make sure it is included on the page as shown above.
+
 ### Write with Template Strings
 
 This is the default configuration and easiest way to use Rotom. It enables you to write HTML in your components as string templates.
 
-Write your component:
+First, install `omdomdom` as an additional dependency:
+
+```sh
+npm i omdomdom
+```
+
+Then write your component with HTML strings:
 
 ```js
 import { Rotom, register } from "rotom"
@@ -68,12 +110,10 @@ First, install `snabbdom` as an additional dependency:
 $ npm i snabbdom
 ```
 
-When writing your component, ensure you specify `rotom/jsx` as the import path:
+When writing your component, ensure you specify `rotom/jsx` as the import path and import the jsx pragma:
 
 ```js
 import { Rotom, register } from "rotom/jsx"
-// pragma to transform JSX into regular javascript
-// you can declare this as a global in eslint to avoid no-unused errors
 import { jsx } from "snabbdom"
 
 class FirstComponent extends Rotom {
@@ -82,7 +122,7 @@ class FirstComponent extends Rotom {
       <p
         attrs={{ id: "foo" }}
         className="bar"
-        on={{ mouseenter: handleMouseEnterFn }}
+        on={{ mouseenter: (e) => console.log(e.target.innerText) }}
       >
         What a cool component
       </p>
@@ -104,6 +144,10 @@ Set up a `babel.config.json` like so (in addition to any plugins/presets you alr
 ```
 
 Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
+
+### Type Checking and Debugging
+
+The development (unminified) build of Rotom will include component property type checking. This feature is omitted in the production build.
 
 ## Browser Support
 

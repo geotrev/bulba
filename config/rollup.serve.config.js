@@ -1,5 +1,6 @@
 import path from "path"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
+import replace from "@rollup/plugin-replace"
 import babel from "@rollup/plugin-babel"
 import serve from "rollup-plugin-serve"
 import livereload from "rollup-plugin-livereload"
@@ -32,5 +33,6 @@ export default {
       host: "localhost",
       port: 3000,
     }),
+    replace({ values: { BUILD_ENV: JSON.stringify("development") } }),
   ],
 }
