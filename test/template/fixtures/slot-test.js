@@ -1,5 +1,5 @@
-import { Rotom, register } from "../../../src/rotom.template"
-// const { RotomTemplate: Rotom, register } = window.Rotom
+import { Rotom, register } from "../../../src/index.js"
+// const { Rotom, register } = window.rotom
 
 class SlotTest extends Rotom {
   static get styles() {

@@ -1,6 +1,5 @@
 import { jsx } from "snabbdom"
 import { Rotom, register } from "../../../src/rotom.jsx"
-// const { RotomJSX: Rotom, register } = window.Rotom
 
 export class RenderScheduleTest extends Rotom {
   static get properties() {

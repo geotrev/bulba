@@ -11,7 +11,6 @@ export const External = {
   rotomIdProperty: "rotomId",
   requestRender: "requestRender",
   render: "render",
-  validateType: "validateType",
   staticProperties: "properties",
   staticStyles: "styles",
 

@@ -2,7 +2,6 @@
 lerna-debug.log
 npm-error.log*
 
-dist/
 lib/
 node_modules/
 bundle.js
