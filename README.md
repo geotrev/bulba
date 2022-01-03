@@ -58,16 +58,16 @@ _NOTE: Only template rendering is supported with the CDN._
 <!-- The unminified bundle for development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.8.0/dist/rotom.template.js"
-  integrity="sha256-bTESWLEO7RugFyx49taqcqsLKSAcseG9fbsMC8Ue/5k="
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.0/dist/rotom.template.js"
+  integrity="sha256-3AVXa1552fsQNPx4Iv+RbTr9o+4ugisSmJLq+NDrDGE="
   crossorigin="anonymous"
 ></script>
 
 <!-- Minified/uglified bundle for production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.8.0/dist/rotom.template.min.js"
-  integrity="sha256-IHi2nfMkx1PF4x+Qj/qMNkQCM+jOJu4UJVL4fqukpwQ="
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.0/dist/rotom.template.min.js"
+  integrity="sha256-YS4ihG9nj0pMuswpBfYXI8AWZ9uw2L1FqqtG/Pxp7Rw="
   crossorigin="anonymous"
 ></script>
 ```
