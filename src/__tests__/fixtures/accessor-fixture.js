@@ -1,4 +1,4 @@
-import { Rotom, register } from "../../rotom.template"
+import { RotomElement, register } from "../../rotom.template"
 
 /**
  * Create a test fixture with custom accessors. The id must be unique as we
@@ -6,7 +6,7 @@ import { Rotom, register } from "../../rotom.template"
  * @param {string} id
  */
 export function createAccessorFixture(id) {
-  class TestElement extends Rotom {
+  class TestElement extends RotomElement {
     constructor() {
       super()
       this._count = 0

@@ -32,20 +32,29 @@ const patch = init([
 ])
 
 export function renderer({ Internal, External }) {
-  function getNextRenderState(element) {
+  function getRenderState(element) {
     if (isFunction(element[External.render])) {
       return sign(element[External.render]())
     } else {
       throw new Error(
-        `[Rotom]: You must include a render method in element: '${element.constructor.name}'`
+        `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
       )
     }
   }
 
-  function setInitialRenderState(element) {
+  function getInitialRenderState(element) {
     const vNode = toVNode(document.createElement("div"))
-    element[Internal.vDOM] = patch(vNode, getNextRenderState(element))
-    element.shadowRoot.appendChild(vNode.elm)
+    element[Internal.vDOM] = patch(vNode, getRenderState(element))
+    element.shadowRoot.appendChild(element[Internal.vDOM].elm)
+    element[Internal.runLifecycle](External.onMount)
+  }
+
+  function getNextRenderState(element) {
+    element[Internal.vDOM] = patch(
+      element[Internal.vDOM],
+      getRenderState(element)
+    )
+    element[Internal.runLifecycle](External.onUpdate)
   }
 
   return {
@@ -54,12 +63,9 @@ export function renderer({ Internal, External }) {
 
       if (element[Internal.isFirstRender]) {
         element[Internal.isFirstRender] = false
-        setInitialRenderState(element)
+        getInitialRenderState(element)
       } else {
-        element[Internal.vDOM] = patch(
-          element[Internal.vDOM],
-          getNextRenderState(element)
-        )
+        getNextRenderState(element)
       }
     },
     destroy(element) {

@@ -1,10 +1,10 @@
-import { Rotom, register } from "../../../src/index.js"
-// const { Rotom, register } = window.rotom
+import { RotomElement, register } from "../../../src/index.js"
 
-class CustomAccessorTest extends Rotom {
+class CustomAccessorTest extends RotomElement {
   static get properties() {
     return {
       text: {
+        default: "THIS SHOULD NOT APPEAR!",
         type: "string",
       },
       preventUpdates: {
@@ -55,9 +55,7 @@ class CustomAccessorTest extends Rotom {
     return `
       <div>
         <p>Update text with custom accessors:</p>
-        <button id="update">This is:&nbsp;${
-          this.text || "(uh oh, no text)"
-        }</button>
+        <button id="update">This is:&nbsp;${this.text || ""}</button>
         <p>Stop updates from happening:</p>
         <button id="cancel-updates">Disable updates</button>
       </div>

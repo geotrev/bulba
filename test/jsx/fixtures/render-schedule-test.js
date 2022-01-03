@@ -1,7 +1,7 @@
 import { jsx } from "snabbdom"
-import { Rotom, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/rotom.jsx"
 
-export class RenderScheduleTest extends Rotom {
+export class RenderScheduleTest extends RotomElement {
   static get properties() {
     return {
       borderColor: { default: "blue", type: "string" },

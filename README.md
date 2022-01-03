@@ -42,32 +42,32 @@ $ npm i rotom
 
 ### CDN
 
-Use the CDN to skip packaging. Attaches to the window under `window.rotom`.
+Use the CDN to skip packaging. Attaches to the window under `window.Rotom`.
 
-_NOTE: Only template rendering is supported via CDN._
+_NOTE: Only template rendering is supported with the CDN._
 
 ```html
 <!-- Peer dependency -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.2.3/dist/omdomdom.js"
-  integrity="sha256-HBLiViWpBlIc3sW3GXN1ZDGOqzCCZSzP4COMH2ToKrk="
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.3.0/dist/omdomdom.js"
+  integrity="sha256-BpjOyF5QNlVmvIoAucFkb4hr+8+5r0qctp12U3J9cmM="
   crossorigin="anonymous"
 ></script>
 
 <!-- The unminified bundle for development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.8.0/dist/rotom.template.js"
-  integrity="sha256-bTESWLEO7RugFyx49taqcqsLKSAcseG9fbsMC8Ue/5k="
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.1/dist/rotom.template.js"
+  integrity="sha256-u6O9H0tr3290P9gRScPqi1ao+BqEmvXMBxU+1bFTeiQ="
   crossorigin="anonymous"
 ></script>
 
 <!-- Minified/uglified bundle for production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.8.0/dist/rotom.template.min.js"
-  integrity="sha256-IHi2nfMkx1PF4x+Qj/qMNkQCM+jOJu4UJVL4fqukpwQ="
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.1/dist/rotom.template.min.js"
+  integrity="sha256-K9tUzH/+qNAF3PNLZbGkCdivhRQwIWuq6nfKz1UvEfw="
   crossorigin="anonymous"
 ></script>
 ```
@@ -87,9 +87,9 @@ npm i omdomdom
 Then write your component with HTML strings:
 
 ```js
-import { Rotom, register } from "rotom"
+import { RotomElement, register } from "rotom"
 
-class FirstComponent extends Rotom {
+class FirstComponent extends RotomElement {
   render() {
     return `<p>What a cool component</p>`
   }
@@ -113,10 +113,10 @@ $ npm i snabbdom
 When writing your component, ensure you specify `rotom/jsx` as the import path and import the jsx pragma:
 
 ```js
-import { Rotom, register } from "rotom/jsx"
+import { RotomElement, register } from "rotom/jsx"
 import { jsx } from "snabbdom"
 
-class FirstComponent extends Rotom {
+class FirstComponent extends RotomElement {
   render() {
     return (
       <p
