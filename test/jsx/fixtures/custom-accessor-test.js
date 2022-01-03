@@ -1,10 +1,10 @@
 import { jsx } from "snabbdom"
-import { Rotom, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/rotom.jsx"
 
-class CustomAccessorTest extends Rotom {
+class CustomAccessorTest extends RotomElement {
   static get properties() {
     return {
-      coolText: { type: "string", default: "No cool text (yet)" },
+      text: { type: "string", default: "THIS SHOULD NOT APPEAR" },
       preventUpdates: {
         type: "boolean",
         default: false,
@@ -12,13 +12,13 @@ class CustomAccessorTest extends Rotom {
     }
   }
 
-  set coolText(value) {
-    this._coolText = value
+  set text(value) {
+    this._text = value
     this.requestRender()
   }
 
-  get coolText() {
-    return this._coolText
+  get text() {
+    return this._text
   }
 
   constructor() {
@@ -28,12 +28,12 @@ class CustomAccessorTest extends Rotom {
   }
 
   onMount() {
-    this.coolText = "Cool"
+    this.text = "Cool"
   }
 
   handleUpdate() {
     if (this.preventUpdates) return
-    this.coolText = this.coolText === "Cool" ? "Not Cool" : "Cool"
+    this.text = this.text === "Cool" ? "Not Cool" : "Cool"
   }
 
   stopUpdates() {
@@ -45,7 +45,7 @@ class CustomAccessorTest extends Rotom {
       <div>
         <p key="lede">Update text with custom accessors:</p>
         <button key="update-text" on={{ click: this.handleUpdate }}>
-          This is: <span key="cool-text">{this.coolText}</span>
+          This is:&nbsp;{this.text || ""}
         </button>
         <p key="stop-text">Stop updates from happening:</p>
         <button key="stop-updates" on={{ click: this.stopUpdates }}>

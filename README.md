@@ -42,9 +42,9 @@ $ npm i rotom
 
 ### CDN
 
-Use the CDN to skip packaging. Attaches to the window under `window.rotom`.
+Use the CDN to skip packaging. Attaches to the window under `window.Rotom`.
 
-_NOTE: Only template rendering is supported via CDN._
+_NOTE: Only template rendering is supported with the CDN._
 
 ```html
 <!-- Peer dependency -->
@@ -87,9 +87,9 @@ npm i omdomdom
 Then write your component with HTML strings:
 
 ```js
-import { Rotom, register } from "rotom"
+import { RotomElement, register } from "rotom"
 
-class FirstComponent extends Rotom {
+class FirstComponent extends RotomElement {
   render() {
     return `<p>What a cool component</p>`
   }
@@ -113,10 +113,10 @@ $ npm i snabbdom
 When writing your component, ensure you specify `rotom/jsx` as the import path and import the jsx pragma:
 
 ```js
-import { Rotom, register } from "rotom/jsx"
+import { RotomElement, register } from "rotom/jsx"
 import { jsx } from "snabbdom"
 
-class FirstComponent extends Rotom {
+class FirstComponent extends RotomElement {
   render() {
     return (
       <p

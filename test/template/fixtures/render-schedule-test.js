@@ -1,7 +1,6 @@
-import { Rotom, register } from "../../../src/index.js"
-// const { Rotom, register } = window.rotom
+import { RotomElement, register } from "../../../src/index.js"
 
-export class RenderScheduleTest extends Rotom {
+export class RenderScheduleTest extends RotomElement {
   static get properties() {
     return {
       containerBorderColor: { default: "blue", type: "string" },

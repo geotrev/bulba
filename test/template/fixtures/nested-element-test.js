@@ -1,8 +1,7 @@
 import "./kitchen-sink-test.js"
-import { Rotom, register } from "../../../src/index.js"
-// const { Rotom, register } = window.rotom
+import { RotomElement, register } from "../../../src/index.js"
 
-class NestedElementTest extends Rotom {
+class NestedElementTest extends RotomElement {
   static get properties() {
     return {
       borderColor: {

@@ -1,8 +1,8 @@
 import { jsx } from "snabbdom"
-import { Rotom, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/rotom.jsx"
 import "./kitchen-sink-test.js"
 
-class NestedElementTest extends Rotom {
+class NestedElementTest extends RotomElement {
   static get properties() {
     return {
       borderColor: {

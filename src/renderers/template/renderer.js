@@ -9,26 +9,26 @@ export function renderer({ Internal, External }) {
       domString = element[External.render]()
     } else {
       throw new Error(
-        `[Rotom]: You must include a render method in element: '${element.constructor.name}'`
+        `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
       )
     }
 
     if (!isString(domString)) {
       throw new Error(
-        `[Rotom]: You attempted to render a non-string template in element: '${element.constructor.name}'.`
+        `[RotomElement]: You attempted to render a non-string template in element: '${element.constructor.name}'.`
       )
     }
 
     return domString
   }
 
-  function setInitialRenderState(element) {
+  function getInitialRenderState(element) {
     element[Internal.vDOM] = create(getRenderState(element))
     render(element[Internal.vDOM], element.shadowRoot)
     element[Internal.runLifecycle](External.onMount)
   }
 
-  function setNextRenderState(element) {
+  function getNextRenderState(element) {
     let nextVDOM = create(getRenderState(element))
     patch(nextVDOM, element[Internal.vDOM])
     element[Internal.runLifecycle](External.onUpdate)
@@ -41,9 +41,9 @@ export function renderer({ Internal, External }) {
 
       if (element[Internal.isFirstRender]) {
         element[Internal.isFirstRender] = false
-        setInitialRenderState(element)
+        getInitialRenderState(element)
       } else {
-        setNextRenderState(element)
+        getNextRenderState(element)
       }
     },
     destroy(element) {
