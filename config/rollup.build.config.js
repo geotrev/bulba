@@ -6,6 +6,7 @@ import replace from "@rollup/plugin-replace"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 
 const currentDir = process.cwd()
+const year = new Date().getFullYear()
 const RenderTypes = {
   TEMPLATE: "template",
   JSX: "jsx",
@@ -15,8 +16,30 @@ const Environments = {
   DEVELOPMENT: "development",
 }
 const Formats = ["esm", "cjs"]
-const PKG_NAME = "rotom"
+const GLOBAL_NAME = "Rotom"
 const external = ["snabbdom", "omdomdom"]
+
+const banner = async () => {
+  const { default: pkg } = await import("../package.json")
+
+  return `/*!
+  * @license MIT (https://github.com/geotrev/rotom/blob/master/LICENSE)
+  * Rotom v${pkg.version} (${pkg.homepage})
+  * Copyright ${year} ${pkg.author}
+  */`
+}
+
+const terserPlugin = terser({
+  output: {
+    comments: (_, comment) => {
+      const { value, type } = comment
+
+      if (type === "comment2") {
+        return /@preserve|@license|@cc_on/i.test(value)
+      }
+    },
+  },
+})
 const plugins = [
   babel({
     babelHelpers: "bundled",
@@ -26,7 +49,6 @@ const plugins = [
   commonjs(),
   nodeResolve(),
 ]
-const terserPlugin = terser()
 
 function replacePlugin(value) {
   return replace({
@@ -35,14 +57,21 @@ function replacePlugin(value) {
   })
 }
 
+function baseOutput(format) {
+  return {
+    banner,
+    format,
+    name: GLOBAL_NAME,
+  }
+}
+
 function createDevOutputs(type) {
   return Formats.reduce(
     (outputs, format) => [
       ...outputs,
       {
-        format,
+        ...baseOutput(format),
         file: path.resolve(currentDir, `lib/rotom.${type}.${format}.js`),
-        name: PKG_NAME,
         sourcemap: true,
       },
     ],
@@ -55,9 +84,8 @@ function createProdOutputs(type) {
     (outputs, format) => [
       ...outputs,
       {
-        format,
+        ...baseOutput(format),
         file: path.resolve(currentDir, `lib/rotom.${type}.${format}.min.js`),
-        name: PKG_NAME,
         sourcemap: true,
         plugins: [terserPlugin],
       },
@@ -96,14 +124,19 @@ function createLibConfigs() {
 }
 
 function createDistConfigs() {
+  const baseDistOutput = {
+    banner,
+    format: "umd",
+    name: GLOBAL_NAME,
+    globals: { omdomdom: "Omdomdom" },
+  }
+
   return [
     {
       input: path.resolve(currentDir, "src/rotom.template.js"),
       output: {
-        format: "umd",
+        ...baseDistOutput,
         file: path.resolve(currentDir, `dist/rotom.template.js`),
-        name: PKG_NAME,
-        globals: { omdomdom: "omdomdom" },
         sourcemap: true,
       },
       external,
@@ -112,10 +145,8 @@ function createDistConfigs() {
     {
       input: path.resolve(currentDir, "src/rotom.template.js"),
       output: {
-        format: "umd",
+        ...baseDistOutput,
         file: path.resolve(currentDir, `dist/rotom.template.min.js`),
-        name: PKG_NAME,
-        globals: { omdomdom: "omdomdom" },
         sourcemap: true,
         plugins: [terserPlugin],
       },

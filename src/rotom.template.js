@@ -4,6 +4,6 @@ import { createDirectionObserver } from "./observers"
 
 createDirectionObserver()
 
-export const Rotom = rotomFactory(renderer)
+export const RotomElement = rotomFactory(renderer)
 export { register } from "./register"
 export { validateType } from "./properties"

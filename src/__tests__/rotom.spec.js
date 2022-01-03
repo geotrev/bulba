@@ -7,7 +7,7 @@ import { jest } from "@jest/globals"
 
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
-describe("Rotom", () => {
+describe("RotomElement", () => {
   afterEach(() => (document.innerHTML = ""))
 
   it("upgrades the element", () => {
@@ -182,7 +182,7 @@ describe("Rotom", () => {
     console.warn = jest.fn()
 
     describe("warnings", () => {
-      const warningMessage = `[Rotom]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
+      const warningMessage = `[RotomElement]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
 
       it("will print warning on upgrade if assigned type doesn't match", () => {
         // Given

@@ -13,10 +13,10 @@ const SHADOW_ROOT_MODE = "open"
 
 export function rotomFactory(renderer) {
   /**
-   * @module Rotom
+   * @module RotomElement
    * @extends HTMLElement
    */
-  return class Rotom extends HTMLElement {
+  return class RotomElement extends HTMLElement {
     constructor() {
       super()
 

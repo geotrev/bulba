@@ -1,7 +1,6 @@
-import { Rotom, register } from "../../../src/index.js"
-// const { Rotom, register } = window.rotom
+import { RotomElement, register } from "../../../src/index.js"
 
-export class KitchenSinkTest extends Rotom {
+export class KitchenSinkTest extends RotomElement {
   static get properties() {
     return {
       firstName: {

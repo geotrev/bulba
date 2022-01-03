@@ -1,7 +1,7 @@
 import { jsx } from "snabbdom"
-import { Rotom, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/rotom.jsx"
 
-class SlotTest extends Rotom {
+class SlotTest extends RotomElement {
   static get styles() {
     return `
       ::slotted(*) { 

@@ -23,8 +23,8 @@ export default {
     format: "iife",
     globals: isCdnMode
       ? {
-          [ROTOM_EXTERNAL_ID]: "rotom",
-          omdomdom: "omdomdom",
+          [ROTOM_EXTERNAL_ID]: "Rotom",
+          omdomdom: "Omdomdom",
         }
       : {},
   },
