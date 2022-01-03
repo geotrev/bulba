@@ -16,6 +16,7 @@
     }
   },
   "scripts": {
+    "prepare": "husky install",
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "rollup -c config/rollup.build.config.js",
@@ -23,16 +24,17 @@
     "watch:cdn:template": "CDN=true ENTRY=template rollup -c config/rollup.serve.config.js -w",
     "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
     "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
-    "format": "prettier --write '**/*.js'",
-    "lint": "eslint . --ext .js -c .eslintrc.json --ignore-path .eslintignore",
+    "prettier:check": "prettier --config .prettierrc.json --check",
+    "prettier:write": "prettier --config .prettierrc.json --write",
+    "lint": "eslint -c .eslintrc.json",
     "git:update-origin": "git add . && git commit -m '[npm publish] update to $npm_package_version' && git push && git push --tags",
     "prepublishOnly": "paopu && npm run git:update-origin",
     "preversion": "npm test",
     "postversion": "rm -rf lib dist && npm run build"
   },
   "optionalDependencies": {
-    "snabbdom": "^3.2.0",
-    "omdomdom": "^0.2.3"
+    "omdomdom": "^0.2.3",
+    "snabbdom": "^3.2.0"
   },
   "dependencies": {
     "snabbdom-signature": "^0.0.3"
@@ -51,7 +53,9 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^25.3.3",
     "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
     "jest": "^27.4.5",
+    "lint-staged": "^12.1.5",
     "paopu": "^0.0.6",
     "prettier": "^2.5.1",
     "rollup": "^2.62.0",
@@ -76,8 +80,8 @@
     "src": "src"
   },
   "files": [
-    "lib/*.{js,map}",
     "dist/*.{js,map}",
+    "lib/*.{js,map}",
     "src/**/*.js"
   ],
   "author": "George Treviranus <geotrev@icloud.com>",
@@ -89,5 +93,14 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/geotrev/rotom/issues"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run prettier:check",
+      "npm run eslint:check"
+    ],
+    "*.json": [
+      "npm run prettier:write"
+    ]
   }
 }
