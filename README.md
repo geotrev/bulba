@@ -32,7 +32,7 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 - [Custom properties](https://github.com/geotrev/rotom/wiki/Custom-properties)
 - [Lifecycle methods](https://github.com/geotrev/rotom/wiki/Lifecycle-methods)
 - [DOM events](https://github.com/geotrev/rotom/wiki/DOM-events)
-- [Internal methods](https://github.com/geotrev/rotom/wiki/Internal-methods)
+- [Methods & utilities](https://github.com/geotrev/rotom/wiki/Methods-&-Utilities)
 
 ### Install
 
