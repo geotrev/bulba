@@ -58,7 +58,7 @@ _NOTE: Only template rendering is supported with the CDN._
 <!-- The unminified bundle for development -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.1/dist/rotom.template.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.js"
   integrity="sha256-u6O9H0tr3290P9gRScPqi1ao+BqEmvXMBxU+1bFTeiQ="
   crossorigin="anonymous"
 ></script>
@@ -66,7 +66,7 @@ _NOTE: Only template rendering is supported with the CDN._
 <!-- Minified/uglified bundle for production -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.9.1/dist/rotom.template.min.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.min.js"
   integrity="sha256-K9tUzH/+qNAF3PNLZbGkCdivhRQwIWuq6nfKz1UvEfw="
   crossorigin="anonymous"
 ></script>
