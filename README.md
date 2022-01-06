@@ -26,8 +26,8 @@
 So you're ready to take the dive? Awesome! Check out the wiki articles below on getting started. If you run into any problems or simply have ideas and suggestions, don't be shy about submitting an issue or pull request!
 
 - [Getting started](https://github.com/geotrev/rotom/wiki/)
-- [Add a view](https://github.com/geotrev/rotom/wiki/Add-a-view)
-- [Add styles](https://github.com/geotrev/rotom/wiki/Add-styles)
+- [Create a view](https://github.com/geotrev/rotom/wiki/Views)
+- [Add styles](https://github.com/geotrev/rotom/wiki/Styles)
 - [Properties & state](https://github.com/geotrev/rotom/wiki/Properties-&-state)
 - [Custom properties](https://github.com/geotrev/rotom/wiki/Custom-properties)
 - [Lifecycle methods](https://github.com/geotrev/rotom/wiki/Lifecycle-methods)
@@ -74,77 +74,6 @@ _NOTE: Only template rendering is supported with the CDN._
 
 Note that omdomdom is a peer dependency of rotom (similar to `react-dom` for `react`). Make sure it is included on the page as shown above.
 
-### Write with Template Strings
-
-This is the default configuration and easiest way to use Rotom. It enables you to write HTML in your components as string templates.
-
-First, install `omdomdom` as an additional dependency:
-
-```sh
-npm i omdomdom
-```
-
-Then write your component with HTML strings:
-
-```js
-import { RotomElement, register } from "rotom"
-
-class FirstComponent extends RotomElement {
-  render() {
-    return `<p>What a cool component</p>`
-  }
-}
-
-register("first-component", FirstComponent)
-```
-
-### Write with JSX
-
-Using Rotom with JSX requires additional configuration.
-
-In this mode, JSX is written with [`snabbdom`](https://github.com/snabbdom/snabbdom), so the below instructions follow [their recommendations](https://github.com/snabbdom/snabbdom#jsx) on setup.
-
-First, install `snabbdom` as an additional dependency:
-
-```sh
-$ npm i snabbdom
-```
-
-When writing your component, ensure you specify `rotom/jsx` as the import path and import the jsx pragma:
-
-```js
-import { RotomElement, register } from "rotom/jsx"
-import { jsx } from "snabbdom"
-
-class FirstComponent extends RotomElement {
-  render() {
-    return (
-      <p
-        attrs={{ id: "foo" }}
-        className="bar"
-        on={{ mouseenter: (e) => console.log(e.target.innerText) }}
-      >
-        What a cool component
-      </p>
-    )
-  }
-}
-
-register("first-component", FirstComponent)
-```
-
-Next, you're going to need some way of transforming the JSX at build time. The easiest way is transpiling your code with Babel using `@babel/plugin-transform-react-jsx` with Snabbdom's pragma.
-
-Set up a `babel.config.json` like so (in addition to any plugins/presets you already have):
-
-```json
-{
-  "plugins": [["@babel/plugin-transform-react-jsx", { "pragma": "jsx" }]]
-}
-```
-
-Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
-
 ### Type Checking and Debugging
 
 The development (unminified) build of Rotom will include component property type checking. This feature is omitted in the production build.
@@ -168,4 +97,4 @@ However, as good as the performance is, it isn't perfect, so changes are always 
 
 If you like the project or find issues, feel free to contribute!
 
-See [this SO answer](https://stackoverflow.com/a/63112599) on prerelease versioning.
+See [this StackOverflow answer](https://stackoverflow.com/a/63112599) on prerelease versioning.
