@@ -74,22 +74,20 @@ _NOTE: Only template rendering is supported with the CDN._
 
 Note that omdomdom is a peer dependency of rotom (similar to `react-dom` for `react`). Make sure it is included on the page as shown above.
 
-### Type Checking and Debugging
-
-The development (unminified) build of Rotom will include component property type checking. This feature is omitted in the production build.
-
 ## Browser Support
 
-Rotom will work as-is in all major browsers, except IE11. The package contains no polyfills.
+The npm and browser bundles will work in all major browsers, except IE11. The package contains no explicit polyfills.
 
 Use the below polyfills to achieve IE11 support. Include them once in your app (or page) before importing Rotom.
 
 - [Symbols](https://github.com/zloirock/core-js) (import via npm as `core-js/features/symbol`)
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
 
+You will also need to run the bundle through ES5 transpilation for things like arrow functions.
+
 ## Performance
 
-Performance is taken seriously. Both renderers use performant reconciliation algorithms to change content on a page.
+Both the string and JSX libraries use performant reconciliation algorithms to change content on a page.
 
 However, as good as the performance is, it isn't perfect, so changes are always welcome!
 
