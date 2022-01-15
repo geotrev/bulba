@@ -73,16 +73,16 @@ And Rotom itself (after the renderer script):
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.js"
-  integrity="sha256-u6O9H0tr3290P9gRScPqi1ao+BqEmvXMBxU+1bFTeiQ="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/rotom.template.js"
+  integrity="sha256-VCvTNMHKyllheidwKrN6aSGMNo/OTMlldeoJQLhpTZI="
   crossorigin="anonymous"
 ></script>
 
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.min.js"
-  integrity="sha256-K9tUzH/+qNAF3PNLZbGkCdivhRQwIWuq6nfKz1UvEfw="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/rotom.template.min.js"
+  integrity="sha256-l0g50A9Tw0UCiWQBOQmDHKD7RKVO4anDhoQ65ovyebk="
   crossorigin="anonymous"
 ></script>
 ```
