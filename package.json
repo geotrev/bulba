@@ -27,7 +27,7 @@
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
-    "git:update-origin": "git add . && git commit -m '[npm publish] update to $npm_package_version' && git push && git push --tags",
+    "git:update-origin": "git add . && git commit -m '[chore] version & deploy' && git push && git push --tags",
     "prepublishOnly": "paopu && npm run git:update-origin",
     "preversion": "npm test",
     "postversion": "rm -rf lib dist && npm run build"

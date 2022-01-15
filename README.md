@@ -9,13 +9,16 @@
   <a href="https://www.libraries.io/npm/rotom"><img src="https://img.shields.io/librariesio/release/npm/rotom" alt="dependency status" /></a>
 </p>
 
+<p align="center"><a href="https://todo-rotom-jsx.netlify.app/"><big>See Rotom in action!</big></a></p>
+
 **🧾 Explore**
 
 - 🎮 [Getting Started](#getting-started)
   - [Install](#install)
-  - [CDN](#cdn)
-  - [Write with Template Strings](#write-with-template-strings)
-  - [Write with JSX](#write-with-jsx)
+    - [CDN](#cdn)
+    - [Write with Template Strings](#write-with-template-strings)
+    - [Write with JSX](#write-with-jsx)
+  - [Default and Custom Renderer Versions](#default-and-custom-renderer-versions)
   - [Type Checking and Debugging](#type-checking-and-debugging)
 - 🌍 [Browser Support](#browser-support)
 - 📈 [Performance](#performance)
@@ -40,14 +43,14 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 $ npm i rotom
 ```
 
-### CDN
+#### **CDN**
 
-Use the CDN to skip packaging. Attaches to the window under `window.Rotom`.
+Use the CDN to skip packaging and use the library from the cloud.
 
-_NOTE: Only template rendering is supported with the CDN._
+First, include the renderer:
 
 ```html
-<!-- Peer dependency -->
+<!-- Development build -->
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/omdomdom@0.3.0/dist/omdomdom.js"
@@ -55,7 +58,19 @@ _NOTE: Only template rendering is supported with the CDN._
   crossorigin="anonymous"
 ></script>
 
-<!-- The unminified bundle for development -->
+<!-- OR production build-->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/omdomdom@0.3.0/dist/omdomdomm.min.js"
+  integrity="sha256-BpjOyF5QNlVmvIoAucFkb4hr+8+5r0qctp12U3J9cmM="
+  crossorigin="anonymous"
+></script>
+```
+
+And Rotom itself (after the renderer script):
+
+```html
+<!-- Development build -->
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.js"
@@ -63,7 +78,7 @@ _NOTE: Only template rendering is supported with the CDN._
   crossorigin="anonymous"
 ></script>
 
-<!-- Minified/uglified bundle for production -->
+<!-- OR production build -->
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.9.1/dist/rotom.template.min.js"
@@ -72,45 +87,52 @@ _NOTE: Only template rendering is supported with the CDN._
 ></script>
 ```
 
-Note that omdomdom is a peer dependency of rotom (similar to `react-dom` for `react`). Make sure it is included on the page as shown above.
+- Note 1: that [Omdomdom](https://github.com/geotrev/omdomdom) is an peer dependency of Rotom in this use-case (similar to `react-dom` for `react`). Make sure it is included on the page, as shown above, _before_ Rotom is loaded.
+- Note 2: You might need to configure your bundle to use Rotom on the page. Its global name is `'Rotom'` (bundlers will reference this globally from `window.Rotom`).
 
-### Write with Template Strings
+#### **Write with Template Strings**
 
 This is the default configuration and easiest way to use Rotom. It enables you to write HTML in your components as string templates.
 
-First, install `omdomdom` as an additional dependency:
-
-```sh
-npm i omdomdom
-```
-
-Then write your component with HTML strings:
+Write your component with HTML strings:
 
 ```js
 import { RotomElement, register } from "rotom"
 
 class FirstComponent extends RotomElement {
+  constructor() {
+    super()
+    this.handleMouseEnter = this.handleMouseEnter.bind(this)
+  }
+
+  onMount() {
+    this.target = this.shadowRoot.querySelector("#foo")
+    this.target.addEventListener("mouseenter", this.handleMouseEnter)
+  }
+
+  onUnmount() {
+    this.target.removeEventListener("mouseenter", this.handleMouseEnter)
+  }
+
+  handleMouseEnter(e) {
+    console.log(e.target.innerText)
+  }
+
   render() {
-    return `<p>What a cool component</p>`
+    return "<p id="foo" class="bar">What a cool component!</p>"
   }
 }
 
 register("first-component", FirstComponent)
 ```
 
-### Write with JSX
+Learn more about [Omdomdom](https://github.com/geotrev/omdomdom).
 
-Using Rotom with JSX requires additional configuration.
+#### **Write with JSX**
 
-In this mode, JSX is written with [`snabbdom`](https://github.com/snabbdom/snabbdom), so the below instructions follow [their recommendations](https://github.com/snabbdom/snabbdom#jsx) on setup.
+JSX is an industry standard for writing views, and it's fully supported in Rotom. [Snabbdom](https://github.com/snabbdom/snabbdom), a popular and performant JSX library, is used.
 
-First, install `snabbdom` as an additional dependency:
-
-```sh
-$ npm i snabbdom
-```
-
-When writing your component, ensure you specify `rotom/jsx` as the import path and import the jsx pragma:
+When importing from `rotom`, ensure you specify `rotom/jsx` as the import path and import the `jsx` pragma from `snabbdom` directly (you might need to whitelist `jsx` as an unused variable in linters):
 
 ```js
 import { RotomElement, register } from "rotom/jsx"
@@ -120,11 +142,10 @@ class FirstComponent extends RotomElement {
   render() {
     return (
       <p
-        attrs={{ id: "foo" }}
-        className="bar"
+        attrs={{ id: "foo", class: "bar" }}
         on={{ mouseenter: (e) => console.log(e.target.innerText) }}
       >
-        What a cool component
+        What a cool component!
       </p>
     )
   }
@@ -135,7 +156,7 @@ register("first-component", FirstComponent)
 
 Next, you're going to need some way of transforming the JSX at build time. The easiest way is transpiling your code with Babel using `@babel/plugin-transform-react-jsx` with Snabbdom's pragma.
 
-Set up a `babel.config.json` like so (in addition to any plugins/presets you already have):
+Add the plugin to your `babel.config.json`. Example:
 
 ```json
 {
@@ -144,6 +165,10 @@ Set up a `babel.config.json` like so (in addition to any plugins/presets you alr
 ```
 
 Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
+
+### Default and Custom Renderer Versions
+
+If you want to use a specific version of Omdomdom or Snabbdom, you can do so by explicitly installing it alongside Rotom. See Rotom's `optionalDependencies` field in its [`package.json` file](https://github.com/geotrev/rotom/blob/main/package.json#L35) for the default version you will get.
 
 ### Type Checking and Debugging
 
