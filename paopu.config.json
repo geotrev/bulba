@@ -4,6 +4,10 @@
     "resources": ["dist/omdomdom.js", "dist/omdomdom.min.js"],
     "targets": ["README.md", "test/template/index.html"]
   },
+  "snabbdom": {
+    "resources": ["dist/snabbdom.js", "dist/snabbdom.min.js"],
+    "targets": ["README.md", "test/jsx/index.html"]
+  },
   "rotom": {
     "resources": ["dist/rotom.template.js", "dist/rotom.template.min.js"],
     "targets": ["README.md", "test/jsx/index.html", "test/template/index.html"]

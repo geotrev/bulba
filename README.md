@@ -47,7 +47,9 @@ $ npm i rotom
 
 Use the CDN to skip packaging and use the library from the cloud.
 
-First, include the renderer:
+First, include a renderer (only one):
+
+**Omdomdom**:
 
 ```html
 <!-- Development build -->
@@ -66,6 +68,30 @@ First, include the renderer:
   crossorigin="anonymous"
 ></script>
 ```
+
+**Snabbdom**:
+
+```html
+<!-- Development build -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/snabbdom.js"
+  integrity="sha256-NKgEEe5JMJgIg2jtyq8znfNBAsxZYQwKkD0diYL390U="
+  crossorigin="anonymous"
+></script>
+
+<!-- OR production build-->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/snabbdom.min.js"
+  integrity="sha256-B8iG3NqITfDbCJGeChjPi/lgJ5BC5/Rqo4MZlnC9L9Y="
+  crossorigin="anonymous"
+></script>
+```
+
+Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
+
+---
 
 And Rotom itself (after the renderer script):
 

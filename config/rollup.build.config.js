@@ -97,25 +97,25 @@ function createProdOutputs(type) {
 function createLibConfigs() {
   return [
     {
-      input: path.resolve(currentDir, `src/rotom.jsx.js`),
+      input: path.resolve(currentDir, "src/rotom.jsx.js"),
       output: createDevOutputs(RenderTypes.JSX),
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, `src/rotom.jsx.js`),
+      input: path.resolve(currentDir, "src/rotom.jsx.js"),
       output: createProdOutputs(RenderTypes.JSX),
       external,
       plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
     },
     {
-      input: path.resolve(currentDir, `src/rotom.template.js`),
+      input: path.resolve(currentDir, "src/rotom.template.js"),
       output: createDevOutputs(RenderTypes.TEMPLATE),
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, `src/rotom.template.js`),
+      input: path.resolve(currentDir, "src/rotom.template.js"),
       output: createProdOutputs(RenderTypes.TEMPLATE),
       external,
       plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
@@ -136,7 +136,7 @@ function createDistConfigs() {
       input: path.resolve(currentDir, "src/rotom.template.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(currentDir, `dist/rotom.template.js`),
+        file: path.resolve(currentDir, "dist/rotom.template.js"),
         sourcemap: true,
       },
       external,
@@ -146,7 +146,7 @@ function createDistConfigs() {
       input: path.resolve(currentDir, "src/rotom.template.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(currentDir, `dist/rotom.template.min.js`),
+        file: path.resolve(currentDir, "dist/rotom.template.min.js"),
         sourcemap: true,
         plugins: [terserPlugin],
       },
@@ -156,4 +156,30 @@ function createDistConfigs() {
   ]
 }
 
-export default [...createLibConfigs(), ...createDistConfigs()]
+function createSnabbdomConfig() {
+  return {
+    input: path.resolve(currentDir, "vendor/snabbdom.js"),
+    output: [
+      {
+        file: path.resolve(currentDir, "dist/snabbdom.js"),
+        format: "umd",
+        name: "snabbdom",
+        sourcemap: true,
+      },
+      {
+        file: path.resolve(currentDir, "dist/snabbdom.min.js"),
+        format: "umd",
+        name: "snabbdom",
+        sourcemap: true,
+        plugins: [terserPlugin],
+      },
+    ],
+    plugins,
+  }
+}
+
+export default [
+  createSnabbdomConfig(),
+  ...createLibConfigs(),
+  ...createDistConfigs(),
+]
