@@ -1,3 +1,5 @@
+## [0.10.3](https://github.com/geotrev/rotom/compare/v0.10.2...v0.10.3) (2022-01-16)
+
 ## [0.10.2](https://github.com/geotrev/rotom/compare/v0.10.1...v0.10.2) (2022-01-16)
 
 
