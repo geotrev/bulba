@@ -1,3 +1,10 @@
+## [0.10.2](https://github.com/geotrev/rotom/compare/v0.10.1...v0.10.2) (2022-01-16)
+
+
+### Bug Fixes
+
+* move paopu to before:init hook ([3dd83e8](https://github.com/geotrev/rotom/commit/3dd83e8cff6f618c5fe73166208c5416ab1cdc45))
+
 ## [0.10.1](https://github.com/geotrev/rotom/compare/v0.10.0...v0.10.1) (2022-01-16)
 
 
