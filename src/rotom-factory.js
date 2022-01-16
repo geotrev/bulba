@@ -5,7 +5,7 @@ import {
   isEmptyObject,
   isString,
   isFunction,
-  toKebabCase,
+  camelToKebab,
   createUUID,
 } from "./utilities"
 
@@ -28,7 +28,7 @@ export function rotomFactory(renderer) {
 
       this[Internal.patch] = this[Internal.patch].bind(this)
       this[Internal.isFirstRender] = true
-      this[Internal.vDOM] = null
+      this[Internal.vnode] = null
       this[Internal.rotomId] = createUUID()
     }
 
@@ -41,7 +41,7 @@ export function rotomFactory(renderer) {
       let attributes = []
       for (let propName in properties) {
         if (!properties[propName].reflected) continue
-        attributes.push(toKebabCase(propName))
+        attributes.push(camelToKebab(propName))
       }
       return attributes
     }
@@ -140,7 +140,7 @@ export function rotomFactory(renderer) {
     }
 
     /**
-     * Called during disconnectedCallback. Clean up the vDOM
+     * Called during disconnectedCallback. Clean up the vnode
      * and remove remaining nodes in the shadowRoot.
      */
     [Internal.destroy]() {

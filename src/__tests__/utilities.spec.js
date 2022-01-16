@@ -59,17 +59,17 @@ describe("forEach", () => {
   })
 })
 
-describe("toKebabCase", () => {
+describe("camelToKebab", () => {
   it("converts camelCase", () => {
     const camelName = "imACoolCat"
     const kebabName = "im-a-cool-cat"
-    expect(utils.toKebabCase(camelName)).toEqual(kebabName)
+    expect(utils.camelToKebab(camelName)).toEqual(kebabName)
   })
 
   it("converts PascalCase", () => {
     const PascalName = "ImACoolCat"
     const kebabName = "im-a-cool-cat"
-    expect(utils.toKebabCase(PascalName)).toEqual(kebabName)
+    expect(utils.camelToKebab(PascalName)).toEqual(kebabName)
   })
 })
 

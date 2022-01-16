@@ -1,5 +1,5 @@
 import { Internal, External } from "../enums"
-import { isUndefined, toKebabCase, sanitizeString } from "../utilities"
+import { isUndefined, camelToKebab, sanitizeString } from "../utilities"
 import { initializePropertyValue } from "./initialize-property-value"
 import { validateType } from "./validate-type"
 
@@ -61,7 +61,7 @@ export const upgradeProperty = (
         )
 
         if (reflected) {
-          const attribute = toKebabCase(propName)
+          const attribute = camelToKebab(propName)
           const attrValue = String(value)
           RotomInstance.setAttribute(attribute, attrValue)
         }
@@ -76,7 +76,7 @@ export const upgradeProperty = (
         )
 
         if (reflected) {
-          const attribute = toKebabCase(propName)
+          const attribute = camelToKebab(propName)
           RotomInstance.removeAttribute(attribute)
         }
       }

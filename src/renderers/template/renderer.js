@@ -1,5 +1,5 @@
 import { patch, render, create } from "omdomdom"
-import { isString, isFunction } from "./utilities"
+import { isString, isFunction } from "../../utilities"
 
 export function renderer({ Internal, External }) {
   function getRenderState(element) {
@@ -23,16 +23,16 @@ export function renderer({ Internal, External }) {
   }
 
   function getInitialRenderState(element) {
-    element[Internal.vDOM] = create(getRenderState(element))
-    render(element[Internal.vDOM], element.shadowRoot)
+    element[Internal.vnode] = create(getRenderState(element))
+    render(element[Internal.vnode], element.shadowRoot)
     element[Internal.runLifecycle](External.onMount)
   }
 
   function getNextRenderState(element) {
-    let nextVDOM = create(getRenderState(element))
-    patch(nextVDOM, element[Internal.vDOM])
+    let nextVnode = create(getRenderState(element))
+    patch(nextVnode, element[Internal.vnode])
     element[Internal.runLifecycle](External.onUpdate)
-    nextVDOM = null
+    nextVnode = null
   }
 
   return {
@@ -58,8 +58,8 @@ export function renderer({ Internal, External }) {
       }
 
       element[Internal.isFirstRender] = true
-      patch(emptyVNode, element[Internal.vDOM])
-      element[Internal.vDOM] = null
+      patch(emptyVNode, element[Internal.vnode])
+      element[Internal.vnode] = null
 
       const children = element.shadowRoot.childNodes
       if (children.length) {

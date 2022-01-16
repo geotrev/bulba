@@ -29,7 +29,7 @@ export const External = {
 export const Internal = {
   // Primitives
   rotomId: Symbol("#rotomId"),
-  vDOM: Symbol("#vDOM"),
+  vnode: Symbol("#vnode"),
   isFirstRender: Symbol("#isFirstRender"),
 
   // Methods
