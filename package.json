@@ -123,8 +123,7 @@
       "release": true
     },
     "hooks": {
-      "before:init": "npm test",
-      "before:git": "paopu",
+      "before:init": "npm test && paopu",
       "before:release": "rm -rf lib dist && npm run build"
     },
     "plugins": {
