@@ -1,1 +1,1 @@
-export * as snabbdom from "snabbdom"
+export * from "snabbdom"

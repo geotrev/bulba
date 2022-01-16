@@ -47,7 +47,7 @@ $ npm i rotom
 
 Use the CDN to skip packaging and use the library from the cloud.
 
-First, include a renderer (only one):
+You can use Rotom with string or jsx renderers. Make sure to use the right version of Rotom for your renderer as shown below.
 
 **Omdomdom**:
 
@@ -69,52 +69,63 @@ First, include a renderer (only one):
 ></script>
 ```
 
-**Snabbdom**:
-
 ```html
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/snabbdom.js"
-  integrity="sha256-NKgEEe5JMJgIg2jtyq8znfNBAsxZYQwKkD0diYL390U="
-  crossorigin="anonymous"
-></script>
-
-<!-- OR production build-->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/snabbdom.min.js"
-  integrity="sha256-B8iG3NqITfDbCJGeChjPi/lgJ5BC5/Rqo4MZlnC9L9Y="
-  crossorigin="anonymous"
-></script>
-```
-
-Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
-
----
-
-And Rotom itself (after the renderer script):
-
-```html
-<!-- Development build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/rotom.template.js"
-  integrity="sha256-VCvTNMHKyllheidwKrN6aSGMNo/OTMlldeoJQLhpTZI="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/rotom.template.js"
+  integrity="sha256-OVU1Ax2Yfw7clj9VfVBqYMuU32VCBmOfc12uhdIrE0c="
   crossorigin="anonymous"
 ></script>
 
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.9.2/dist/rotom.template.min.js"
-  integrity="sha256-l0g50A9Tw0UCiWQBOQmDHKD7RKVO4anDhoQ65ovyebk="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/rotom.template.min.js"
+  integrity="sha256-Rlx8xw030dFcJjVO5f6x1aP1NCziE1454Ugo7dvZ7WQ="
   crossorigin="anonymous"
 ></script>
 ```
 
-- Note 1: that [Omdomdom](https://github.com/geotrev/omdomdom) is an peer dependency of Rotom in this use-case (similar to `react-dom` for `react`). Make sure it is included on the page, as shown above, _before_ Rotom is loaded.
-- Note 2: You might need to configure your bundle to use Rotom on the page. Its global name is `'Rotom'` (bundlers will reference this globally from `window.Rotom`).
+**Snabbdom**:
+
+```html
+<!-- Development build -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/snabbdom.js"
+  integrity="sha256-wzUlWqdph3dkPgMS1erybfZ/qE9unRF+6DlEZijmq/g="
+  crossorigin="anonymous"
+></script>
+
+<!-- OR production build-->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/snabbdom.min.js"
+  integrity="sha256-h8esti27+CNGAwpjX6mY/XY/QFINRIGsddWvwvG2aFs="
+  crossorigin="anonymous"
+></script>
+```
+
+Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
+
+```html
+<!-- Development build -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/rotom.jsx.js"
+  integrity="sha256-pAY71syoyg14kgisycvzV4y9Ca4DS2QOwC5dz2T7aps="
+  crossorigin="anonymous"
+></script>
+
+<!-- OR production build -->
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.10.0/dist/rotom.jsx.min.js"
+  integrity="sha256-mdRhDl0UMmoNFqREwop0P2zPTUPs7IoYEtjX7E08+LY="
+  crossorigin="anonymous"
+></script>
+```
 
 #### **Write with Template Strings**
 
@@ -190,7 +201,7 @@ Add the plugin to your `babel.config.json`. Example:
 }
 ```
 
-Learn more about snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
+Learn more about Snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
 
 ### Default and Custom Renderer Versions
 

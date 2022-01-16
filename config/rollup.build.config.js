@@ -128,7 +128,7 @@ function createDistConfigs() {
     banner,
     format: "umd",
     name: GLOBAL_NAME,
-    globals: { omdomdom: "Omdomdom" },
+    globals: { omdomdom: "Omdomdom", snabbdom: "snabbdom" },
   }
 
   return [
@@ -147,6 +147,27 @@ function createDistConfigs() {
       output: {
         ...baseDistOutput,
         file: path.resolve(currentDir, "dist/rotom.template.min.js"),
+        sourcemap: true,
+        plugins: [terserPlugin],
+      },
+      external,
+      plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
+    },
+    {
+      input: path.resolve(currentDir, "src/rotom.jsx.js"),
+      output: {
+        ...baseDistOutput,
+        file: path.resolve(currentDir, "dist/rotom.jsx.js"),
+        sourcemap: true,
+      },
+      external,
+      plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
+    },
+    {
+      input: path.resolve(currentDir, "src/rotom.jsx.js"),
+      output: {
+        ...baseDistOutput,
+        file: path.resolve(currentDir, "dist/rotom.jsx.min.js"),
         sourcemap: true,
         plugins: [terserPlugin],
       },

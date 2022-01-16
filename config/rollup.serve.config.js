@@ -25,10 +25,11 @@ export default {
       ? {
           [ROTOM_EXTERNAL_ID]: "Rotom",
           omdomdom: "Omdomdom",
+          snabbdom: "snabbdom",
         }
       : {},
   },
-  external: isCdnMode ? [ROTOM_EXTERNAL_ID, "omdomdom"] : [],
+  external: isCdnMode ? [ROTOM_EXTERNAL_ID, "omdomdom", "snabbdom"] : [],
   plugins: [
     findUnused(),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),
