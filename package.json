@@ -123,8 +123,9 @@
       "release": true
     },
     "hooks": {
-      "before:init": "npm test && paopu",
-      "before:release": "rm -rf lib dist && npm run build"
+      "before:init": "npm test",
+      "after:version:bump": "rm -rf lib dist && npm run build",
+      "before:npm:release": "paopu"
     },
     "plugins": {
       "@release-it/conventional-changelog": {
