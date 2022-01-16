@@ -1,3 +1,11 @@
+## [0.10.1](https://github.com/geotrev/rotom/compare/v0.10.0...v0.10.1) (2022-01-16)
+
+
+### Bug Fixes
+
+* build jsx browser bundle, correct snabbdom exports, correct readme ([21ea828](https://github.com/geotrev/rotom/commit/21ea828e8a3a1518a8ee13338c21f3ccee9565d8))
+* resolve dependency vulnerabilities ([5a1162a](https://github.com/geotrev/rotom/commit/5a1162a036e7d263e0787df0c28008af13719c02))
+
 # [0.10.0](https://github.com/geotrev/rotom/compare/v0.9.1...v0.10.0) (2022-01-16)
 
 
