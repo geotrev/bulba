@@ -15,7 +15,7 @@ const Environments = {
 const CJS = "cjs"
 const external = ["snabbdom", "omdomdom"]
 
-const BANNER_ENABLED = true
+const BANNER_ENABLED = false
 
 const banner = async () => {
   const { default: pkg } = await import("../package.json")
