@@ -15,6 +15,8 @@ const Environments = {
 const CJS = "cjs"
 const external = ["snabbdom", "omdomdom"]
 
+const BANNER_ENABLED = true
+
 const banner = async () => {
   const { default: pkg } = await import("../package.json")
 
@@ -46,7 +48,7 @@ const plugins = [
   nodeResolve(),
 ]
 const baseOutput = {
-  banner,
+  banner: BANNER_ENABLED ? banner : undefined,
   format: CJS,
   name: GLOBAL_NAME,
 }
@@ -86,7 +88,7 @@ function createLibConfigs() {
 
 function createDistConfigs() {
   const baseDistOutput = {
-    banner,
+    banner: BANNER_ENABLED ? banner : undefined,
     format: "umd",
     name: GLOBAL_NAME,
     globals: { omdomdom: "Omdomdom", snabbdom: "snabbdom" },
