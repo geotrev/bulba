@@ -7,6 +7,7 @@ import { setPropToModule } from "./set-prop-to-module"
  * @returns {Object} vnode
  */
 export function transformJsxProps(vnode) {
+  // e.g., aria-label -> vnode.data.attrs['aria-label']
   setPropToModule(vnode, /^aria-/, ({ key, value, node }) => {
     // debugger
     if (node.data.attrs) {
@@ -17,6 +18,7 @@ export function transformJsxProps(vnode) {
     delete node.data[key]
   })
 
+  // e.g., data-foo-bar -> vnode.data.dataset.fooBar
   setPropToModule(vnode, /^data-/, ({ key, value, node }) => {
     const abbrevName = kebabToCamel(key.slice(5))
 
@@ -29,6 +31,7 @@ export function transformJsxProps(vnode) {
     delete node.data[key]
   })
 
+  // e.g., className -> vnode.data.props.className
   setPropToModule(vnode, /^className$/, ({ value, node }) => {
     if (node.data.props) {
       node.data.props.className = value
@@ -39,6 +42,7 @@ export function transformJsxProps(vnode) {
     delete node.data.className
   })
 
+  // e.g., on-click -> vnode.data.on.click
   setPropToModule(vnode, /^on-/, ({ key, value, node }) => {
     const abbrevName = key.split("-")[1]
 
@@ -46,6 +50,19 @@ export function transformJsxProps(vnode) {
       node.data.on[abbrevName] = value
     } else {
       node.data.on = { [abbrevName]: value }
+    }
+
+    delete node.data[key]
+  })
+
+  // e.g., hook-update -> vnode.data.hook.update
+  setPropToModule(vnode, /^hook-/, ({ key, value, node }) => {
+    const abbrevName = key.split("-")[1]
+
+    if (node.data.hook) {
+      node.data.hook[abbrevName] = value
+    } else {
+      node.data.hook = { [abbrevName]: value }
     }
 
     delete node.data[key]

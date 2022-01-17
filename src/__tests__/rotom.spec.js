@@ -292,7 +292,7 @@ describe("RotomElement", () => {
   })
 
   describe("jsx prop transformers", () => {
-    it("applies className prop to class attribute", () => {
+    it("applies className prop to data.props.className", () => {
       // Given
       const tagName = "class-transform"
       const className = "foo"
@@ -302,7 +302,7 @@ describe("RotomElement", () => {
       expect(node.getAttribute("class")).toEqual(className)
     })
 
-    it("applies aria prop to attribute", () => {
+    it("applies aria prop to data.attrs", () => {
       // Given
       const tagName = "aria-transform"
       const ariaLabel = "foo"
@@ -312,7 +312,7 @@ describe("RotomElement", () => {
       expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
     })
 
-    it("applies dataset prop to attribute", () => {
+    it("applies data prop to data.dataset", () => {
       // Given
       const tagName = "dataset-transform"
       const dataset = "foo"
@@ -322,7 +322,7 @@ describe("RotomElement", () => {
       expect(node.getAttribute("data-baz-buz")).toEqual(dataset)
     })
 
-    it("applies event handler prop", () => {
+    it("applies event handler data.on", () => {
       // Given
       let num = 0
       const handler = () => (num += 1)
@@ -333,6 +333,19 @@ describe("RotomElement", () => {
       document.body.addEventListener("click", assert)
       getElement(tagName).shadowRoot.firstElementChild.click()
       document.body.removeEventListener("click", assert)
+    })
+
+    it("applies hook prop to data.hook", () => {
+      // Given
+      let num = 0
+      const hookDestroy = () => (num += 1)
+      const tagName = "hook-transform"
+      createPropTransformFixture(tagName, { hookDestroy })
+      // When
+      const fixture = getElement(tagName)
+      fixture.parentNode.removeChild(fixture)
+      // Then
+      expect(num).toEqual(1)
     })
   })
 })

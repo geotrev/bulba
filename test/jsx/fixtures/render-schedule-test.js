@@ -54,6 +54,8 @@ export class RenderScheduleTest extends RotomElement {
           It should have one render per button press, despite having multiple
           property updates.
           <div
+            // eslint-disable-next-line no-console
+            hook-insert={({ elm }) => console.log("hook-insert mounted:", elm)}
             data-foo-bar="baz"
             aria-hidden="true"
             aria-labelledby="#0"
