@@ -18,12 +18,12 @@ export function transformJsxProps(vnode) {
   })
 
   setPropToModule(vnode, /^data-/, ({ key, value, node }) => {
-    const abbrevKey = kebabToCamel(key.slice(5))
+    const abbrevName = kebabToCamel(key.slice(5))
 
     if (node.data.dataset) {
-      node.data.dataset[abbrevKey] = value
+      node.data.dataset[abbrevName] = value
     } else {
-      node.data.dataset = { [abbrevKey]: value }
+      node.data.dataset = { [abbrevName]: value }
     }
 
     delete node.data[key]
@@ -37,6 +37,18 @@ export function transformJsxProps(vnode) {
     }
 
     delete node.data.className
+  })
+
+  setPropToModule(vnode, /^on-/, ({ key, value, node }) => {
+    const abbrevName = key.split("-")[1]
+
+    if (node.data.on) {
+      node.data.on[abbrevName] = value
+    } else {
+      node.data.on = { [abbrevName]: value }
+    }
+
+    delete node.data[key]
   })
 
   return vnode
