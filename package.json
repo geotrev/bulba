@@ -1,6 +1,6 @@
 {
   "name": "rotom",
-  "version": "0.12.0-alpha.0",
+  "version": "0.12.0-alpha.1",
   "description": "A base class for using Web Components",
   "main": "lib/rotom.cjs.js",
   "module": "src/index.js",
