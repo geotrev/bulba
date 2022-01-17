@@ -212,4 +212,18 @@ However, as good as the performance is, it isn't perfect, so changes are always 
 
 If you like the project or find issues, feel free to contribute!
 
-See [this StackOverflow answer](https://stackoverflow.com/a/63112599) on prerelease versioning.
+## Versioning
+
+To install `@latest` (add `--ci` to skip prompts and take defaults):
+
+```sh
+$ npm run release -- patch|minor|major
+```
+
+To install `@<tag>`:
+
+```sh
+$ npm version prepatch|preminor|premajor|prerelease [--preid <tag>] -m "chore: release v<version>-<tag>.0"
+```
+
+You only need to add `--preid` if using prepatch, preminor, or premajor.
