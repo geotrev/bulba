@@ -30,6 +30,7 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 
 - [Getting started](https://github.com/geotrev/rotom/wiki/)
 - [Create a view](https://github.com/geotrev/rotom/wiki/Views)
+- [JSX Renderer](https://github.com/geotrev/rotom/wiki/JSX-Renderer)
 - [Add styles](https://github.com/geotrev/rotom/wiki/Styles)
 - [Properties & state](https://github.com/geotrev/rotom/wiki/Properties-&-state)
 - [Custom properties](https://github.com/geotrev/rotom/wiki/Custom-properties)
