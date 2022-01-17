@@ -1,6 +1,7 @@
 import { createBasicFixture } from "./fixtures/basic-fixture"
 import { createAccessorFixture } from "./fixtures/accessor-fixture"
 import { createLifecycleFixture } from "./fixtures/lifecycle-fixture"
+import { createPropTransformFixture } from "./fixtures/transform-prop-fixture"
 import { getElement } from "./fixtures/get-element"
 import { External } from "../enums"
 import { jest } from "@jest/globals"
@@ -8,7 +9,7 @@ import { jest } from "@jest/globals"
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
 describe("RotomElement", () => {
-  afterEach(() => (document.innerHTML = ""))
+  afterEach(() => (document.body.innerHTML = ""))
 
   it("upgrades the element", () => {
     // Given
@@ -287,6 +288,32 @@ describe("RotomElement", () => {
       await new Promise((done) => setTimeout(done, 15))
       document.body.appendChild(fixture)
       expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
+    })
+  })
+
+  describe("jsx prop transformers", () => {
+    it("applies className prop to class attribute", () => {
+      const tagName = "class-transform"
+      const className = "foo"
+      createPropTransformFixture(tagName, { className })
+      const node = getElement(tagName).shadowRoot.firstElementChild
+      expect(node.getAttribute("class")).toEqual(className)
+    })
+
+    it("applies aria prop to attribute", () => {
+      const tagName = "aria-transform"
+      const ariaLabel = "foo"
+      createPropTransformFixture(tagName, { ariaLabel })
+      const node = getElement(tagName).shadowRoot.firstElementChild
+      expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
+    })
+
+    it("applies dataset prop to attribute", () => {
+      const tagName = "dataset-transform"
+      const dataset = "foo"
+      createPropTransformFixture(tagName, { dataset })
+      const node = getElement(tagName).shadowRoot.firstElementChild
+      expect(node.getAttribute("data-baz-buz")).toEqual(dataset)
     })
   })
 })
