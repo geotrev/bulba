@@ -2,7 +2,7 @@ import { validateType } from "./validate-type"
 import {
   isFunction,
   isUndefined,
-  toKebabCase,
+  camelToKebab,
   sanitizeString,
 } from "../utilities"
 
@@ -61,7 +61,7 @@ export const initializePropertyValue = (
 
   if (reflected) {
     const initialAttrValue = initialValue ? String(initialValue) : ""
-    const attribute = toKebabCase(propName)
+    const attribute = camelToKebab(propName)
     RotomInstance.setAttribute(attribute, initialAttrValue)
   }
 }

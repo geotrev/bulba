@@ -117,13 +117,13 @@ export class KitchenSinkTest extends RotomElement {
         <p key="desc">{this.getAttribute("description")}</p>
         {renderRemovedNote}
         <p key="safe">Sanitized content: {this.safeString}</p>
-        <button key="name-btn" on={{ click: this.handleNameChange }}>
+        <button key="name-btn" on-click={this.handleNameChange}>
           Change Name
         </button>
-        <button key="hl-btn" on={{ click: this.handleRemoveHighlight }}>
+        <button key="hl-btn" on-click={this.handleRemoveHighlight}>
           Remove Highlights
         </button>
-        <button key="attr-btn" on={{ click: this.handleRemoveAttr }}>
+        <button key="attr-btn" on-click={this.handleRemoveAttr}>
           Remove Attribute
         </button>
         <slot key="slot" />

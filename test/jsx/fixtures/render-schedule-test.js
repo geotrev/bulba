@@ -53,6 +53,14 @@ export class RenderScheduleTest extends RotomElement {
           <br />
           It should have one render per button press, despite having multiple
           property updates.
+          <div
+            data-foo-bar="baz"
+            aria-hidden="true"
+            aria-labelledby="#0"
+            className="visually-hidden"
+          >
+            Don't read me!
+          </div>
         </p>
         <button on={{ click: this.handleClick }}>Click to update</button>
       </div>

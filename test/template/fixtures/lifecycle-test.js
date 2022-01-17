@@ -5,7 +5,13 @@ import { register } from "../../../src/index.js"
 
 class LifecycleTest extends KitchenSinkTest {
   static get properties() {
-    return { ...KitchenSinkTest.properties }
+    return {
+      ...KitchenSinkTest.properties,
+      count: {
+        default: 0,
+        type: "number",
+      },
+    }
   }
 
   constructor() {
@@ -86,6 +92,7 @@ class LifecycleTest extends KitchenSinkTest {
   onMount() {
     super.onMount()
     console.log("onMount")
+    this.count = this.count + 1
     console.log("====================")
   }
 
