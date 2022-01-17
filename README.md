@@ -76,7 +76,7 @@ You can use Rotom with string or jsx renderers. Choose from the below peer scrip
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/snabbdom.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.12.0-alpha.1/dist/snabbdom.js"
   integrity="sha256-wzUlWqdph3dkPgMS1erybfZ/qE9unRF+6DlEZijmq/g="
   crossorigin="anonymous"
 ></script>
@@ -84,7 +84,7 @@ You can use Rotom with string or jsx renderers. Choose from the below peer scrip
 <!-- OR production build-->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/snabbdom.min.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.12.0-alpha.1/dist/snabbdom.min.js"
   integrity="sha256-h8esti27+CNGAwpjX6mY/XY/QFINRIGsddWvwvG2aFs="
   crossorigin="anonymous"
 ></script>
@@ -96,16 +96,16 @@ Then add rotom:
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.js"
-  integrity="sha256-cyDERZxyXOasMjTvvwrt51TZzS0kPhklk+BTRREs+ho="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.12.0-alpha.1/dist/rotom.js"
+  integrity="sha256-9YEpDkqEVUjAhBZh71gxsLbjQG17cnhwdWx1Q2kXkXQ="
   crossorigin="anonymous"
 ></script>
 
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.min.js"
-  integrity="sha256-O8XLpKVNwyYCa8zSRBz0dpUS/7o0MdOcYEl//U7XrY4="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.12.0-alpha.1/dist/rotom.min.js"
+  integrity="sha256-JB8W2tsQjIm2gOAetWg9prt7ifzf9CYhuz7JedBa4u0="
   crossorigin="anonymous"
 ></script>
 ```
