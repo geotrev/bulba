@@ -293,27 +293,46 @@ describe("RotomElement", () => {
 
   describe("jsx prop transformers", () => {
     it("applies className prop to class attribute", () => {
+      // Given
       const tagName = "class-transform"
       const className = "foo"
       createPropTransformFixture(tagName, { className })
       const node = getElement(tagName).shadowRoot.firstElementChild
+      // Then
       expect(node.getAttribute("class")).toEqual(className)
     })
 
     it("applies aria prop to attribute", () => {
+      // Given
       const tagName = "aria-transform"
       const ariaLabel = "foo"
       createPropTransformFixture(tagName, { ariaLabel })
       const node = getElement(tagName).shadowRoot.firstElementChild
+      // Then
       expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
     })
 
     it("applies dataset prop to attribute", () => {
+      // Given
       const tagName = "dataset-transform"
       const dataset = "foo"
       createPropTransformFixture(tagName, { dataset })
       const node = getElement(tagName).shadowRoot.firstElementChild
+      // Then
       expect(node.getAttribute("data-baz-buz")).toEqual(dataset)
+    })
+
+    it("applies event handler prop", () => {
+      // Given
+      let num = 0
+      const handler = () => (num += 1)
+      const assert = () => expect(num).toEqual(1)
+      const tagName = "handler-transform"
+      createPropTransformFixture(tagName, { handler })
+      // Then
+      document.body.addEventListener("click", assert)
+      getElement(tagName).shadowRoot.firstElementChild.click()
+      document.body.removeEventListener("click", assert)
     })
   })
 })
