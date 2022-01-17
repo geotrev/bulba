@@ -156,7 +156,7 @@ class FirstComponent extends RotomElement {
   }
 
   render() {
-    return "<p id="foo" class="bar">What a cool component!</p>"
+    return "<p class='bar'>What a cool component!</p>"
   }
 }
 
@@ -178,10 +178,7 @@ import { jsx } from "snabbdom"
 class FirstComponent extends RotomElement {
   render() {
     return (
-      <p
-        attrs={{ id: "foo", class: "bar" }}
-        on={{ mouseenter: (e) => console.log(e.target.innerText) }}
-      >
+      <p className="bar" on-mouseenter={(e) => console.log(e.target.innerText)}>
         What a cool component!
       </p>
     )
