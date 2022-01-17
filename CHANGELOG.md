@@ -1,3 +1,12 @@
+# [0.11.0](https://github.com/geotrev/rotom/compare/v0.10.3...v0.11.0) (2022-01-17)
+
+
+### Features
+
+* adds class, dataset, and aria attribute jsx prop transformers. ([7fa434c](https://github.com/geotrev/rotom/commit/7fa434ca58e844524acc0363e286de14136ea093))
+* adds jsx prop transform for event handlers ([ddbc098](https://github.com/geotrev/rotom/commit/ddbc098ffa768b28efe2495a306450878f3cf41e))
+* adds jsx prop transform for snabbdom hooks ([8a25ed8](https://github.com/geotrev/rotom/commit/8a25ed8a73822972ffd20823ad4df7fc73f20ad9))
+
 ## [0.10.3](https://github.com/geotrev/rotom/compare/v0.10.3...v0.10.3) (2022-01-16)
 
 ## [0.10.3](https://github.com/geotrev/rotom/compare/v0.10.2...v0.10.3) (2022-01-16)
