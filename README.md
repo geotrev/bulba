@@ -75,7 +75,7 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.10.3/dist/rotom.template.js"
-  integrity="sha256-qL94/gSrTDcmdL5FA1W2lU5ZmBiInOMR9fPQRPtg/kQ="
+  integrity="sha256-XFPCT36JS5+wkk3u3yAK7gWmJZ+hVFoC6K2BJXbtOW0="
   crossorigin="anonymous"
 ></script>
 
@@ -83,7 +83,7 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.10.3/dist/rotom.template.min.js"
-  integrity="sha256-HGm1sV2wYQqn2TiW+wg68aeoM9uB1ApKiVE1aXGMvFQ="
+  integrity="sha256-6OE1xjgvYjrqoVR3QpBhafF4EVJk+u3iJkBMAsMSDPI="
   crossorigin="anonymous"
 ></script>
 ```
@@ -115,7 +115,7 @@ Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.10.3/dist/rotom.jsx.js"
-  integrity="sha256-1p8nIJTHdPj+J6vt+fuk+gEra4HtCWqFdYIrf76l0nk="
+  integrity="sha256-hAdklhHfhs/X0JcSqM7vJbodNgLkUvQv3kSqso9mNTk="
   crossorigin="anonymous"
 ></script>
 
@@ -123,7 +123,7 @@ Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
 <script
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/rotom@0.10.3/dist/rotom.jsx.min.js"
-  integrity="sha256-ouPCRjVKGY2Lj1KGdOLJvfhE71h03UfLPzT0Hv1zGYY="
+  integrity="sha256-OE7C3DYjUDP8ID2l+QLW1FhsUovWER9/K1f86hyVHBg="
   crossorigin="anonymous"
 ></script>
 ```
