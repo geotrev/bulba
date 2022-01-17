@@ -1,5 +1,5 @@
-import { KitchenSinkTest } from "./kitchen-sink-test"
-import { register } from "../../../src/register"
+import { KitchenSinkTest } from "./kitchen-sink-test.js"
+import { register } from "../../../src/index.js"
 
 /* eslint-disable no-console */
 

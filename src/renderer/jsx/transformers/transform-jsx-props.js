@@ -1,5 +1,5 @@
-import { kebabToCamel } from "../../../utilities"
-import { setPropToModule } from "./set-prop-to-module"
+import { kebabToCamel } from "../../../utilities/index.js"
+import { setPropToModule } from "./set-prop-to-module.js"
 
 /**
  * Transform JSX props to snabbdom module data structure.

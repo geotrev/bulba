@@ -1,7 +1,6 @@
-/**
- * This file is for local testing only. It isn't specified in the package exports.
- */
+import { createDirectionObserver } from "./observers/index.js"
+createDirectionObserver()
 
-export { RotomElement } from "./rotom.template"
-export { register } from "./register"
-export { validateType } from "./properties"
+export { RotomElement } from "./rotom.js"
+export { register } from "./register.js"
+export { validateType } from "./properties/index.js"

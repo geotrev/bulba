@@ -1,4 +1,4 @@
-import { forEach } from "../../../utilities"
+import { forEach } from "../../../utilities/index.js"
 
 /**
  * Given a matcher to a vnode property, apply it to the

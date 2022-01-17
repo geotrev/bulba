@@ -1,5 +1,5 @@
 import { jsx } from "snabbdom"
-import { RotomElement, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/index.js"
 import "./kitchen-sink-test.js"
 
 class NestedElementTest extends RotomElement {
@@ -50,8 +50,6 @@ class NestedElementTest extends RotomElement {
         <div
           className="border"
           style={{
-            borderWidth: "4px",
-            borderStyle: "solid",
             borderColor: this.borderColor,
           }}
         >

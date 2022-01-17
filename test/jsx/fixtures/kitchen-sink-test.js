@@ -1,5 +1,5 @@
 import { jsx } from "snabbdom"
-import { RotomElement, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../../../src/index.js"
 
 export class KitchenSinkTest extends RotomElement {
   static get properties() {

@@ -13,14 +13,17 @@ const dirname = process.cwd()
 
 const TEST_PATH = path.resolve(dirname, ENTRY ? `test/${ENTRY}` : "test")
 const INPUT_PATH = TEST_PATH + "/examples.js"
-const OUTPUT_PATH = TEST_PATH + "/bundle.js"
+const OUTPUT_PATH = TEST_PATH + "/build"
 const ROTOM_EXTERNAL_ID = path.resolve(dirname, "src/index.js")
 
 export default {
+  preserveEntrySignatures: "strict",
   input: INPUT_PATH,
   output: {
-    file: OUTPUT_PATH,
-    format: "iife",
+    dir: OUTPUT_PATH,
+    format: "es",
+    name: "app",
+    chunkFileNames: "[name].js",
     globals: isCdnMode
       ? {
           [ROTOM_EXTERNAL_ID]: "Rotom",

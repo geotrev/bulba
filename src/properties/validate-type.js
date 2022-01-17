@@ -1,4 +1,4 @@
-import { log, getTypeTag } from "../utilities"
+import { log, getTypeTag } from "../utilities/index.js"
 
 export function validateType(Instance, propName, value, type) {
   if (typeof type === "undefined") return

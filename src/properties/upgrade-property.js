@@ -1,7 +1,11 @@
-import { Internal, External } from "../enums"
-import { isUndefined, camelToKebab, sanitizeString } from "../utilities"
-import { initializePropertyValue } from "./initialize-property-value"
-import { validateType } from "./validate-type"
+import { Internal, External } from "../enums.js"
+import {
+  isUndefined,
+  camelToKebab,
+  sanitizeString,
+} from "../utilities/index.js"
+import { initializePropertyValue } from "./initialize-property-value.js"
+import { validateType } from "./validate-type.js"
 
 /**
  * Upgrade a property based on its configuration. If accessors are detected in

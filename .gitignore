@@ -6,3 +6,4 @@ dist/
 lib/
 node_modules/
 bundle.js
+test/*/build/*

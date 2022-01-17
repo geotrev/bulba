@@ -1,10 +1,10 @@
-import { validateType } from "./validate-type"
+import { validateType } from "./validate-type.js"
 import {
   isFunction,
   isUndefined,
   camelToKebab,
   sanitizeString,
-} from "../utilities"
+} from "../utilities/index.js"
 
 export const initializePropertyValue = (
   RotomInstance,
