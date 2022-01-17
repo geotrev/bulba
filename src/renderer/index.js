@@ -1,6 +1,6 @@
 import { External, Internal } from "../enums.js"
-import { patchTemplateRoot, destroyTemplateRoot } from "./template/index.js"
-import { patchJsxRoot, destroyJsxRoot } from "./jsx/index.js"
+import { patchTemplate, destroyTemplate } from "./template/index.js"
+import { patchJsx, destroyJsx } from "./jsx/index.js"
 import { isFunction } from "../utilities/index.js"
 
 function runPatchLifecycle(element) {
@@ -28,9 +28,9 @@ export function getRenderer() {
 
       const type = typeof nextState
       if (type === "string") {
-        await patchTemplateRoot(element, nextState)
+        await patchTemplate(element, nextState)
       } else {
-        await patchJsxRoot(element, nextState)
+        await patchJsx(element, nextState)
       }
 
       runPatchLifecycle(element)
@@ -45,9 +45,9 @@ export function getRenderer() {
       element[Internal.isFirstRender] = true
 
       if (type === "string") {
-        await destroyTemplateRoot(element)
+        await destroyTemplate(element)
       } else {
-        await destroyJsxRoot(element)
+        await destroyJsx(element)
       }
 
       element[Internal.vnode] = null

@@ -2,19 +2,9 @@
   "name": "rotom",
   "version": "0.11.0",
   "description": "A base class for using Web Components",
-  "main": "lib/rotom.template.cjs.js",
-  "module": "lib/rotom.template.esm.js",
-  "browser": "dist/rotom.template.min.js",
-  "exports": {
-    ".": {
-      "require": "./lib/rotom.template.cjs.js",
-      "import": "./lib/rotom.template.esm.js"
-    },
-    "./jsx": {
-      "require": "./lib/rotom.jsx.cjs.js",
-      "import": "./lib/rotom.jsx.esm.js"
-    }
-  },
+  "main": "lib/rotom.cjs.js",
+  "module": "src/index.js",
+  "browser": "dist/rotom.min.js",
   "scripts": {
     "prepare": "husky install",
     "test": "jest",
@@ -84,7 +74,7 @@
     "lib/*.{js,map}",
     "src/**/*.js"
   ],
-  "author": "George Treviranus <geotrev@icloud.com>",
+  "author": "George Treviranus <geowtrev@gmail.com>",
   "homepage": "https://github.com/geotrev/rotom#readme",
   "repository": {
     "type": "git",

@@ -4,7 +4,7 @@ import { transformJsxProps } from "./transformers/index.js"
 
 let snabbdom, patch
 
-export async function patchJsxRoot(element, nextState) {
+export async function patchJsx(element, nextState) {
   if (!snabbdom) {
     try {
       const module = await import("snabbdom")
@@ -36,7 +36,7 @@ export async function patchJsxRoot(element, nextState) {
   }
 }
 
-export function destroyJsxRoot(element) {
+export function destroyJsx(element) {
   element[Internal.vnode] = patch(element[Internal.vnode], snabbdom.h("!"))
 
   const children = element.shadowRoot.childNodes

@@ -10,7 +10,7 @@ const emptyVNode = {
 
 let patch, render, create
 
-export async function patchTemplateRoot(element, nextState) {
+export async function patchTemplate(element, nextState) {
   if (!patch || !render || !create) {
     try {
       const module = await import("omdomdom")
@@ -32,7 +32,7 @@ export async function patchTemplateRoot(element, nextState) {
   }
 }
 
-export function destroyTemplateRoot(element) {
+export function destroyTemplate(element) {
   patch(emptyVNode, element[Internal.vnode])
 
   const children = element.shadowRoot.childNodes

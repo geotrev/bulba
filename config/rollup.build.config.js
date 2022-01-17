@@ -7,16 +7,12 @@ import { nodeResolve } from "@rollup/plugin-node-resolve"
 
 const currentDir = process.cwd()
 const year = new Date().getFullYear()
-const RenderTypes = {
-  TEMPLATE: "template",
-  JSX: "jsx",
-}
+const GLOBAL_NAME = "Rotom"
 const Environments = {
   PRODUCTION: "production",
   DEVELOPMENT: "development",
 }
-const Formats = ["esm", "cjs"]
-const GLOBAL_NAME = "Rotom"
+const CJS = "cjs"
 const external = ["snabbdom", "omdomdom"]
 
 const banner = async () => {
@@ -49,6 +45,11 @@ const plugins = [
   commonjs(),
   nodeResolve(),
 ]
+const baseOutput = {
+  banner,
+  format: CJS,
+  name: GLOBAL_NAME,
+}
 
 function replacePlugin(value) {
   return replace({
@@ -57,66 +58,26 @@ function replacePlugin(value) {
   })
 }
 
-function baseOutput(format) {
-  return {
-    banner,
-    format,
-    name: GLOBAL_NAME,
-  }
-}
-
-function createDevOutputs(type) {
-  return Formats.reduce(
-    (outputs, format) => [
-      ...outputs,
-      {
-        ...baseOutput(format),
-        file: path.resolve(currentDir, `lib/rotom.${type}.${format}.js`),
-        sourcemap: true,
-      },
-    ],
-    []
-  )
-}
-
-function createProdOutputs(type) {
-  return Formats.reduce(
-    (outputs, format) => [
-      ...outputs,
-      {
-        ...baseOutput(format),
-        file: path.resolve(currentDir, `lib/rotom.${type}.${format}.min.js`),
-        sourcemap: true,
-        plugins: [terserPlugin],
-      },
-    ],
-    []
-  )
-}
-
 function createLibConfigs() {
   return [
     {
-      input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: createDevOutputs(RenderTypes.JSX),
+      input: path.resolve(currentDir, "src/rotom.js"),
+      output: {
+        ...baseOutput,
+        file: path.resolve(currentDir, `lib/rotom.${CJS}.js`),
+        sourcemap: true,
+      },
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: createProdOutputs(RenderTypes.JSX),
-      external,
-      plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
-    },
-    {
-      input: path.resolve(currentDir, "src/rotom.template.js"),
-      output: createDevOutputs(RenderTypes.TEMPLATE),
-      external,
-      plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
-    },
-    {
-      input: path.resolve(currentDir, "src/rotom.template.js"),
-      output: createProdOutputs(RenderTypes.TEMPLATE),
+      input: path.resolve(currentDir, "src/rotom.js"),
+      output: {
+        ...baseOutput,
+        file: path.resolve(currentDir, `lib/rotom.${CJS}.min.js`),
+        sourcemap: true,
+        plugins: [terserPlugin],
+      },
       external,
       plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
     },
@@ -133,41 +94,20 @@ function createDistConfigs() {
 
   return [
     {
-      input: path.resolve(currentDir, "src/rotom.template.js"),
+      input: path.resolve(currentDir, "src/rotom.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(currentDir, "dist/rotom.template.js"),
+        file: path.resolve(currentDir, "dist/rotom.js"),
         sourcemap: true,
       },
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, "src/rotom.template.js"),
+      input: path.resolve(currentDir, "src/rotom.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(currentDir, "dist/rotom.template.min.js"),
-        sourcemap: true,
-        plugins: [terserPlugin],
-      },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
-    },
-    {
-      input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: {
-        ...baseDistOutput,
-        file: path.resolve(currentDir, "dist/rotom.jsx.js"),
-        sourcemap: true,
-      },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
-    },
-    {
-      input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: {
-        ...baseDistOutput,
-        file: path.resolve(currentDir, "dist/rotom.jsx.min.js"),
+        file: path.resolve(currentDir, "dist/rotom.min.js"),
         sourcemap: true,
         plugins: [terserPlugin],
       },
