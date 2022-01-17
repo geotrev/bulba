@@ -9,12 +9,7 @@
     "targets": ["README.md", "test/jsx/index.html"]
   },
   "rotom": {
-    "resources": [
-      "dist/rotom.jsx.js",
-      "dist/rotom.jsx.min.js",
-      "dist/rotom.template.js",
-      "dist/rotom.template.min.js"
-    ],
+    "resources": ["dist/rotom.js", "dist/rotom.min.js"],
     "targets": ["README.md", "test/jsx/index.html", "test/template/index.html"]
   }
 }

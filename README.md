@@ -48,9 +48,9 @@ $ npm i rotom
 
 Use the CDN to skip packaging and use the library from the cloud.
 
-You can use Rotom with string or jsx renderers. Make sure to use the right version of Rotom for your renderer as shown below.
+You can use Rotom with string or jsx renderers. Choose from the below peer scripts.
 
-**Omdomdom**:
+**Omdomdom (Template)**:
 
 ```html
 <!-- Development build -->
@@ -70,25 +70,7 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 ></script>
 ```
 
-```html
-<!-- Development build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.template.js"
-  integrity="sha256-Xka2w2nFwuRjg6080ncMle2wlON2+X8HkoQzGNDAJhI="
-  crossorigin="anonymous"
-></script>
-
-<!-- OR production build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.template.min.js"
-  integrity="sha256-e0jjzBwX6NKaEZ8+dJg5cE8vGn9fofn4gE2Ai/MnIv8="
-  crossorigin="anonymous"
-></script>
-```
-
-**Snabbdom**:
+**Snabbdom (JSX)**:
 
 ```html
 <!-- Development build -->
@@ -108,13 +90,13 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 ></script>
 ```
 
-Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
+Then add rotom:
 
 ```html
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.jsx.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.js"
   integrity="sha256-cyDERZxyXOasMjTvvwrt51TZzS0kPhklk+BTRREs+ho="
   crossorigin="anonymous"
 ></script>
@@ -122,7 +104,7 @@ Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.jsx.min.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.0/dist/rotom.min.js"
   integrity="sha256-O8XLpKVNwyYCa8zSRBz0dpUS/7o0MdOcYEl//U7XrY4="
   crossorigin="anonymous"
 ></script>
