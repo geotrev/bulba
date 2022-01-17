@@ -51,5 +51,17 @@ export function transformJsxProps(vnode) {
     delete node.data[key]
   })
 
+  setPropToModule(vnode, /^hook-/, ({ key, value, node }) => {
+    const abbrevName = key.split("-")[1]
+
+    if (node.data.hook) {
+      node.data.hook[abbrevName] = value
+    } else {
+      node.data.hook = { [abbrevName]: value }
+    }
+
+    delete node.data[key]
+  })
+
   return vnode
 }
