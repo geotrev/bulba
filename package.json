@@ -84,7 +84,7 @@
     "lib/*.{js,map}",
     "src/**/*.js"
   ],
-  "author": "George Treviranus <geotrev@icloud.com>",
+  "author": "George Treviranus <geowtrev@gmail.com>",
   "homepage": "https://github.com/geotrev/rotom#readme",
   "repository": {
     "type": "git",
