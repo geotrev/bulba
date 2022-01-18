@@ -63,7 +63,7 @@ function replacePlugin(value) {
 function createLibConfigs() {
   return [
     {
-      input: path.resolve(currentDir, "src/rotom.js"),
+      input: path.resolve(currentDir, "src/index.js"),
       output: {
         ...baseOutput,
         file: path.resolve(currentDir, `lib/rotom.${CJS}.js`),
@@ -73,7 +73,7 @@ function createLibConfigs() {
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, "src/rotom.js"),
+      input: path.resolve(currentDir, "src/index.js"),
       output: {
         ...baseOutput,
         file: path.resolve(currentDir, `lib/rotom.${CJS}.min.js`),
@@ -96,7 +96,7 @@ function createDistConfigs() {
 
   return [
     {
-      input: path.resolve(currentDir, "src/rotom.js"),
+      input: path.resolve(currentDir, "src/index.js"),
       output: {
         ...baseDistOutput,
         file: path.resolve(currentDir, "dist/rotom.js"),
@@ -106,7 +106,7 @@ function createDistConfigs() {
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
-      input: path.resolve(currentDir, "src/rotom.js"),
+      input: path.resolve(currentDir, "src/index.js"),
       output: {
         ...baseDistOutput,
         file: path.resolve(currentDir, "dist/rotom.min.js"),

@@ -21,7 +21,7 @@ export default {
   input: INPUT_PATH,
   output: {
     dir: OUTPUT_PATH,
-    format: "es",
+    format: "iife",
     name: "app",
     chunkFileNames: "[name].js",
     globals: isCdnMode
