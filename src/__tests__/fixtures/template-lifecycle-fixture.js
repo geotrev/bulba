@@ -5,7 +5,7 @@ import { RotomElement, register } from "../../rotom.template"
  * can't unregister custom elements from the DOM, even between tests.
  * @param {string} id
  */
-export function createLifecycleFixture(id, wait = false) {
+export function createTempLifecycleFixture(id, wait = false) {
   class TestElement extends RotomElement {
     constructor() {
       super()

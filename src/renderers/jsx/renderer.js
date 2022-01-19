@@ -73,10 +73,20 @@ export function renderer({ Internal, External }) {
     destroy(element) {
       if (!window || !window.document) return
 
+      element[Internal.isFirstRender] = true
+
       element[Internal.vnode] = patch(
         element[Internal.vnode],
         createEmptyVNode(element, Internal)
       )
+      element[Internal.vnode] = null
+
+      const children = element.shadowRoot.childNodes
+      if (children.length) {
+        Array.prototype.forEach.call(children, (child) =>
+          element.shadowRoot.removeChild(child)
+        )
+      }
     },
   }
 }

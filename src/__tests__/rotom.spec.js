@@ -1,7 +1,8 @@
 import { createBasicFixture } from "./fixtures/basic-fixture"
 import { createAccessorFixture } from "./fixtures/accessor-fixture"
-import { createLifecycleFixture } from "./fixtures/lifecycle-fixture"
-import { createPropTransformFixture } from "./fixtures/transform-prop-fixture"
+import { createTempLifecycleFixture } from "./fixtures/template-lifecycle-fixture"
+import { createJsxLifecycleFixture } from "./fixtures/jsx-lifecycle-fixture"
+import { createPropTransformFixture } from "./fixtures/jsx-transform-prop-fixture"
 import { getElement } from "./fixtures/get-element"
 import { External } from "../enums"
 import { jest } from "@jest/globals"
@@ -218,76 +219,83 @@ describe("RotomElement", () => {
     /* eslint-enable no-console */
   })
 
-  describe("lifecycle methods", () => {
-    it("calls onPropertyChange", () => {
-      const Cls = createLifecycleFixture("prop-changed")
-      Cls.prototype[External.onPropertyChange] = jest.fn()
-      getElement("prop-changed").testProp = true
-      expect(Cls.prototype[External.onPropertyChange]).toBeCalledWith(
-        "testProp",
-        false,
-        true
-      )
-    })
+  const lifecycleFixtures = [
+    [createTempLifecycleFixture, "template"],
+    [createJsxLifecycleFixture, "jsx"],
+  ]
 
-    it("calls onAttributeChange", () => {
-      const Cls = createLifecycleFixture("attr-changed")
-      Cls.prototype[External.onAttributeChange] = jest.fn()
-      getElement("attr-changed").testProp = true
-      expect(Cls.prototype[External.onAttributeChange]).toBeCalledWith(
-        "test-prop",
-        "",
-        "true"
-      )
-    })
+  lifecycleFixtures.forEach(([createFixture, rendererType]) => {
+    describe(`${rendererType} renderer lifecycle methods`, () => {
+      it("calls onPropertyChange", () => {
+        const Cls = createFixture(`${rendererType}-prop-changed`)
+        Cls.prototype[External.onPropertyChange] = jest.fn()
+        getElement(`${rendererType}-prop-changed`).testProp = true
+        expect(Cls.prototype[External.onPropertyChange]).toBeCalledWith(
+          "testProp",
+          false,
+          true
+        )
+      })
 
-    it("calls onUpdate", () => {
-      const Cls = createLifecycleFixture("update")
-      Cls.prototype[External.onUpdate] = jest.fn()
-      getElement("update").testProp = true
-      expect(Cls.prototype[External.onUpdate]).toBeCalled()
-    })
+      it("calls onAttributeChange", () => {
+        const Cls = createFixture(`${rendererType}-attr-changed`)
+        Cls.prototype[External.onAttributeChange] = jest.fn()
+        getElement(`${rendererType}-attr-changed`).testProp = true
+        expect(Cls.prototype[External.onAttributeChange]).toBeCalledWith(
+          "test-prop",
+          "",
+          "true"
+        )
+      })
 
-    it("calls onUpdate if property updates in onMount", async () => {
-      const [init, Cls] = createLifecycleFixture("mount-update", true)
-      Cls.prototype[External.onMount] = () => {
-        getElement("mount-update").testProp = true
-      }
-      Cls.prototype[External.onUpdate] = jest.fn()
-      init()
-      expect(Cls.prototype[External.onUpdate]).toBeCalled()
-    })
+      it("calls onUpdate", () => {
+        const Cls = createFixture(`${rendererType}-update`)
+        Cls.prototype[External.onUpdate] = jest.fn()
+        getElement(`${rendererType}-update`).testProp = true
+        expect(Cls.prototype[External.onUpdate]).toBeCalled()
+      })
 
-    it("calls onConnect", () => {
-      const [init, Cls] = createLifecycleFixture("connect", true)
-      Cls.prototype[External.onConnect] = jest.fn()
-      init()
-      expect(Cls.prototype[External.onConnect]).toBeCalled()
-    })
+      it("calls onUpdate if property updates in onMount", async () => {
+        const [init, Cls] = createFixture(`${rendererType}-mount-update`, true)
+        Cls.prototype[External.onMount] = () => {
+          getElement(`${rendererType}-mount-update`).testProp = true
+        }
+        Cls.prototype[External.onUpdate] = jest.fn()
+        init()
+        expect(Cls.prototype[External.onUpdate]).toBeCalled()
+      })
 
-    it("calls onMount", () => {
-      const [init, Cls] = createLifecycleFixture("mount", true)
-      Cls.prototype[External.onMount] = jest.fn()
-      init()
-      expect(Cls.prototype[External.onMount]).toBeCalled()
-    })
+      it("calls onConnect", () => {
+        const [init, Cls] = createFixture(`${rendererType}-connect`, true)
+        Cls.prototype[External.onConnect] = jest.fn()
+        init()
+        expect(Cls.prototype[External.onConnect]).toBeCalled()
+      })
 
-    it("calls onUnmount", () => {
-      const Cls = createLifecycleFixture("unmount")
-      Cls.prototype[External.onUnmount] = jest.fn()
-      document.body.removeChild(getElement("unmount"))
-      expect(Cls.prototype[External.onUnmount]).toBeCalled()
-    })
+      it("calls onMount", () => {
+        const [init, Cls] = createFixture(`${rendererType}-mount`, true)
+        Cls.prototype[External.onMount] = jest.fn()
+        init()
+        expect(Cls.prototype[External.onMount]).toBeCalled()
+      })
 
-    it("recalls onMount if the component is disconnected and then reconnected", async () => {
-      const [init, Cls] = createLifecycleFixture("remount", true)
-      Cls.prototype[External.onMount] = jest.fn()
-      init()
-      const fixture = getElement("remount")
-      document.body.removeChild(fixture)
-      await new Promise((done) => setTimeout(done, 15))
-      document.body.appendChild(fixture)
-      expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
+      it("calls onUnmount", () => {
+        const Cls = createFixture(`${rendererType}-unmount`)
+        Cls.prototype[External.onUnmount] = jest.fn()
+        document.body.removeChild(getElement(`${rendererType}-unmount`))
+        expect(Cls.prototype[External.onUnmount]).toBeCalled()
+      })
+
+      it("recalls onMount if the component is disconnected and then reconnected", async () => {
+        const [init, Cls] = createFixture(`${rendererType}-remount`, true)
+        Cls.prototype[External.onMount] = jest.fn()
+        init()
+        const fixture = getElement(`${rendererType}-remount`)
+        document.body.removeChild(fixture)
+        await new Promise((done) => setTimeout(done, 15))
+        document.body.appendChild(fixture)
+        expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
+      })
     })
   })
 
