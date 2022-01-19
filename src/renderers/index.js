@@ -1,3 +1,4 @@
+import { isFunction } from "../utilities"
 import { Internal, External } from "../enums"
 
 /**
@@ -9,6 +10,12 @@ export function setRenderer(renderer) {
   return {
     patch(element) {
       if (!window || !window.document) return
+
+      if (!isFunction(element[External.render])) {
+        throw new Error(
+          `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
+        )
+      }
 
       renderer.patch(element)
 

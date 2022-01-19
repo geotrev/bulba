@@ -11,7 +11,6 @@ import {
   datasetModule,
 } from "snabbdom"
 import { Internal, External } from "../../enums"
-import { isFunction } from "../../utilities"
 import { transformJsxProps } from "./transformers"
 
 const createEmptyVNode = (element, Internal) =>
@@ -34,14 +33,7 @@ const patch = init([
 ])
 
 function getRenderState(element) {
-  if (isFunction(element[External.render])) {
-    const vnode = transformJsxProps(element[External.render]())
-    return sign(vnode)
-  } else {
-    throw new Error(
-      `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
-    )
-  }
+  return sign(transformJsxProps(element[External.render]()))
 }
 
 function getInitialRenderState(element) {

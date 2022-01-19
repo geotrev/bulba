@@ -1,5 +1,5 @@
 import { patch, render, create } from "omdomdom"
-import { isString, isFunction } from "../../utilities"
+import { isString } from "../../utilities"
 import { Internal, External } from "../../enums"
 
 const emptyVNode = {
@@ -11,15 +11,7 @@ const emptyVNode = {
 }
 
 function getRenderState(element) {
-  let domString
-
-  if (isFunction(element[External.render])) {
-    domString = element[External.render]()
-  } else {
-    throw new Error(
-      `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
-    )
-  }
+  const domString = element[External.render]()
 
   if (!isString(domString)) {
     throw new Error(
