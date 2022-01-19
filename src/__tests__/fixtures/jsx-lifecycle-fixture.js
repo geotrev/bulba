@@ -27,15 +27,15 @@ export function createJsxLifecycleFixture(id, wait = false) {
     }
   }
 
-  const init = () => {
+  const mount = () => {
     register(`test-${id}`, TestElement)
     document.body.innerHTML = `<test-${id}></test-${id}>`
   }
 
   if (wait) {
-    return [init, TestElement]
+    return [mount, TestElement]
   } else {
-    init()
+    mount()
     return TestElement
   }
 }

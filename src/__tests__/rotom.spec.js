@@ -227,9 +227,12 @@ describe("RotomElement", () => {
   lifecycleFixtures.forEach(([createFixture, rendererType]) => {
     describe(`${rendererType} renderer lifecycle methods`, () => {
       it("calls onPropertyChange", () => {
+        // Given
         const Cls = createFixture(`${rendererType}-prop-changed`)
         Cls.prototype[External.onPropertyChange] = jest.fn()
+        // When
         getElement(`${rendererType}-prop-changed`).testProp = true
+        // Then
         expect(Cls.prototype[External.onPropertyChange]).toBeCalledWith(
           "testProp",
           false,
@@ -238,9 +241,12 @@ describe("RotomElement", () => {
       })
 
       it("calls onAttributeChange", () => {
+        // Given
         const Cls = createFixture(`${rendererType}-attr-changed`)
         Cls.prototype[External.onAttributeChange] = jest.fn()
+        // When
         getElement(`${rendererType}-attr-changed`).testProp = true
+        // Then
         expect(Cls.prototype[External.onAttributeChange]).toBeCalledWith(
           "test-prop",
           "",
@@ -249,51 +255,69 @@ describe("RotomElement", () => {
       })
 
       it("calls onUpdate", () => {
+        // Given
         const Cls = createFixture(`${rendererType}-update`)
         Cls.prototype[External.onUpdate] = jest.fn()
+        // When
         getElement(`${rendererType}-update`).testProp = true
+        // Then
         expect(Cls.prototype[External.onUpdate]).toBeCalled()
       })
 
       it("calls onUpdate if property updates in onMount", async () => {
-        const [init, Cls] = createFixture(`${rendererType}-mount-update`, true)
+        // Given
+        const [mount, Cls] = createFixture(`${rendererType}-mount-update`, true)
         Cls.prototype[External.onMount] = () => {
           getElement(`${rendererType}-mount-update`).testProp = true
         }
         Cls.prototype[External.onUpdate] = jest.fn()
-        init()
+        // When
+        mount()
+        // Then
         expect(Cls.prototype[External.onUpdate]).toBeCalled()
       })
 
       it("calls onConnect", () => {
-        const [init, Cls] = createFixture(`${rendererType}-connect`, true)
+        // Given
+        const [mount, Cls] = createFixture(`${rendererType}-connect`, true)
         Cls.prototype[External.onConnect] = jest.fn()
-        init()
+        // When
+        mount()
+        // Then
         expect(Cls.prototype[External.onConnect]).toBeCalled()
       })
 
       it("calls onMount", () => {
-        const [init, Cls] = createFixture(`${rendererType}-mount`, true)
+        // Given
+        const [mount, Cls] = createFixture(`${rendererType}-mount`, true)
         Cls.prototype[External.onMount] = jest.fn()
-        init()
+        // When
+        mount()
+        // Then
         expect(Cls.prototype[External.onMount]).toBeCalled()
       })
 
       it("calls onUnmount", () => {
+        // Given
         const Cls = createFixture(`${rendererType}-unmount`)
         Cls.prototype[External.onUnmount] = jest.fn()
+        // When
         document.body.removeChild(getElement(`${rendererType}-unmount`))
+        // Then
         expect(Cls.prototype[External.onUnmount]).toBeCalled()
       })
 
       it("recalls onMount if the component is disconnected and then reconnected", async () => {
-        const [init, Cls] = createFixture(`${rendererType}-remount`, true)
+        // Given
+        const [mount, Cls] = createFixture(`${rendererType}-remount`, true)
         Cls.prototype[External.onMount] = jest.fn()
-        init()
+        mount()
         const fixture = getElement(`${rendererType}-remount`)
+        // When
         document.body.removeChild(fixture)
         await new Promise((done) => setTimeout(done, 15))
         document.body.appendChild(fixture)
+        // Then
         expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
       })
     })
