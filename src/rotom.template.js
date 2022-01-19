@@ -1,9 +1,9 @@
 import { rotomFactory } from "./rotom-factory"
-import { renderer } from "./renderers/template"
+import { templateRenderer } from "./renderers/template"
 import { createDirectionObserver } from "./observers"
 
 createDirectionObserver()
 
-export const RotomElement = rotomFactory(renderer)
+export const RotomElement = rotomFactory(templateRenderer)
 export { register } from "./register"
 export { validateType } from "./properties"

@@ -1,1 +1,1 @@
-export { renderer } from "./renderer"
+export { jsxRenderer } from "./renderer"

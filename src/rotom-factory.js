@@ -1,3 +1,4 @@
+import { setRenderer } from "./renderers"
 import { createScheduler } from "./scheduler"
 import { upgradeProperty } from "./properties"
 import { Internal, External, Attributes, AttributeValues } from "./enums"
@@ -22,7 +23,7 @@ export function rotomFactory(renderer) {
 
       // Internal methods, properties, and data
       this[Internal.schedule] = createScheduler()
-      this[Internal.renderer] = renderer({ Internal, External })
+      this[Internal.renderer] = setRenderer(renderer)
 
       this.attachShadow({ mode: SHADOW_ROOT_MODE })
 
@@ -75,7 +76,6 @@ export function rotomFactory(renderer) {
     }
 
     disconnectedCallback() {
-      this[Internal.runLifecycle](External.onUnmount)
       this[Internal.destroy]()
     }
 
