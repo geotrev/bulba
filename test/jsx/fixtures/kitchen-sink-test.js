@@ -92,12 +92,6 @@ export class KitchenSinkTest extends RotomElement {
 
   render() {
     const dataAttrHasKeys = !!Object.keys(this.dataAttr).length
-    const dataEmpty = dataAttrHasKeys
-      ? {
-          empty: JSON.stringify(this.dataAttr),
-        }
-      : null
-
     const renderRemovedNote = !dataAttrHasKeys && (
       <div key="rem">Removed attribute</div>
     )
@@ -110,7 +104,7 @@ export class KitchenSinkTest extends RotomElement {
         <p
           key="comp"
           class={{ compliments: true, empty: dataAttrHasKeys }}
-          dataset={dataEmpty}
+          data-empty={dataAttrHasKeys ? JSON.stringify(this.dataAttr) : ""}
         >
           You're awesome, {this.firstName}!
         </p>

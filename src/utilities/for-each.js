@@ -5,9 +5,9 @@
  * @param fn
  */
 export const forEach = (items, fn) => {
-  let idx = -1
   const length = items.length
   if (!length) return
+  let idx = -1
   while (++idx < length) {
     if (fn(items[idx], idx) === false) break
   }

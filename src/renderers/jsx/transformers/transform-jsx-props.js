@@ -1,72 +1,66 @@
-import { kebabToCamel } from "../../../utilities"
-import { setPropToModule } from "./set-prop-to-module"
+import { forEach, kebabToCamel } from "../../../utilities"
+
+const propsToUpdate = [
+  {
+    reg: /^aria-/,
+    module: "attrs",
+  },
+  {
+    reg: /^data-/,
+    module: "dataset",
+    transform: (key) => kebabToCamel(key.slice(5)),
+  },
+  {
+    reg: /^on-/,
+    module: "on",
+    transform: (key) => key.split("-")[1],
+  },
+  {
+    reg: /^hook-/,
+    module: "hook",
+    transform: (key) => key.split("-")[1],
+  },
+  {
+    reg: /^className$/,
+    module: "props",
+  },
+]
 
 /**
- * Transform JSX props to snabbdom module data structure.
+ * Converts JSX props to valid snabbdom vnode modules.
  * @param {Object} vnode
  * @returns {Object} vnode
  */
 export function transformJsxProps(vnode) {
-  // e.g., aria-label -> vnode.data.attrs['aria-label']
-  setPropToModule(vnode, /^aria-/, ({ key, value, node }) => {
-    // debugger
-    if (node.data.attrs) {
-      node.data.attrs[key] = value
-    } else {
-      node.data.attrs = { [key]: value }
-    }
-    delete node.data[key]
-  })
+  if (vnode.data) {
+    const propKeys = Object.keys(vnode.data)
+    const deletions = []
 
-  // e.g., data-foo-bar -> vnode.data.dataset.fooBar
-  setPropToModule(vnode, /^data-/, ({ key, value, node }) => {
-    const abbrevName = kebabToCamel(key.slice(5))
+    forEach(propsToUpdate, (propInfo) => {
+      const matches = propKeys.filter((key) => propInfo.reg.test(key))
+      if (!matches.length) return
 
-    if (node.data.dataset) {
-      node.data.dataset[abbrevName] = value
-    } else {
-      node.data.dataset = { [abbrevName]: value }
-    }
+      forEach(matches, (propKey) => {
+        const { module, transform } = propInfo
+        const moduleKey = transform ? transform(propKey) : propKey
+        const value = vnode.data[propKey]
 
-    delete node.data[key]
-  })
+        if (vnode.data[module]) {
+          vnode.data[module][moduleKey] = value
+        } else {
+          vnode.data[module] = { [moduleKey]: value }
+        }
 
-  // e.g., className -> vnode.data.props.className
-  setPropToModule(vnode, /^className$/, ({ value, node }) => {
-    if (node.data.props) {
-      node.data.props.className = value
-    } else {
-      node.data.props = { className: value }
-    }
+        deletions.push(propKey)
+      })
+    })
 
-    delete node.data.className
-  })
+    forEach(deletions, (key) => delete vnode.data[key])
+  }
 
-  // e.g., on-click -> vnode.data.on.click
-  setPropToModule(vnode, /^on-/, ({ key, value, node }) => {
-    const abbrevName = key.split("-")[1]
-
-    if (node.data.on) {
-      node.data.on[abbrevName] = value
-    } else {
-      node.data.on = { [abbrevName]: value }
-    }
-
-    delete node.data[key]
-  })
-
-  // e.g., hook-update -> vnode.data.hook.update
-  setPropToModule(vnode, /^hook-/, ({ key, value, node }) => {
-    const abbrevName = key.split("-")[1]
-
-    if (node.data.hook) {
-      node.data.hook[abbrevName] = value
-    } else {
-      node.data.hook = { [abbrevName]: value }
-    }
-
-    delete node.data[key]
-  })
+  if (Array.isArray(vnode.children)) {
+    forEach(vnode.children, transformJsxProps)
+  }
 
   return vnode
 }

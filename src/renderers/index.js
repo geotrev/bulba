@@ -28,7 +28,7 @@ export function setRenderer(renderer) {
       renderer.destroy(element)
 
       element[Internal.vnode] = null
-      const children = element.shadowRoot.childNodes
+      const children = Array.apply(null, element.shadowRoot.childNodes)
       if (children.length) {
         Array.prototype.forEach.call(children, (child) =>
           element.shadowRoot.removeChild(child)
