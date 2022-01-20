@@ -8,7 +8,7 @@ import { RotomElement, register } from "../../rotom.jsx.js"
  */
 export function createPropTransformFixture(
   id,
-  { className, ariaLabel, dataset, handler, hookDestroy } = {}
+  { className, ariaLabel, dataset, handler, hookDestroy, ariaPressed } = {}
 ) {
   class TestElement extends RotomElement {
     render() {
@@ -16,6 +16,7 @@ export function createPropTransformFixture(
         <div
           className={className}
           aria-label={ariaLabel}
+          aria-pressed={ariaPressed}
           data-baz-buz={dataset}
           on-click={handler}
           hook-destroy={hookDestroy}

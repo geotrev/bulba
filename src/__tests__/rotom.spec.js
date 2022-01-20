@@ -379,5 +379,17 @@ describe("RotomElement", () => {
       // Then
       expect(num).toEqual(1)
     })
+
+    it("applies multiple of the same prop", () => {
+      // Given
+      const tagName = "double-transform"
+      const ariaLabel = "foo"
+      const ariaPressed = "true"
+      createPropTransformFixture(tagName, { ariaLabel, ariaPressed })
+      const node = getElement(tagName).shadowRoot.firstElementChild
+      // Then
+      expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
+      expect(node.getAttribute("aria-pressed")).toEqual(ariaPressed)
+    })
   })
 })
