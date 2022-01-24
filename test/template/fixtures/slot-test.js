@@ -3,7 +3,7 @@ import { RotomElement, register } from "../../../src/index.js"
 class SlotTest extends RotomElement {
   static get styles() {
     return `
-      ::slotted(*) { 
+      p { 
         font-weight: normal;
         font-family: sans-serif;
       }
