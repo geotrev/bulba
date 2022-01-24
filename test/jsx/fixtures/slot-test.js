@@ -13,9 +13,9 @@ class SlotTest extends RotomElement {
 
   render() {
     return (
-      <h1>
+      <p>
         <slot></slot>
-      </h1>
+      </p>
     )
   }
 }

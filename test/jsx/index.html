@@ -8,29 +8,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   </head>
   <body style="max-width: 800px">
-    <slot-test>Rotom demo</slot-test>
+    <h1>Rotom demo</h1>
+    <h2>Slotted content test</h2>
+    <slot-test>Foo bar</slot-test>
     <hr />
+    <h2>Render schedule test (should start at 1)</h2>
     <render-schedule-test></render-schedule-test>
     <hr />
+    <h2>Kitchen sink</h2>
     <kitchen-sink-test first-name="Silver" description="This is my favorite group of people."></kitchen-sink-test>
     <hr />
+    <h2>Lifecycles (see console)</h2>
     <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
     <br />
     <button class="change-btn">Remove above element</button>
+    <p>(this button will remove the component, cause a disconnect/unmount, then on append, re-call connect/mount)</p>
     <hr />
+    <h2>Custom accessor test</h2>
     <custom-accessor-test></custom-accessor-test>
     <hr />
+    <h2>Nested components</h2>
     <nested-element-test>
       <p>This is forwarded slot content</p>
     </nested-element-test>
 
-    <!-- Test DOM cleanup: -->
+    <!-- Test DOM clean and component state after appending: -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const testElement = document.querySelector("lifecycle-test")
         const changeBtn = document.querySelector(".change-btn")
         let rendered = true
-        let triggerText = () => (rendered ? "Remove element" : "Add element")
+        let triggerText = () => (rendered ? "Remove" : "Add")
 
         changeBtn.addEventListener("click", () => {
           if (rendered) {

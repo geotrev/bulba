@@ -1,4 +1,5 @@
 import { denyUnlessSigned, sign } from "snabbdom-signature"
+import { transform } from "snabbdom-transform-jsx-props"
 import {
   init,
   h,
@@ -11,7 +12,6 @@ import {
   datasetModule,
 } from "snabbdom"
 import { Internal, External } from "../../enums"
-import { transformJsxProps } from "./transformers"
 
 const createEmptyVNode = (element, Internal) =>
   h("!", {
@@ -33,7 +33,7 @@ const patch = init([
 ])
 
 function getRenderState(element) {
-  return sign(transformJsxProps(element[External.render]()))
+  return sign(transform(element[External.render]()))
 }
 
 function getInitialRenderState(element) {
