@@ -40,7 +40,7 @@ export class RenderScheduleTest extends RotomElement {
   render() {
     return (
       <div
-        className="container"
+        class-name="container"
         style={{
           borderWidth: "4px",
           borderStyle: "solid",
@@ -60,6 +60,7 @@ export class RenderScheduleTest extends RotomElement {
             aria-hidden="true"
             aria-labelledby="#0"
             className="visually-hidden"
+            tab-index={0}
           >
             Don't read me!
           </div>

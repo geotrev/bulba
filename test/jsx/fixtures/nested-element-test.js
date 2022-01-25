@@ -49,6 +49,7 @@ class NestedElementTest extends RotomElement {
         <button on={{ click: this.handleClick }}>Click to update</button>
         <div
           className="border"
+          tabindex={0}
           style={{
             borderWidth: "4px",
             borderStyle: "solid",

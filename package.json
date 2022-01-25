@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "snabbdom-signature": "^0.0.3",
-    "snabbdom-transform-jsx-props": "^0.1.0"
+    "snabbdom-transform-jsx-props": "^0.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
