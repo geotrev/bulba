@@ -63,30 +63,6 @@ export class KitchenSinkTest extends RotomElement {
     )
   }
 
-  render() {
-    return `
-      <div>
-        <p data-key="lede" style="${this.highlight}">
-          You've changed names ${this.changeCount} times
-        </p>
-        <p data-key="comp" class="compliments" ${this.dataAttr} data-empty="${
-      this.dataAttr
-    }">You're awesome, ${this.firstName}!</p>
-        <p data-key='desc'>${this.getAttribute("description")}</p>
-        ${
-          this.dataAttr === ""
-            ? "<div data-key='rem'>Removed attribute</div>"
-            : ""
-        }
-        <p data-key="safe">Sanitized content: ${this.safeString}</p>
-        <button data-key="name-btn" id="update-name-btn">Change Name</button>
-        <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>
-        <button data-key="attr-btn" id="update-attr-btn">Remove Attribute</button>
-        <slot data-key="slot"></slot>
-      </div>
-    `
-  }
-
   getNewName() {
     const newName = this.getRandom([
       "Sonic",
@@ -97,6 +73,22 @@ export class KitchenSinkTest extends RotomElement {
     ])
     if (newName === this.firstName) return this.getNewName()
     return newName
+  }
+
+  getRandom(items) {
+    return items[Math.floor(Math.random() * items.length)]
+  }
+
+  getHighlight() {
+    const bg = this.getRandom([
+      "darkorange",
+      "blue",
+      "darkblue",
+      "green",
+      "purple",
+    ])
+    const text = this.getRandom(["skyblue", "lime", "white"])
+    return [text, bg]
   }
 
   handleNameChange() {
@@ -119,20 +111,28 @@ export class KitchenSinkTest extends RotomElement {
     this.dataAttr = ""
   }
 
-  getRandom(items) {
-    return items[Math.floor(Math.random() * items.length)]
-  }
-
-  getHighlight() {
-    const bg = this.getRandom([
-      "darkorange",
-      "blue",
-      "darkblue",
-      "green",
-      "purple",
-    ])
-    const text = this.getRandom(["skyblue", "lime", "white"])
-    return [text, bg]
+  render() {
+    return `
+      <div>
+        <p data-key="lede" style="${this.highlight}">
+          You've changed names ${this.changeCount} times
+        </p>
+        <p data-key="comp" class="compliments" ${this.dataAttr} data-empty="${
+      this.dataAttr
+    }">You're awesome, ${this.firstName}!</p>
+        <p data-key='desc'>${this.getAttribute("description")}</p>
+        ${
+          this.dataAttr === ""
+            ? "<div data-key='rem'>Removed attribute</div>"
+            : ""
+        }
+        <p data-key="safe">Sanitized content: ${this.safeString}</p>
+        <button data-key="name-btn" id="update-name-btn">Change Name</button>
+        <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>
+        <button data-key="attr-btn" id="update-attr-btn">Remove Attribute</button>
+        <slot data-key="slot"></slot>
+      </div>
+    `
   }
 }
 

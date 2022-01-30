@@ -44,11 +44,11 @@ class CustomAccessorTest extends RotomElement {
     return (
       <div>
         <p key="lede">Update text with custom accessors:</p>
-        <button key="update-text" on={{ click: this.handleUpdate }}>
+        <button key="update-text" on-click={this.handleUpdate}>
           This is:&nbsp;{this.text || ""}
         </button>
         <p key="stop-text">Stop updates from happening:</p>
-        <button key="stop-updates" on={{ click: this.stopUpdates }}>
+        <button key="stop-updates" on-click={this.stopUpdates}>
           Disable updates
         </button>
       </div>

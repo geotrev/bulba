@@ -46,19 +46,16 @@ class NestedElementTest extends RotomElement {
     return (
       <div>
         <p>This one is nested with inline styles.</p>
-        <button on={{ click: this.handleClick }}>Click to update</button>
+        <button on-click={this.handleClick}>Click to update</button>
         <div
           className="border"
-          tabindex={0}
           style={{
             borderWidth: "4px",
             borderStyle: "solid",
             borderColor: this.borderColor,
           }}
         >
-          <kitchen-sink-test
-            attrs={{ "first-name": "Chaos", description: "I'm nested!" }}
-          >
+          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
             <slot></slot>
           </kitchen-sink-test>
         </div>

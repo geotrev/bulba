@@ -2,7 +2,6 @@ import { createBasicFixture } from "./fixtures/basic-fixture"
 import { createAccessorFixture } from "./fixtures/accessor-fixture"
 import { createTempLifecycleFixture } from "./fixtures/template-lifecycle-fixture"
 import { createJsxLifecycleFixture } from "./fixtures/jsx-lifecycle-fixture"
-import { createPropTransformFixture } from "./fixtures/jsx-transform-prop-fixture"
 import { getElement } from "./fixtures/get-element"
 import { External } from "../enums"
 import { jest } from "@jest/globals"
@@ -320,76 +319,6 @@ describe("RotomElement", () => {
         // Then
         expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
       })
-    })
-  })
-
-  describe("jsx prop transformers", () => {
-    it("applies className prop to data.props.className", () => {
-      // Given
-      const tagName = "class-transform"
-      const className = "foo"
-      createPropTransformFixture(tagName, { className })
-      const node = getElement(tagName).shadowRoot.firstElementChild
-      // Then
-      expect(node.getAttribute("class")).toEqual(className)
-    })
-
-    it("applies aria prop to data.attrs", () => {
-      // Given
-      const tagName = "aria-transform"
-      const ariaLabel = "foo"
-      createPropTransformFixture(tagName, { ariaLabel })
-      const node = getElement(tagName).shadowRoot.firstElementChild
-      // Then
-      expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
-    })
-
-    it("applies data prop to data.dataset", () => {
-      // Given
-      const tagName = "dataset-transform"
-      const dataset = "foo"
-      createPropTransformFixture(tagName, { dataset })
-      const node = getElement(tagName).shadowRoot.firstElementChild
-      // Then
-      expect(node.getAttribute("data-baz-buz")).toEqual(dataset)
-    })
-
-    it("applies event handler data.on", () => {
-      // Given
-      let num = 0
-      const handler = () => (num += 1)
-      const assert = () => expect(num).toEqual(1)
-      const tagName = "handler-transform"
-      createPropTransformFixture(tagName, { handler })
-      // Then
-      document.body.addEventListener("click", assert)
-      getElement(tagName).shadowRoot.firstElementChild.click()
-      document.body.removeEventListener("click", assert)
-    })
-
-    it("applies hook prop to data.hook", () => {
-      // Given
-      let num = 0
-      const hookDestroy = () => (num += 1)
-      const tagName = "hook-transform"
-      createPropTransformFixture(tagName, { hookDestroy })
-      // When
-      const fixture = getElement(tagName)
-      fixture.parentNode.removeChild(fixture)
-      // Then
-      expect(num).toEqual(1)
-    })
-
-    it("applies multiple of the same prop", () => {
-      // Given
-      const tagName = "double-transform"
-      const ariaLabel = "foo"
-      const ariaPressed = "true"
-      createPropTransformFixture(tagName, { ariaLabel, ariaPressed })
-      const node = getElement(tagName).shadowRoot.firstElementChild
-      // Then
-      expect(node.getAttribute("aria-label")).toEqual(ariaLabel)
-      expect(node.getAttribute("aria-pressed")).toEqual(ariaPressed)
     })
   })
 })

@@ -48,24 +48,13 @@ export class RenderScheduleTest extends RotomElement {
         }}
       >
         <p>Render count: {this.count}</p>
-        <p className="label" style={{ color: this.labelColor }}>
+        <p class-name="label" style={{ color: this.labelColor }}>
           This is a scheduling test.
           <br />
           It should have one render per button press, despite having multiple
           property updates.
-          <div
-            // eslint-disable-next-line no-console
-            hook-insert={({ elm }) => console.log("hook-insert mounted:", elm)}
-            data-foo-bar="baz"
-            aria-hidden="true"
-            aria-labelledby="#0"
-            className="visually-hidden"
-            tab-index={0}
-          >
-            Don't read me!
-          </div>
         </p>
-        <button on={{ click: this.handleClick }}>Click to update</button>
+        <button on-click={this.handleClick}>Click to update</button>
       </div>
     )
   }
