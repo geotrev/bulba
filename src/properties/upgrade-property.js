@@ -63,7 +63,10 @@ export const upgradeProperty = (
         if (reflected) {
           const attribute = camelToKebab(propName)
           const attrValue = String(value)
-          RotomInstance.setAttribute(attribute, attrValue)
+
+          if (RotomInstance.getAttribute(attribute) !== attrValue) {
+            RotomInstance.setAttribute(attribute, attrValue)
+          }
         }
       } else {
         delete RotomInstance[privateName]

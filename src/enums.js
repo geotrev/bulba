@@ -27,7 +27,7 @@ export const External = {
 }
 
 export const Internal = {
-  // Primitives
+  // Properties
   rotomId: Symbol("#rotomId"),
   vnode: Symbol("#vnode"),
   isFirstRender: Symbol("#isFirstRender"),

@@ -9,6 +9,10 @@ class NestedElementTest extends RotomElement {
         default: "lightgray",
         type: "string",
       },
+      name: {
+        default: "Chaos",
+        type: "string",
+      },
     }
   }
 
@@ -30,16 +34,26 @@ class NestedElementTest extends RotomElement {
     this.handleClick = this.handleClick.bind(this)
   }
 
+  getRandom(current, items) {
+    const newValue = items[Math.floor(Math.random() * items.length)]
+    if (newValue === current) return this.getRandom(current, items)
+    return newValue
+  }
+
   handleClick() {
-    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
-      Math.floor(Math.random() * 5)
-    ]
-    this.shadowRoot.querySelector("kitchen-sink-test").firstName = [
+    this.borderColor = this.getRandom(this.borderColor, [
+      "gray",
+      "blue",
+      "purple",
+      "lime",
+      "orange",
+    ])
+    this.name = this.getRandom(this.name, [
       "Mario",
       "Samus",
       "Luigi",
       "C Falcon",
-    ][Math.floor(Math.random() * 4)]
+    ])
   }
 
   render() {
@@ -55,7 +69,7 @@ class NestedElementTest extends RotomElement {
             borderColor: this.borderColor,
           }}
         >
-          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
+          <kitchen-sink-test first-name={this.name} description="I'm nested!">
             <slot></slot>
           </kitchen-sink-test>
         </div>

@@ -8,6 +8,8 @@ import {
   isFunction,
   camelToKebab,
   createUUID,
+  kebabToCamel,
+  isUndefined,
 } from "./utilities"
 
 const SHADOW_ROOT_MODE = "open"
@@ -60,6 +62,11 @@ export function rotomFactory(renderer) {
           oldValue,
           newValue
         )
+
+        const propName = kebabToCamel(name)
+        if (!isUndefined(this[propName]) && this[propName] !== newValue) {
+          this[propName] = newValue
+        }
       }
     }
 

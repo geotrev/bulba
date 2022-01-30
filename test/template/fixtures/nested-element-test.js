@@ -8,6 +8,10 @@ class NestedElementTest extends RotomElement {
         default: "lightgray",
         type: "string",
       },
+      name: {
+        default: "Chaos",
+        type: "string",
+      },
     }
   }
 
@@ -42,12 +46,9 @@ class NestedElementTest extends RotomElement {
     this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
       Math.floor(Math.random() * 5)
     ]
-    this.shadowRoot.querySelector("kitchen-sink-test").firstName = [
-      "Mario",
-      "Samus",
-      "Luigi",
-      "C Falcon",
-    ][Math.floor(Math.random() * 4)]
+    this.name = ["Mario", "Samus", "Luigi", "C Falcon"][
+      Math.floor(Math.random() * 4)
+    ]
   }
 
   render() {
@@ -56,7 +57,7 @@ class NestedElementTest extends RotomElement {
         <p data-key="lede">This one is nested with inline styles.</p>
         <button data-key="updater" id="clicker">Click to update</button>
         <div data-key="nested" class="border" style="border-color: ${this.borderColor}">
-          <kitchen-sink-test first-name="Chaos" description="I'm nested!">
+          <kitchen-sink-test first-name="${this.name}" description="I'm nested!">
             <slot></slot>
           </kitchen-sink-test>
         </div>

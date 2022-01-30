@@ -20,7 +20,7 @@ export const kebabToCamel = (value) =>
   value
     .split("-")
     .map((word, i) =>
-      i
+      i > 0
         ? word[0].toUpperCase() + word.slice(1).toLowerCase()
         : word.toLowerCase()
     )
