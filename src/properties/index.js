@@ -1,2 +1,2 @@
-export { upgradeProperty } from "./upgrade-property"
-export { validateType } from "./validate-type"
+export * from "./upgrade-property"
+export * from "./validate-type"

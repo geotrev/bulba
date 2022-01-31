@@ -134,9 +134,9 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { reflected: true },
         }
-        createBasicFixture("reflect-one", { properties })
+        createBasicFixture("reflect-prop", { properties })
         // Then
-        const element = getElement("reflect-one")
+        const element = getElement("reflect-prop")
         expect(element.hasAttribute("reflected-prop")).toBe(true)
         expect(element.getAttribute("reflected-prop")).toEqual("")
       })
@@ -146,9 +146,9 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-two", { properties })
+        createBasicFixture("reflect-value", { properties })
         // Then
-        const element = getElement("reflect-two")
+        const element = getElement("reflect-value")
         expect(element.hasAttribute("reflected-prop")).toBe(true)
         expect(element.getAttribute("reflected-prop")).toEqual("foo")
       })
@@ -158,11 +158,25 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-three", { properties })
-        const element = getElement("reflect-three")
+        createBasicFixture("reflect-update-attr", { properties })
+        const element = getElement("reflect-update-attr")
+        // When
         element.reflectedProp = "bar"
         // Then
         expect(element.getAttribute("reflected-prop")).toEqual("bar")
+      })
+
+      it("updates property if corresponding attribute is changed", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        createBasicFixture("reflect-update-prop", { properties })
+        const element = getElement("reflect-update-prop")
+        // When
+        element.setAttribute("reflected-prop", "bar")
+        // Then
+        expect(element.reflectedProp).toEqual("bar")
       })
 
       it("removes attribute if set as undefined", () => {
@@ -170,12 +184,42 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-four", { properties })
-        const element = getElement("reflect-four")
+        createBasicFixture("reflect-remove-attr", { properties })
+        const element = getElement("reflect-remove-attr")
+        // When
         element.reflectedProp = undefined
         // Then
         expect(element.reflectedProp).toBeUndefined()
         expect(element.hasAttribute("reflected-prop")).toBe(false)
+      })
+
+      describe("property is undefined", () => {
+        let element
+
+        beforeEach(() => {
+          // Given
+          const properties = {
+            reflectedProp: { default: "foo", reflected: true },
+          }
+          createBasicFixture("reflect-update-prop", { properties })
+          element = getElement("reflect-update-prop")
+          element.reflectedProp = undefined
+        })
+
+        it("won't set attribute value to property", () => {
+          // When
+          element.setAttribute("reflected-prop", "bar")
+          // Then
+          expect(element.reflectedProp).toBeUndefined()
+        })
+
+        it("sets attribute value to property if value is no longer undefined", () => {
+          // When
+          element.reflectedProp = "foo"
+          element.setAttribute("reflected-prop", "bar")
+          // Then
+          expect(element.reflectedProp).toEqual("bar")
+        })
       })
     })
 

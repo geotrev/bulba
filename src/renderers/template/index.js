@@ -1,1 +1,1 @@
-export { templateRenderer } from "./renderer"
+export * from "./renderer"

@@ -112,6 +112,8 @@ export class KitchenSinkTest extends RotomElement {
   }
 
   render() {
+    const intermittentNode =
+      this.dataAttr === "" ? "<div data-key='rem'>Removed attribute</div>" : ""
     return `
       <div>
         <p data-key="lede" style="${this.highlight}">
@@ -121,11 +123,7 @@ export class KitchenSinkTest extends RotomElement {
       this.dataAttr
     }">You're awesome, ${this.firstName}!</p>
         <p data-key='desc'>${this.getAttribute("description")}</p>
-        ${
-          this.dataAttr === ""
-            ? "<div data-key='rem'>Removed attribute</div>"
-            : ""
-        }
+        ${intermittentNode}
         <p data-key="safe">Sanitized content: ${this.safeString}</p>
         <button data-key="name-btn" id="update-name-btn">Change Name</button>
         <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>

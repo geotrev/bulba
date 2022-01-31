@@ -42,13 +42,26 @@ class NestedElementTest extends RotomElement {
     this.label.removeEventListener("click", this.handleClick)
   }
 
+  getRandom(current, items) {
+    const newValue = items[Math.floor(Math.random() * items.length)]
+    if (newValue === current) return this.getRandom(current, items)
+    return newValue
+  }
+
   handleClick() {
-    this.borderColor = ["gray", "blue", "purple", "lime", "orange"][
-      Math.floor(Math.random() * 5)
-    ]
-    this.name = ["Mario", "Samus", "Luigi", "C Falcon"][
-      Math.floor(Math.random() * 4)
-    ]
+    this.borderColor = this.getRandom(this.borderColor, [
+      "gray",
+      "blue",
+      "purple",
+      "lime",
+      "orange",
+    ])
+    this.name = this.getRandom(this.name, [
+      "Mario",
+      "Samus",
+      "Luigi",
+      "C Falcon",
+    ])
   }
 
   render() {
