@@ -1,3 +1,15 @@
+## [0.11.2](https://github.com/geotrev/rotom/compare/v0.11.1...v0.11.2) (2022-01-31)
+
+
+### Bug Fixes
+
+* brings jsx renderer lifecycles to parity with template renderer and adds jsx lifecycle tests ([ec15320](https://github.com/geotrev/rotom/commit/ec15320f1dd2b218c97d420653d93d5a9cb50986))
+
+
+### Features
+
+* double binds upgraded props - setting a corresponding attribute will upgrade its upgraded prop ([f415994](https://github.com/geotrev/rotom/commit/f4159940960628091ed6b40f84a2401d5586b595))
+
 ## [0.11.1](https://github.com/geotrev/rotom/compare/v0.11.0...v0.11.1) (2022-01-18)
 
 # [0.11.0](https://github.com/geotrev/rotom/compare/v0.10.3...v0.11.0) (2022-01-17)
