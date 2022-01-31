@@ -27,7 +27,7 @@
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
-    "release": "release-it"
+    "release": "dotenv release-it"
   },
   "optionalDependencies": {
     "omdomdom": "^0.3.0",
@@ -49,6 +49,7 @@
     "@rollup/plugin-replace": "^3.0.1",
     "babel-jest": "^27.4.6",
     "commithelper": "^1.2.0",
+    "dotenv-cli": "^4.1.1",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^25.7.0",
