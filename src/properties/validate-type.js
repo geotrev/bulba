@@ -1,6 +1,13 @@
 import { log, getTypeTag } from "../utilities"
 
-export function validateType(Instance, propName, value, type) {
+/**
+ * Checks that a prop name matches its intended type.
+ * @param {HTMLElement} Cls
+ * @param {string} propName
+ * @param {*} value
+ * @param {string} type
+ */
+export function validateType(Cls, propName, value, type) {
   if (typeof type === "undefined") return
 
   const evaluatedType = getTypeTag(value)
@@ -8,6 +15,6 @@ export function validateType(Instance, propName, value, type) {
   if (type === undefined || evaluatedType === type) return
 
   log(
-    `Property '${propName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${Instance.constructor.name}.`
+    `Property '${propName}' is invalid type of '${evaluatedType}'. Expected '${type}'. Check ${Cls.constructor.name}.`
   )
 }

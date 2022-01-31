@@ -31,6 +31,7 @@ export const Internal = {
   rotomId: Symbol("#rotomId"),
   vnode: Symbol("#vnode"),
   isFirstRender: Symbol("#isFirstRender"),
+  propMap: Symbol("#propMap"),
 
   // Methods
   renderer: Symbol("#renderer"),

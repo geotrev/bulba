@@ -1,59 +1,67 @@
 import { Internal, External } from "../enums"
-import { isUndefined, camelToKebab, sanitizeString } from "../utilities"
+import {
+  isUndefined,
+  camelToKebab,
+  sanitizeString,
+  isString,
+  getTempName,
+} from "../utilities"
 import { initializePropertyValue } from "./initialize-property-value"
 import { validateType } from "./validate-type"
 
 /**
  * Upgrade a property based on its configuration. If accessors are detected in
  * the extender, skip the upgrade.
- * @param {Object} RotomInstance
+ * @param {HTMLElement} Cls
  * @param {string} propName
- * @param {{value, default, reflected}} configuration
+ * @param {{ default, type, reflected, safe }} configuration
  */
-export const upgradeProperty = (
-  RotomInstance,
-  propName,
-  configuration = {}
-) => {
+export const upgradeProperty = (Cls, propName, configuration = {}) => {
   // If the constructor class is using its own setter/getter, bail
-  if (
-    Object.getOwnPropertyDescriptor(
-      Object.getPrototypeOf(RotomInstance),
-      propName
-    )
-  ) {
+  if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(Cls), propName)) {
     return
   }
 
   const privateName = Symbol(propName)
   const { type, reflected = false, safe = false } = configuration
 
-  initializePropertyValue(RotomInstance, propName, configuration, privateName)
-  // Finally, declare its accessors
+  if (reflected) {
+    Cls[Internal.propMap][propName] = privateName
+  }
 
-  Object.defineProperty(RotomInstance, propName, {
+  initializePropertyValue(Cls, propName, configuration, privateName)
+
+  // define the upgraded prop accessors
+
+  Object.defineProperty(Cls, propName, {
     configurable: true,
     enumerable: true,
     get() {
-      return RotomInstance[privateName]
+      return Cls[privateName]
     },
     set(value) {
       // Don't set if the value is the same to prevent unnecessary re-renders.
-      if (value === RotomInstance[privateName]) return
+      if (value === Cls[privateName]) return
 
       if (BUILD_ENV === "development") {
-        validateType(RotomInstance, propName, value, type)
+        validateType(Cls, propName, value, type)
       }
 
-      const oldValue = RotomInstance[privateName]
+      // If the reflected property was undefined previously, re-add the prop
+      // to the propMap so attribute changes reflect to the property again
+      if (reflected && !Cls[Internal.propMap[propName]]) {
+        Cls[Internal.propMap][propName] = privateName
+      }
+
+      const oldValue = Cls[privateName]
 
       if (!isUndefined(value)) {
-        RotomInstance[privateName] =
-          safe && type === "string" && typeof value === "string"
+        Cls[privateName] =
+          safe && type === "string" && isString(value) && value !== ""
             ? sanitizeString(value)
             : value
 
-        RotomInstance[Internal.runLifecycle](
+        Cls[Internal.runLifecycle](
           External.onPropertyChange,
           propName,
           oldValue,
@@ -64,14 +72,24 @@ export const upgradeProperty = (
           const attribute = camelToKebab(propName)
           const attrValue = String(value)
 
-          if (RotomInstance.getAttribute(attribute) !== attrValue) {
-            RotomInstance.setAttribute(attribute, attrValue)
+          if (Cls.getAttribute(attribute) !== attrValue) {
+            Cls.setAttribute(attribute, attrValue)
           }
         }
       } else {
-        delete RotomInstance[privateName]
+        delete Cls[privateName]
 
-        RotomInstance[Internal.runLifecycle](
+        // Prevent attribute changes from updating the property unintentionally.
+        if (reflected) {
+          delete Cls[Internal.propMap][propName]
+        }
+
+        const initialValue = Cls[getTempName(propName)]
+        if (!isUndefined(initialValue)) {
+          Cls[propName] = initialValue
+        }
+
+        Cls[Internal.runLifecycle](
           External.onPropertyChange,
           propName,
           oldValue,
@@ -80,11 +98,11 @@ export const upgradeProperty = (
 
         if (reflected) {
           const attribute = camelToKebab(propName)
-          RotomInstance.removeAttribute(attribute)
+          Cls.removeAttribute(attribute)
         }
       }
 
-      RotomInstance[External.requestRender]()
+      Cls[External.requestRender]()
     },
   })
 }
