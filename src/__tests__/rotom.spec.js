@@ -94,9 +94,24 @@ describe("RotomElement", () => {
       expect(getElement("no-upgrade").count).toEqual(1)
     })
 
+    it("uses pre-existing property values if they exist", () => {
+      // Given
+      const [mount, Cls] = createTempLifecycleFixture(
+        "default-prop-value",
+        true
+      )
+      Cls.prototype.testProp = true
+      // When
+      mount()
+      const fixture = getElement("default-prop-value")
+      // Then
+      expect(fixture.testProp).toBe(true)
+    })
+
     describe("safe", () => {
       it("sanitizes string on upgrade", () => {
         // Given
+        const nextValue = "&lt;span&gt;unsafe&lt;/span&gt;"
         const properties = {
           safeString: {
             default: "<span>unsafe</span>",
@@ -106,7 +121,6 @@ describe("RotomElement", () => {
         }
         createBasicFixture("safe-upgrade", { properties })
         // Then
-        const nextValue = "&lt;span&gt;unsafe&lt;/span&gt;"
         expect(getElement("safe-upgrade").safeString).toEqual(nextValue)
       })
 

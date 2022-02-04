@@ -14,21 +14,20 @@ export const initializePropertyValue = (
   { default: defaultValue, type: propType, reflected = false, safe = false },
   privateName
 ) => {
-  // If the property happens to be pre-existing, set aside
-  // the old value to a separate prop and use its value on
-  // the replacement
-
-  if (!isUndefined(Cls[propName])) {
-    Cls[getTempName(propName)] = Cls[propName]
-  }
+  let initialValue
 
   // Initialize the value
+  //
+  // 1. If the property happens to be pre-existing, set aside
+  //    the old value to a separate prop and use its value on
+  //    the replacement
   // 1. If the default is a function, compute the value
   // 2. Otherwise, just set the value as the default
 
-  let initialValue
-
-  if (isFunction(defaultValue)) {
+  if (!isUndefined(Cls[propName])) {
+    Cls[getTempName(propName)] = Cls[propName]
+    initialValue = Cls[propName]
+  } else if (isFunction(defaultValue)) {
     initialValue = defaultValue(Cls)
   } else {
     initialValue = defaultValue
