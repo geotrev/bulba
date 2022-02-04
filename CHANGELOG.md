@@ -1,3 +1,10 @@
+## [0.11.4](https://github.com/geotrev/rotom/compare/v0.11.3...v0.11.4) (2022-02-04)
+
+
+### Bug Fixes
+
+* prevents pre-existing property values from being overriden by upgraded property default during upgrade ([b1b0856](https://github.com/geotrev/rotom/commit/b1b0856f664e034d038cb9e4ce266cc9d28ebb11))
+
 ## [0.11.3](https://github.com/geotrev/rotom/compare/v0.11.2...v0.11.3) (2022-02-04)
 
 

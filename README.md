@@ -74,16 +74,16 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/rotom.template.js"
-  integrity="sha256-HIKV+AaVZ7xRmfu4oVygD5Z16T6xekJ1yrGPqSWrTco="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/rotom.template.js"
+  integrity="sha256-EAOXKDlcN9D1UDJxO1KcA9j0QF5uiJaglzPwc3fPj3o="
   crossorigin="anonymous"
 ></script>
 
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/rotom.template.min.js"
-  integrity="sha256-FS5U/aPq1vGuJUxnHHPzAfAHHxC9cGqtuvOL1q/Cd38="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/rotom.template.min.js"
+  integrity="sha256-DoxQUMY0fjOt0yTJfDJJuSi8gXZ5KfM3KA5XcMsdSpk="
   crossorigin="anonymous"
 ></script>
 ```
@@ -94,7 +94,7 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/snabbdom.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/snabbdom.js"
   integrity="sha256-0xccUJ0Wrf3QnJXGrV4onKUkgI92mpyy+48H4jIN4Ho="
   crossorigin="anonymous"
 ></script>
@@ -102,7 +102,7 @@ You can use Rotom with string or jsx renderers. Make sure to use the right versi
 <!-- OR production build-->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/snabbdom.min.js"
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/snabbdom.min.js"
   integrity="sha256-2ocqbM/5Lp2mPUeOc5EYrFGf8tFXkpRM3hg0PIU5m8k="
   crossorigin="anonymous"
 ></script>
@@ -114,16 +114,16 @@ Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
 <!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/rotom.jsx.js"
-  integrity="sha256-aB2qiis+dyl5nF/hwhaoEsKlRBF+C4wDdY0xESWUCyY="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/rotom.jsx.js"
+  integrity="sha256-HTGIzDoKPpX8PNspvlWaKkiTrbqY2i4ErfJrFwLwMqE="
   crossorigin="anonymous"
 ></script>
 
 <!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.11.3/dist/rotom.jsx.min.js"
-  integrity="sha256-0nVURjYaUIzSSt0iiuhd46nZdfUKOPgGIVJNNCoWXEI="
+  src="https://cdn.jsdelivr.net/npm/rotom@0.11.4/dist/rotom.jsx.min.js"
+  integrity="sha256-BXYgvYofC2VIpBfDo/JFCIChJVW3y3UPf85H6bmYtmY="
   crossorigin="anonymous"
 ></script>
 ```
