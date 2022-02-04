@@ -193,7 +193,19 @@ describe("RotomElement", () => {
         expect(element.hasAttribute("reflected-prop")).toBe(false)
       })
 
-      describe("property is undefined", () => {
+      it("uses attribute value for undefined property default", () => {
+        const properties = {
+          reflectedProp: { reflected: true },
+        }
+        createBasicFixture("reflect-no-prop-default", {
+          properties,
+          attribute: "reflected-prop='foo'",
+        })
+        const element = getElement("reflect-no-prop-default")
+        expect(element.reflectedProp).toEqual("foo")
+      })
+
+      describe("property set to undefined", () => {
         let element
 
         beforeEach(() => {

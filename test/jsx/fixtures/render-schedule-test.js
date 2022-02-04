@@ -40,7 +40,7 @@ export class RenderScheduleTest extends RotomElement {
   render() {
     return (
       <div
-        class-name="container"
+        className="container"
         style={{
           borderWidth: "4px",
           borderStyle: "solid",
@@ -48,7 +48,7 @@ export class RenderScheduleTest extends RotomElement {
         }}
       >
         <p>Render count: {this.count}</p>
-        <p class-name="label" style={{ color: this.labelColor }}>
+        <p className="label" style={{ color: this.labelColor }}>
           This is a scheduling test.
           <br />
           It should have one render per button press, despite having multiple

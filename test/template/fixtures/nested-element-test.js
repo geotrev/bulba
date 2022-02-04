@@ -70,7 +70,7 @@ class NestedElementTest extends RotomElement {
         <p data-key="lede">This one is nested with inline styles.</p>
         <button data-key="updater" id="clicker">Click to update</button>
         <div data-key="nested" class="border" style="border-color: ${this.borderColor}">
-          <kitchen-sink-test first-name="${this.name}" description="I'm nested!">
+          <kitchen-sink-test attribute-default="it works!" first-name="${this.name}" description="I'm nested!">
             <slot></slot>
           </kitchen-sink-test>
         </div>

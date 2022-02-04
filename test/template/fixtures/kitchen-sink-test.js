@@ -26,6 +26,7 @@ export class KitchenSinkTest extends RotomElement {
         default: "<script>;(function(){console.log('sanitized')})()</script>",
         safe: true,
       },
+      attributeDefault: { reflected: true },
     }
   }
 
@@ -125,6 +126,9 @@ export class KitchenSinkTest extends RotomElement {
         <p data-key='desc'>${this.getAttribute("description")}</p>
         ${intermittentNode}
         <p data-key="safe">Sanitized content: ${this.safeString}</p>
+        <p key="attr-default">Attribute set to prop: ${
+          this.attributeDefault
+        }</p>
         <button data-key="name-btn" id="update-name-btn">Change Name</button>
         <button data-key="hl-btn" id="update-hl-btn">Remove Highlights</button>
         <button data-key="attr-btn" id="update-attr-btn">Remove Attribute</button>

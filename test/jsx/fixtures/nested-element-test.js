@@ -69,7 +69,11 @@ class NestedElementTest extends RotomElement {
             borderColor: this.borderColor,
           }}
         >
-          <kitchen-sink-test first-name={this.name} description="I'm nested!">
+          <kitchen-sink-test
+            attribute-default="it works!"
+            first-name={this.name}
+            description="I'm nested!"
+          >
             <slot></slot>
           </kitchen-sink-test>
         </div>

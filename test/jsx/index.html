@@ -16,10 +16,14 @@
     <render-schedule-test></render-schedule-test>
     <hr />
     <h2>Kitchen sink</h2>
-    <kitchen-sink-test first-name="Silver" description="This is my favorite group of people."></kitchen-sink-test>
+    <kitchen-sink-test
+      attribute-default="it works!"
+      first-name="Silver"
+      description="This is my favorite group of people."
+    ></kitchen-sink-test>
     <hr />
     <h2>Lifecycles (see console)</h2>
-    <lifecycle-test first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
+    <lifecycle-test attribute-default="it works!" first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
     <br />
     <button class="change-btn">Remove above element</button>
     <p>(this button will remove the component, cause a disconnect/unmount, then on append, re-call connect/mount)</p>

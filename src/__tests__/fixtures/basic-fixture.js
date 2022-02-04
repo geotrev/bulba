@@ -44,7 +44,13 @@ export function createBasicFixture(id, options = {}) {
   register(`test-${id}`, TestElement)
 
   if (options.content && options.content.includes("slot")) {
-    document.body.innerHTML = `<test-${id}><div slot='${options.slotName}'>Test slot</div></test-${id}>`
+    document.body.innerHTML = `
+      <test-${id}>
+        <div slot='${options.slotName}'>Test slot</div>
+      </test-${id}>
+    `
+  } else if (options.attribute) {
+    document.body.innerHTML = `<test-${id} ${options.attribute}></test-${id}>`
   } else {
     document.body.innerHTML = `<test-${id}></test-${id}>`
   }

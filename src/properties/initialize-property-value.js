@@ -11,34 +11,25 @@ import {
 export const initializePropertyValue = (
   Cls,
   propName,
-  configuration,
+  { default: defaultValue, type: propType, reflected = false, safe = false },
   privateName
 ) => {
-  const {
-    default: defaultValue,
-    type: propType,
-    reflected = false,
-    safe = false,
-  } = configuration
+  // If the property happens to be pre-existing, set aside
+  // the old value to a separate prop and use its value on
+  // the replacement
 
-  // Initializing the property value:
-  //
+  if (!isUndefined(Cls[propName])) {
+    Cls[getTempName(propName)] = Cls[propName]
+  }
+
+  // Initialize the value
   // 1. If the default is a function, compute the value
-  // 2. If the prop name happens to be an existing property, set aside
-  //    the property's value to a separate prop and use its value on
-  //    the replacement
-  // 3. Otherwise, just set the value as the default
+  // 2. Otherwise, just set the value as the default
 
   let initialValue
 
   if (isFunction(defaultValue)) {
     initialValue = defaultValue(Cls)
-  } else if (!isUndefined(Cls[propName])) {
-    initialValue = Cls[propName]
-
-    // Set aside the initial value to a new property, before it's
-    // deleted by the new accessors.
-    Cls[getTempName(propName)] = initialValue
   } else {
     initialValue = defaultValue
   }
@@ -46,7 +37,11 @@ export const initializePropertyValue = (
   // Validate the property's default value type, if given
   // Initialize the private property
 
-  if (!isUndefined(initialValue)) {
+  const valueEmpty = isUndefined(initialValue)
+  const attrName = camelToKebab(propName)
+  const attrValue = Cls.getAttribute(attrName)
+
+  if (!valueEmpty) {
     if (BUILD_ENV === "development") {
       validateType(Cls, propName, initialValue, propType)
     }
@@ -56,13 +51,18 @@ export const initializePropertyValue = (
     }
 
     Cls[privateName] = initialValue
+  } else if (reflected && attrValue) {
+    // if reflected, attribute value exists, and no default given,
+    // set the attribute value to the private prop
+    //
+    // attributes can only have strings, so no need to type check
+
+    initialValue = safe ? sanitizeString(attrValue) : attrValue
+    Cls[privateName] = initialValue
   }
 
-  // If the value is reflected, set its attribute.
-
-  if (reflected) {
+  if (reflected && !attrValue) {
     const initialAttrValue = initialValue ? String(initialValue) : ""
-    const attribute = camelToKebab(propName)
-    Cls.setAttribute(attribute, initialAttrValue)
+    Cls.setAttribute(attrName, initialAttrValue)
   }
 }
