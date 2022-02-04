@@ -1,3 +1,10 @@
+## [0.11.3](https://github.com/geotrev/rotom/compare/v0.11.2...v0.11.3) (2022-02-04)
+
+
+### Features
+
+* allows attribute values to be property defaults if a property is reflected but has no default value ([05ff086](https://github.com/geotrev/rotom/commit/05ff0861646c7b37f210b42499234d182df03909))
+
 ## [0.11.2](https://github.com/geotrev/rotom/compare/v0.11.1...v0.11.2) (2022-01-31)
 
 
