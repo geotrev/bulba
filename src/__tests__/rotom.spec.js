@@ -29,13 +29,12 @@ describe("RotomElement", () => {
     // Given
     const styles = "div { display: block; }"
     createBasicFixture("styles", { styles })
+    const fixture = getElement("styles")
     // Then
-    expect(
-      getElement("styles").shadowRoot.querySelector("style")
-    ).not.toBeNull()
-    expect(
-      getElement("styles").shadowRoot.querySelector("style").textContent
-    ).toEqual(styles)
+    expect(fixture.shadowRoot.querySelector("style")).not.toBeNull()
+    expect(fixture.shadowRoot.querySelector("style").textContent).toEqual(
+      styles
+    )
   })
 
   it("assigns slots, if given", () => {
@@ -78,13 +77,14 @@ describe("RotomElement", () => {
       }
       const nextValue = "bar"
       createBasicFixture("val-change", { properties })
+      const fixture = getElement("val-change")
       // When
-      getElement("val-change").testProp1 = nextValue
+      fixture.testProp1 = nextValue
       // Then
-      expect(getElement("val-change").testProp1).toEqual(nextValue)
-      expect(
-        getElement("val-change").shadowRoot.querySelector("div").textContent
-      ).toEqual(nextValue)
+      expect(fixture.testProp1).toEqual(nextValue)
+      expect(fixture.shadowRoot.querySelector("div").textContent).toEqual(
+        nextValue
+      )
     })
 
     it("doesn't upgrade properties if accessors already exist", () => {
@@ -106,6 +106,20 @@ describe("RotomElement", () => {
       const fixture = getElement("default-prop-value")
       // Then
       expect(fixture.testProp).toBe(true)
+    })
+
+    it("uses attribute default value, if given", () => {
+      // Given
+      const properties = {
+        testAttrDefault: { reflected: true },
+      }
+      createBasicFixture("attr-default", {
+        properties,
+        attribute: "test-attr-default='foo'",
+      })
+      const fixture = getElement("attr-default")
+      // Then
+      expect(fixture.testAttrDefault).toEqual("foo")
     })
 
     describe("safe", () => {
@@ -150,9 +164,9 @@ describe("RotomElement", () => {
         }
         createBasicFixture("reflect-prop", { properties })
         // Then
-        const element = getElement("reflect-prop")
-        expect(element.hasAttribute("reflected-prop")).toBe(true)
-        expect(element.getAttribute("reflected-prop")).toEqual("")
+        const fixture = getElement("reflect-prop")
+        expect(fixture.hasAttribute("reflected-prop")).toBe(true)
+        expect(fixture.getAttribute("reflected-prop")).toEqual("")
       })
 
       it("reflects property to attribute with value, if given", () => {
@@ -162,9 +176,9 @@ describe("RotomElement", () => {
         }
         createBasicFixture("reflect-value", { properties })
         // Then
-        const element = getElement("reflect-value")
-        expect(element.hasAttribute("reflected-prop")).toBe(true)
-        expect(element.getAttribute("reflected-prop")).toEqual("foo")
+        const fixture = getElement("reflect-value")
+        expect(fixture.hasAttribute("reflected-prop")).toBe(true)
+        expect(fixture.getAttribute("reflected-prop")).toEqual("foo")
       })
 
       it("updates attribute if reflected property value is changed", () => {
@@ -173,11 +187,11 @@ describe("RotomElement", () => {
           reflectedProp: { default: "foo", reflected: true },
         }
         createBasicFixture("reflect-update-attr", { properties })
-        const element = getElement("reflect-update-attr")
+        const fixture = getElement("reflect-update-attr")
         // When
-        element.reflectedProp = "bar"
+        fixture.reflectedProp = "bar"
         // Then
-        expect(element.getAttribute("reflected-prop")).toEqual("bar")
+        expect(fixture.getAttribute("reflected-prop")).toEqual("bar")
       })
 
       it("updates property if corresponding attribute is changed", () => {
@@ -186,11 +200,11 @@ describe("RotomElement", () => {
           reflectedProp: { default: "foo", reflected: true },
         }
         createBasicFixture("reflect-update-prop", { properties })
-        const element = getElement("reflect-update-prop")
+        const fixture = getElement("reflect-update-prop")
         // When
-        element.setAttribute("reflected-prop", "bar")
+        fixture.setAttribute("reflected-prop", "bar")
         // Then
-        expect(element.reflectedProp).toEqual("bar")
+        expect(fixture.reflectedProp).toEqual("bar")
       })
 
       it("removes attribute if set as undefined", () => {
@@ -199,12 +213,12 @@ describe("RotomElement", () => {
           reflectedProp: { default: "foo", reflected: true },
         }
         createBasicFixture("reflect-remove-attr", { properties })
-        const element = getElement("reflect-remove-attr")
+        const fixture = getElement("reflect-remove-attr")
         // When
-        element.reflectedProp = undefined
+        fixture.reflectedProp = undefined
         // Then
-        expect(element.reflectedProp).toBeUndefined()
-        expect(element.hasAttribute("reflected-prop")).toBe(false)
+        expect(fixture.reflectedProp).toBeUndefined()
+        expect(fixture.hasAttribute("reflected-prop")).toBe(false)
       })
 
       it("uses attribute value for undefined property default", () => {
@@ -215,12 +229,12 @@ describe("RotomElement", () => {
           properties,
           attribute: "reflected-prop='foo'",
         })
-        const element = getElement("reflect-no-prop-default")
-        expect(element.reflectedProp).toEqual("foo")
+        const fixture = getElement("reflect-no-prop-default")
+        expect(fixture.reflectedProp).toEqual("foo")
       })
 
       describe("property set to undefined", () => {
-        let element
+        let fixture
 
         beforeEach(() => {
           // Given
@@ -228,64 +242,146 @@ describe("RotomElement", () => {
             reflectedProp: { default: "foo", reflected: true },
           }
           createBasicFixture("reflect-update-prop", { properties })
-          element = getElement("reflect-update-prop")
-          element.reflectedProp = undefined
+          fixture = getElement("reflect-update-prop")
+          fixture.reflectedProp = undefined
         })
 
         it("won't set attribute value to property", () => {
           // When
-          element.setAttribute("reflected-prop", "bar")
+          fixture.setAttribute("reflected-prop", "bar")
           // Then
-          expect(element.reflectedProp).toBeUndefined()
+          expect(fixture.reflectedProp).toBeUndefined()
         })
 
         it("sets attribute value to property if value is no longer undefined", () => {
           // When
-          element.reflectedProp = "foo"
-          element.setAttribute("reflected-prop", "bar")
+          fixture.reflectedProp = "foo"
+          fixture.setAttribute("reflected-prop", "bar")
           // Then
-          expect(element.reflectedProp).toEqual("bar")
+          expect(fixture.reflectedProp).toEqual("bar")
         })
       })
     })
 
-    /* eslint-disable no-console */
-    console.warn = jest.fn()
-
     describe("warnings", () => {
-      const warningMessage = `[RotomElement]: Property 'testProp1' is invalid type of 'string'. Expected 'boolean'. Check TestElement.`
+      /* eslint-disable no-console */
+
+      beforeAll(() => {
+        console.warn = jest.fn()
+        console.error = jest.fn()
+      })
+
+      afterAll(() => {
+        console.warn.mockClear()
+        console.error.mockClear()
+      })
+
+      const typeWarning =
+        "[RotomElement]: Property 'testProp' is type 'string', expected 'boolean'."
+      const requiredWithTypeWarning =
+        "[RotomElement]: Property 'testProp' of type 'string' is required."
+      const requiredWarning = "[RotomElement]: Property 'testProp' is required."
 
       it("will print warning on upgrade if assigned type doesn't match", () => {
         // Given
         const properties = {
-          testProp1: {
+          testProp: {
             type: "boolean",
             default: "foo",
           },
         }
         createBasicFixture("upgrade-type-warn", { properties })
         // Then
-        expect(console.warn).toBeCalledWith(warningMessage)
+        expect(console.warn).toBeCalledWith(typeWarning)
       })
 
       it("will print warning on value change if assigned type doesn't match", () => {
         // Given
         const properties = {
-          testProp1: {
+          testProp: {
             type: "boolean",
             default: true,
           },
         }
         createBasicFixture("change-type-warn", { properties })
         // When
-        getElement("change-type-warn").testProp1 = "foo"
+        getElement("change-type-warn").testProp = "foo"
         // Then
-        expect(console.warn).toBeCalledWith(warningMessage)
+        expect(console.warn).toBeCalledWith(typeWarning)
+      })
+
+      it("will print error on upgrade if required prop has no default", () => {
+        // Given
+        const properties = {
+          testProp: {
+            required: true,
+          },
+        }
+        createBasicFixture("upgrade-required-error", { properties })
+        // Then
+        expect(console.error).toBeCalledWith(requiredWarning)
+      })
+
+      it("will print error on upgrade if required, typed prop has no default", () => {
+        // Given
+        const properties = {
+          testProp: {
+            type: "string",
+            required: true,
+          },
+        }
+        createBasicFixture("upgrade-require-type-error", { properties })
+        // Then
+        expect(console.error).toBeCalledWith(requiredWithTypeWarning)
+      })
+
+      it("will print error on value change if required prop is undefined", () => {
+        // Given
+        const properties = {
+          testProp: {
+            required: true,
+            default: "foo",
+          },
+        }
+        createBasicFixture("change-required-error", { properties })
+        getElement("change-required-error").testProp = undefined
+        // Then
+        expect(console.error).toBeCalledWith(requiredWarning)
+      })
+
+      it("will print error on value change if required, typed prop is undefined", () => {
+        // Given
+        const properties = {
+          testProp: {
+            required: true,
+            type: "string",
+            default: "foo",
+          },
+        }
+        createBasicFixture("change-require-type-error", { properties })
+        getElement("change-require-type-error").testProp = undefined
+        // Then
+        expect(console.error).toBeCalledWith(requiredWithTypeWarning)
+      })
+
+      it("will not print error on upgrade if required, reflected prop has attribute", () => {
+        // Given
+        const properties = {
+          testReflectRequired: {
+            required: true,
+            reflected: true,
+          },
+        }
+        createBasicFixture("upgrade-required-reflected-no-error", {
+          properties,
+          attribute: "test-reflect-required='foo'",
+        })
+        // Then
+        expect(console.error).not.toBeCalledWith(requiredWarning)
       })
     })
 
-    console.warn.mockClear()
-    /* eslint-enable no-console */
+    /* eslint-ehnable no-console */
   })
 
   const lifecycleFixtures = [

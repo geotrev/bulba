@@ -34,7 +34,7 @@ export function rotomFactory(renderer) {
       this[Internal.vnode] = null
       this[Internal.rotomId] = createUUID()
 
-      this[Internal.propMap] = {}
+      this[Internal.reflectMap] = {}
     }
 
     // Retrieve defined properties from the constructor.
@@ -68,7 +68,7 @@ export function rotomFactory(renderer) {
         // If the attribute was created via upgraded property,
         // set the value if it's new
         const propName = kebabToCamel(name)
-        const privateName = this[Internal.propMap][propName]
+        const privateName = this[Internal.reflectMap][propName]
         if (!isUndefined(privateName) && this[propName] !== newValue) {
           this[propName] = newValue
         }

@@ -4,9 +4,9 @@ import {
   camelToKebab,
   sanitizeString,
   isString,
-  getTempName,
 } from "../utilities"
-import { initializePropertyValue } from "./initialize-property-value"
+import { setDefaultvalue } from "./set-default-value"
+import { validateRequired } from "./validate-required"
 import { validateType } from "./validate-type"
 
 /**
@@ -16,20 +16,26 @@ import { validateType } from "./validate-type"
  * @param {string} propName
  * @param {{ default, type, reflected, safe }} configuration
  */
-export const upgradeProperty = (Cls, propName, configuration = {}) => {
+export function upgradeProperty(Cls, propName, configuration = {}) {
   // If the constructor class is using its own setter/getter, bail
   if (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(Cls), propName)) {
     return
   }
 
   const privateName = Symbol(propName)
-  const { type, reflected = false, safe = false } = configuration
+  const {
+    type,
+    reflected = false,
+    safe = false,
+    required = false,
+  } = configuration
 
+  // If reflected, store the private name
   if (reflected) {
-    Cls[Internal.propMap][propName] = privateName
+    Cls[Internal.reflectMap][propName] = privateName
   }
 
-  initializePropertyValue(Cls, propName, configuration, privateName)
+  setDefaultvalue(Cls, propName, configuration, privateName)
 
   // define the upgraded prop accessors
 
@@ -44,13 +50,14 @@ export const upgradeProperty = (Cls, propName, configuration = {}) => {
       if (value === Cls[privateName]) return
 
       if (BUILD_ENV === "development") {
-        validateType(Cls, propName, value, type)
+        validateType(propName, value, type)
+        validateRequired(propName, value, type, required)
       }
 
       // If the reflected property was undefined previously, re-add the prop
-      // to the propMap so attribute changes reflect to the property again
-      if (reflected && !Cls[Internal.propMap[propName]]) {
-        Cls[Internal.propMap][propName] = privateName
+      // to the reflectMap so attribute changes reflect to the property again
+      if (reflected && !Cls[Internal.reflectMap][propName]) {
+        Cls[Internal.reflectMap][propName] = privateName
       }
 
       const oldValue = Cls[privateName]
@@ -79,16 +86,6 @@ export const upgradeProperty = (Cls, propName, configuration = {}) => {
       } else {
         delete Cls[privateName]
 
-        // Prevent attribute changes from updating the property unintentionally.
-        if (reflected) {
-          delete Cls[Internal.propMap][propName]
-        }
-
-        const initialValue = Cls[getTempName(propName)]
-        if (!isUndefined(initialValue)) {
-          Cls[propName] = initialValue
-        }
-
         Cls[Internal.runLifecycle](
           External.onPropertyChange,
           propName,
@@ -96,7 +93,10 @@ export const upgradeProperty = (Cls, propName, configuration = {}) => {
           value
         )
 
+        // Prevent attribute changes from updating the property unintentionally.
         if (reflected) {
+          delete Cls[Internal.reflectMap][propName]
+
           const attribute = camelToKebab(propName)
           Cls.removeAttribute(attribute)
         }
