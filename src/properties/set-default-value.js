@@ -33,6 +33,8 @@ export function setDefaultvalue(
   const initialValue =
     reflected && attrValue
       ? attrValue
+      : !isUndefined(Cls[propName])
+      ? Cls[propName]
       : isFunction(defaultValue)
       ? defaultValue(Cls)
       : defaultValue
