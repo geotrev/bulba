@@ -1,8 +1,5 @@
-import { createBasicFixture } from "./fixtures/basic-fixture"
-import { createAccessorFixture } from "./fixtures/accessor-fixture"
-import { createTempLifecycleFixture } from "./fixtures/template-lifecycle-fixture"
-import { createJsxLifecycleFixture } from "./fixtures/jsx-lifecycle-fixture"
-import { getElement } from "./fixtures/get-element"
+import { jsx } from "snabbdom"
+import { mount } from "./helpers/mount"
 import { External } from "../enums"
 import { jest } from "@jest/globals"
 
@@ -13,181 +10,211 @@ describe("RotomElement", () => {
 
   it("upgrades the element", () => {
     // Given
-    createBasicFixture("rotom")
+    const fixture = mount({ view: "<div></div>" })
     // Then
-    expect(getElement("rotom").hasAttribute("rotom-id")).toBe(true)
+    expect(fixture.hasAttribute("rotom-id")).toBe(true)
+    expect(fixture.rotomId).toEqual(fixture.getAttribute("rotom-id"))
   })
 
   it("creates a shadow root", () => {
     // Given
-    createBasicFixture("creates-shadow")
+    const fixture = mount({ view: "<div></div>" })
     // Then
-    expect(getElement("creates-shadow").shadowRoot).not.toBeNull()
+    expect(fixture.shadowRoot).not.toBeNull()
   })
 
   it("renders styles to shadow root", () => {
     // Given
-    const styles = "div { display: block; }"
-    createBasicFixture("styles", { styles })
-    const fixture = getElement("styles")
+    const styles = ""
+    const fixture = mount({ view: "<div></div>", styles })
     // Then
-    expect(fixture.shadowRoot.querySelector("style")).not.toBeNull()
     expect(fixture.shadowRoot.querySelector("style").textContent).toEqual(
       styles
     )
   })
 
-  it("assigns slots, if given", () => {
-    // Given
-    const slotName = "main"
-    createBasicFixture("slotted", {
-      slotName,
-      content: `<slot name='main'></slot>`,
-    })
-    // Then
-    expect(
-      getElement("slotted").shadowRoot.querySelector("slot").assignedNodes()
-    ).toHaveLength(1)
-  })
-
   it("applies default document direction via dir attribute", () => {
     // Given
-    createBasicFixture("direction")
+    const fixture = mount({ view: "<div></div>" })
     // Then
-    expect(getElement("direction").getAttribute("dir")).toEqual("ltr")
+    expect(fixture.getAttribute("dir")).toEqual("ltr")
+  })
+
+  describe("renderers", () => {
+    it("renders a template view", () => {
+      // Given
+      const fixture = mount({ view: "<div></div>" })
+      // Then
+      expect(fixture.shadowRoot.querySelector("div")).not.toBeNull()
+    })
+
+    it("renders a jsx view", () => {
+      // Given
+      const fixture = mount({ view: <div /> })
+      // Then
+      expect(fixture.shadowRoot.querySelector("div")).not.toBeNull()
+    })
   })
 
   describe("properties", () => {
     it("upgrades properties", () => {
       // Given
       const properties = {
-        testProp1: { default: "foo" },
+        testProp: {},
       }
-      createBasicFixture("props", { properties })
+      const fixture = mount({
+        view: "<div></div>",
+        properties,
+      })
       // Then
-      expect(getElement("props").testProp1).toEqual(
-        properties.testProp1.default
-      )
+      expect(fixture.testProp).toEqual(undefined)
     })
 
-    it("re-renders view if value changes", () => {
+    it("updates property value and rerenders view", () => {
       // Given
-      const properties = {
-        testProp1: { default: "foo" },
-      }
-      const nextValue = "bar"
-      createBasicFixture("val-change", { properties })
-      const fixture = getElement("val-change")
+      const properties = { testProp: {} }
+      const fixture = mount({ view: "<div></div>", properties })
       // When
-      fixture.testProp1 = nextValue
+      fixture.testProp = "bar"
       // Then
-      expect(fixture.testProp1).toEqual(nextValue)
-      expect(fixture.shadowRoot.querySelector("div").textContent).toEqual(
-        nextValue
-      )
+      expect(fixture.testProp).toEqual("bar")
+      expect(fixture.count).toEqual(2)
     })
 
     it("doesn't upgrade properties if accessors already exist", () => {
       // Given
-      createAccessorFixture("no-upgrade")
+      const properties = { count: { default: 9999 } }
+      const fixture = mount({
+        view: "<div></div>",
+        properties,
+      })
       // Then
-      expect(getElement("no-upgrade").count).toEqual(1)
+      expect(fixture.count).toEqual(1)
     })
 
-    it("uses pre-existing property values if they exist", () => {
+    it("uses pre-existing property values over default", () => {
       // Given
-      const [mount, Cls] = createTempLifecycleFixture(
-        "default-prop-value",
-        true
-      )
-      Cls.prototype.testProp = true
+      const properties = { testProp: { default: false } }
+      const [TestElement, render] = mount({
+        wait: true,
+        view: "<div></div>",
+        properties,
+      })
+      TestElement.prototype.testProp = true
       // When
-      mount()
-      const fixture = getElement("default-prop-value")
+      const fixture = render()
       // Then
-      expect(fixture.testProp).toBe(true)
+      expect(fixture.testProp).toEqual(true)
     })
 
     it("uses attribute default value, if given", () => {
       // Given
-      const properties = {
-        testAttrDefault: { reflected: true },
-      }
-      createBasicFixture("attr-default", {
+      const properties = { testDefault: { reflected: true } }
+      const attributes = { "test-default": "foo" }
+      const fixture = mount({
+        view: "<div></div>",
         properties,
-        attribute: "test-attr-default='foo'",
+        attributes,
       })
-      const fixture = getElement("attr-default")
       // Then
-      expect(fixture.testAttrDefault).toEqual("foo")
+      expect(fixture.testDefault).toEqual("foo")
     })
 
-    describe("safe", () => {
+    describe("option.safe", () => {
       it("sanitizes string on upgrade", () => {
         // Given
-        const nextValue = "&lt;span&gt;unsafe&lt;/span&gt;"
         const properties = {
-          safeString: {
+          stringProp: {
             default: "<span>unsafe</span>",
             type: "string",
             safe: true,
           },
         }
-        createBasicFixture("safe-upgrade", { properties })
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
-        expect(getElement("safe-upgrade").safeString).toEqual(nextValue)
+        const nextValue = "&lt;span&gt;unsafe&lt;/span&gt;"
+        expect(fixture.stringProp).toEqual(nextValue)
       })
 
       it("sanitizes new string value", () => {
         // Given
         const properties = {
-          safeString: {
+          stringProp: {
             default: "<span>unsafe</span>",
             type: "string",
             safe: true,
           },
         }
-        createBasicFixture("safe-change", { properties })
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // When
-        getElement("safe-change").safeString = "&hello"
+        fixture.stringProp = "&hello"
         // Then
         const nextValue = "&amp;hello"
-        expect(getElement("safe-change").safeString).toEqual(nextValue)
+        expect(fixture.stringProp).toEqual(nextValue)
       })
     })
 
-    describe("reflected", () => {
+    describe("option.reflected", () => {
       it("reflects property to attribute", () => {
         // Given
         const properties = {
           reflectedProp: { reflected: true },
         }
-        createBasicFixture("reflect-prop", { properties })
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
-        const fixture = getElement("reflect-prop")
         expect(fixture.hasAttribute("reflected-prop")).toBe(true)
         expect(fixture.getAttribute("reflected-prop")).toEqual("")
       })
 
-      it("reflects property to attribute with value, if given", () => {
+      it("reflects property to attribute with default value, if given", () => {
         // Given
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-value", { properties })
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
-        const fixture = getElement("reflect-value")
-        expect(fixture.hasAttribute("reflected-prop")).toBe(true)
         expect(fixture.getAttribute("reflected-prop")).toEqual("foo")
       })
 
-      it("updates attribute if reflected property value is changed", () => {
+      it("uses attribute value for default", () => {
         // Given
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-update-attr", { properties })
-        const fixture = getElement("reflect-update-attr")
+        const attributes = {
+          "reflected-prop": "bar",
+        }
+
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+          attributes,
+        })
+        // Then
+        expect(fixture.reflectedProp).toEqual("bar")
+      })
+
+      it("updates attribute if reflected property value changed", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // When
         fixture.reflectedProp = "bar"
         // Then
@@ -199,8 +226,10 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-update-prop", { properties })
-        const fixture = getElement("reflect-update-prop")
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // When
         fixture.setAttribute("reflected-prop", "bar")
         // Then
@@ -212,60 +241,69 @@ describe("RotomElement", () => {
         const properties = {
           reflectedProp: { default: "foo", reflected: true },
         }
-        createBasicFixture("reflect-remove-attr", { properties })
-        const fixture = getElement("reflect-remove-attr")
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // When
         fixture.reflectedProp = undefined
         // Then
-        expect(fixture.reflectedProp).toBeUndefined()
         expect(fixture.hasAttribute("reflected-prop")).toBe(false)
       })
 
       it("uses attribute value for undefined property default", () => {
+        // Given
         const properties = {
           reflectedProp: { reflected: true },
         }
-        createBasicFixture("reflect-no-prop-default", {
+        const attributes = {
+          "reflected-prop": "foo",
+        }
+        const fixture = mount({
+          view: "<div></div>",
           properties,
-          attribute: "reflected-prop='foo'",
+          attributes,
         })
-        const fixture = getElement("reflect-no-prop-default")
+        // Then
         expect(fixture.reflectedProp).toEqual("foo")
       })
 
-      describe("property set to undefined", () => {
-        let fixture
-
-        beforeEach(() => {
-          // Given
-          const properties = {
-            reflectedProp: { default: "foo", reflected: true },
-          }
-          createBasicFixture("reflect-update-prop", { properties })
-          fixture = getElement("reflect-update-prop")
-          fixture.reflectedProp = undefined
+      it("does not set attribute value to undefined reflected property", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
         })
+        fixture.reflectedProp = undefined
+        // When
+        fixture.setAttribute("reflected-prop", "bar")
+        // Then
+        expect(fixture.reflectedProp).toBeUndefined()
+      })
 
-        it("won't set attribute value to property", () => {
-          // When
-          fixture.setAttribute("reflected-prop", "bar")
-          // Then
-          expect(fixture.reflectedProp).toBeUndefined()
+      it("sets attribute value to property when value is no longer undefined", () => {
+        // Given
+        const properties = {
+          reflectedProp: { default: "foo", reflected: true },
+        }
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
         })
-
-        it("sets attribute value to property if value is no longer undefined", () => {
-          // When
-          fixture.reflectedProp = "foo"
-          fixture.setAttribute("reflected-prop", "bar")
-          // Then
-          expect(fixture.reflectedProp).toEqual("bar")
-        })
+        fixture.reflectedProp = undefined
+        // When
+        fixture.reflectedProp = "baz"
+        fixture.setAttribute("reflected-prop", "beep")
+        // Then
+        expect(fixture.reflectedProp).toEqual("beep")
       })
     })
 
-    describe("warnings", () => {
+    describe("property warnings", () => {
       /* eslint-disable no-console */
-
       beforeAll(() => {
         console.warn = jest.fn()
         console.error = jest.fn()
@@ -290,7 +328,10 @@ describe("RotomElement", () => {
             default: "foo",
           },
         }
-        createBasicFixture("upgrade-type-warn", { properties })
+        mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
         expect(console.warn).toBeCalledWith(typeWarning)
       })
@@ -303,9 +344,12 @@ describe("RotomElement", () => {
             default: true,
           },
         }
-        createBasicFixture("change-type-warn", { properties })
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
         // When
-        getElement("change-type-warn").testProp = "foo"
+        fixture.testProp = "foo"
         // Then
         expect(console.warn).toBeCalledWith(typeWarning)
       })
@@ -317,7 +361,10 @@ describe("RotomElement", () => {
             required: true,
           },
         }
-        createBasicFixture("upgrade-required-error", { properties })
+        mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
         expect(console.error).toBeCalledWith(requiredWarning)
       })
@@ -330,7 +377,10 @@ describe("RotomElement", () => {
             required: true,
           },
         }
-        createBasicFixture("upgrade-require-type-error", { properties })
+        mount({
+          view: "<div></div>",
+          properties,
+        })
         // Then
         expect(console.error).toBeCalledWith(requiredWithTypeWarning)
       })
@@ -343,8 +393,11 @@ describe("RotomElement", () => {
             default: "foo",
           },
         }
-        createBasicFixture("change-required-error", { properties })
-        getElement("change-required-error").testProp = undefined
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
+        fixture.testProp = undefined
         // Then
         expect(console.error).toBeCalledWith(requiredWarning)
       })
@@ -358,8 +411,11 @@ describe("RotomElement", () => {
             default: "foo",
           },
         }
-        createBasicFixture("change-require-type-error", { properties })
-        getElement("change-require-type-error").testProp = undefined
+        const fixture = mount({
+          view: "<div></div>",
+          properties,
+        })
+        fixture.testProp = undefined
         // Then
         expect(console.error).toBeCalledWith(requiredWithTypeWarning)
       })
@@ -372,9 +428,13 @@ describe("RotomElement", () => {
             reflected: true,
           },
         }
-        createBasicFixture("upgrade-required-reflected-no-error", {
+        const attributes = {
+          "test-reflect-required": "foo",
+        }
+        mount({
+          view: "<div></div>",
           properties,
-          attribute: "test-reflect-required='foo'",
+          attributes,
         })
         // Then
         expect(console.error).not.toBeCalledWith(requiredWarning)
@@ -385,105 +445,127 @@ describe("RotomElement", () => {
   })
 
   const lifecycleFixtures = [
-    [createTempLifecycleFixture, "template"],
-    [createJsxLifecycleFixture, "jsx"],
+    ["<div></div>", "template"],
+    [<div />, "jsx"],
   ]
 
-  lifecycleFixtures.forEach(([createFixture, rendererType]) => {
-    describe(`${rendererType} renderer lifecycle methods`, () => {
+  lifecycleFixtures.forEach(([view, rendererType]) => {
+    describe(`${rendererType} lifecycle`, () => {
+      it("calls onConnect", () => {
+        // Given
+        const [TestElement, render] = mount({ wait: true, view })
+        TestElement.prototype[External.onConnect] = jest.fn()
+        // When
+        render()
+        // Then
+        expect(TestElement.prototype[External.onConnect]).toBeCalled()
+      })
+
+      it("calls onMount", () => {
+        // Given
+        const [TestElement, render] = mount({ wait: true, view })
+        TestElement.prototype[External.onMount] = jest.fn()
+        // When
+        render()
+        // Then
+        expect(TestElement.prototype[External.onMount]).toBeCalled()
+      })
+
       it("calls onPropertyChange", () => {
         // Given
-        const Cls = createFixture(`${rendererType}-prop-changed`)
-        Cls.prototype[External.onPropertyChange] = jest.fn()
+        const properties = { testProp: {} }
+        const [TestElement, render] = mount({
+          wait: true,
+          properties,
+          view,
+        })
+        TestElement.prototype[External.onPropertyChange] = jest.fn()
+        const fixture = render()
         // When
-        getElement(`${rendererType}-prop-changed`).testProp = true
+        fixture.testProp = true
         // Then
-        expect(Cls.prototype[External.onPropertyChange]).toBeCalledWith(
+        expect(TestElement.prototype[External.onPropertyChange]).toBeCalledWith(
           "testProp",
-          false,
+          undefined,
           true
         )
       })
 
       it("calls onAttributeChange", () => {
         // Given
-        const Cls = createFixture(`${rendererType}-attr-changed`)
-        Cls.prototype[External.onAttributeChange] = jest.fn()
+        const properties = { testProp: { reflected: true } }
+        const [TestElement, render] = mount({
+          wait: true,
+          properties,
+          view,
+        })
+        TestElement.prototype[External.onAttributeChange] = jest.fn()
+        const fixture = render()
         // When
-        getElement(`${rendererType}-attr-changed`).testProp = true
+        fixture.testProp = true
         // Then
-        expect(Cls.prototype[External.onAttributeChange]).toBeCalledWith(
-          "test-prop",
-          "",
-          "true"
-        )
+        expect(
+          TestElement.prototype[External.onAttributeChange]
+        ).toBeCalledWith("test-prop", "", "true")
       })
 
       it("calls onUpdate", () => {
         // Given
-        const Cls = createFixture(`${rendererType}-update`)
-        Cls.prototype[External.onUpdate] = jest.fn()
+        const properties = { testProp: {} }
+        const [TestElement, render] = mount({
+          wait: true,
+          properties,
+          view,
+        })
+        TestElement.prototype[External.onUpdate] = jest.fn()
+        const fixture = render()
         // When
-        getElement(`${rendererType}-update`).testProp = true
+        fixture.testProp = true
         // Then
-        expect(Cls.prototype[External.onUpdate]).toBeCalled()
+        expect(TestElement.prototype[External.onUpdate]).toBeCalled()
       })
 
       it("calls onUpdate if property updates in onMount", async () => {
         // Given
-        const [mount, Cls] = createFixture(`${rendererType}-mount-update`, true)
-        Cls.prototype[External.onMount] = () => {
-          getElement(`${rendererType}-mount-update`).testProp = true
+
+        const properties = { testProp: {} }
+        const [TestElement, render] = mount({
+          wait: true,
+          properties,
+          view,
+        })
+        TestElement.prototype[External.onMount] = function () {
+          // MOUNT NOTE: `mount` fixture is always first in the body.
+          document.body.firstElementChild.testProp = true
         }
-        Cls.prototype[External.onUpdate] = jest.fn()
+        TestElement.prototype[External.onUpdate] = jest.fn()
         // When
-        mount()
+        render()
         // Then
-        expect(Cls.prototype[External.onUpdate]).toBeCalled()
-      })
-
-      it("calls onConnect", () => {
-        // Given
-        const [mount, Cls] = createFixture(`${rendererType}-connect`, true)
-        Cls.prototype[External.onConnect] = jest.fn()
-        // When
-        mount()
-        // Then
-        expect(Cls.prototype[External.onConnect]).toBeCalled()
-      })
-
-      it("calls onMount", () => {
-        // Given
-        const [mount, Cls] = createFixture(`${rendererType}-mount`, true)
-        Cls.prototype[External.onMount] = jest.fn()
-        // When
-        mount()
-        // Then
-        expect(Cls.prototype[External.onMount]).toBeCalled()
+        expect(TestElement.prototype[External.onUpdate]).toBeCalled()
       })
 
       it("calls onUnmount", () => {
         // Given
-        const Cls = createFixture(`${rendererType}-unmount`)
-        Cls.prototype[External.onUnmount] = jest.fn()
-        // When
-        document.body.removeChild(getElement(`${rendererType}-unmount`))
-        // Then
-        expect(Cls.prototype[External.onUnmount]).toBeCalled()
-      })
-
-      it("recalls onMount if the component is disconnected and then reconnected", async () => {
-        // Given
-        const [mount, Cls] = createFixture(`${rendererType}-remount`, true)
-        Cls.prototype[External.onMount] = jest.fn()
-        mount()
-        const fixture = getElement(`${rendererType}-remount`)
+        const [TestElement, render] = mount({ wait: true, view })
+        TestElement.prototype[External.onUnmount] = jest.fn()
+        const fixture = render()
         // When
         document.body.removeChild(fixture)
-        await new Promise((done) => setTimeout(done, 15))
+        // Then
+        expect(TestElement.prototype[External.onUnmount]).toBeCalled()
+      })
+
+      it("recalls onMount if the component is disconnected and then reconnected", () => {
+        // Given
+        const [TestElement, render] = mount({ wait: true, view })
+        TestElement.prototype[External.onMount] = jest.fn()
+        const fixture = render()
+        // When
+        document.body.removeChild(fixture)
         document.body.appendChild(fixture)
         // Then
-        expect(Cls.prototype[External.onMount]).toBeCalledTimes(2)
+        expect(TestElement.prototype[External.onMount]).toBeCalledTimes(2)
       })
     })
   })
