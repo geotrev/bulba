@@ -1,4 +1,4 @@
-import { RotomElement, register } from "../../../src/index.js"
+import { RotomElement, register } from "../rotom.js"
 
 class CustomAccessorTest extends RotomElement {
   static get properties() {

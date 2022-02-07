@@ -14,7 +14,7 @@ const dirname = process.cwd()
 const TEST_PATH = path.resolve(dirname, ENTRY ? `test/${ENTRY}` : "test")
 const INPUT_PATH = TEST_PATH + "/examples.js"
 const OUTPUT_PATH = TEST_PATH + "/bundle.js"
-const ROTOM_EXTERNAL_ID = path.resolve(dirname, "src/index.js")
+const ROTOM_EXTERNAL_ID = path.resolve(dirname, `test/${ENTRY}/rotom.js`)
 
 export default {
   input: INPUT_PATH,

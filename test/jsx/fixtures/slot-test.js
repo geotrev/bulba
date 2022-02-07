@@ -1,5 +1,5 @@
 import { jsx } from "snabbdom"
-import { RotomElement, register } from "../../../src/rotom.jsx"
+import { RotomElement, register } from "../rotom.js"
 
 class SlotTest extends RotomElement {
   static get styles() {

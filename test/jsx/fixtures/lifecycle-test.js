@@ -1,5 +1,5 @@
 import { KitchenSinkTest } from "./kitchen-sink-test"
-import { register } from "../../../src/register"
+import { register } from "../rotom.js"
 
 /* eslint-disable no-console */
 

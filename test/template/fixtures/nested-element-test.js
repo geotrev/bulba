@@ -1,5 +1,5 @@
 import "./kitchen-sink-test.js"
-import { RotomElement, register } from "../../../src/index.js"
+import { RotomElement, register } from "../rotom.js"
 
 class NestedElementTest extends RotomElement {
   static get properties() {

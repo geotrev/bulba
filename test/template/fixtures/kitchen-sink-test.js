@@ -1,4 +1,4 @@
-import { RotomElement, register } from "../../../src/index.js"
+import { RotomElement, register } from "../rotom.js"
 
 export class KitchenSinkTest extends RotomElement {
   static get properties() {
