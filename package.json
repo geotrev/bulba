@@ -28,7 +28,7 @@
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
     "release": "dotenv release-it -- --ci",
-    "pre:release": "npm run release -- --preReleaseId=$ID --npm.tag=$ID --github.preRelease"
+    "pre:release": "dotenv release-it -- --ci --preRelease=alpha"
   },
   "optionalDependencies": {
     "omdomdom": "^0.3.0",
