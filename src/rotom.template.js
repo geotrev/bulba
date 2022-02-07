@@ -1,9 +1,9 @@
-import { rotomFactory } from "./rotom-factory"
-import { templateRenderer } from "./renderers/template"
-import { createDirectionObserver } from "./observers"
+import { rotomFactory } from "./rotom-factory.js"
+import { templateRenderer } from "./renderers/template/index.js"
+import { createDirectionObserver } from "./observers/index.js"
 
 createDirectionObserver()
 
 export const RotomElement = rotomFactory(templateRenderer)
-export { register } from "./register"
-export { validateType, validateRequired } from "./properties"
+export { validateType, validateRequired } from "./properties/index.js"
+export { register } from "./register.js"

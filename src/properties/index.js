@@ -1,3 +1,3 @@
-export * from "./upgrade-property"
-export * from "./validate-type"
-export * from "./validate-required"
+export * from "./upgrade-property.js"
+export * from "./validate-type.js"
+export * from "./validate-required.js"

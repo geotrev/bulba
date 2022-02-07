@@ -1,4 +1,4 @@
-import { log, getTypeTag, isUndefined } from "../utilities"
+import { log, getTypeTag, isUndefined } from "../utilities/index.js"
 
 /**
  * Checks that a prop name matches its intended type in development.

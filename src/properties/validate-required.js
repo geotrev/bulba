@@ -1,4 +1,4 @@
-import { log, isUndefined } from "../utilities"
+import { log, isUndefined } from "../utilities/index.js"
 
 /**
  * Checks that required props have values in development.

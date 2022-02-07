@@ -11,7 +11,7 @@ import {
   attributesModule,
   datasetModule,
 } from "snabbdom"
-import { Internal, External } from "../../enums"
+import { Internal, External } from "../../enums.js"
 
 const createEmptyVNode = (element, Internal) =>
   h("!", {

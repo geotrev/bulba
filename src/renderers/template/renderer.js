@@ -1,6 +1,6 @@
 import { patch, render, create } from "omdomdom"
-import { isString } from "../../utilities"
-import { Internal, External } from "../../enums"
+import { isString } from "../../utilities/index.js"
+import { Internal, External } from "../../enums.js"
 
 const emptyVNode = {
   type: "comment",

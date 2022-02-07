@@ -6,8 +6,8 @@ import {
   isString,
 } from "../utilities"
 import { setDefaultvalue } from "./set-default-value"
-import { validateRequired } from "./validate-required"
-import { validateType } from "./validate-type"
+import { validateRequired } from "./validate-required.js"
+import { validateType } from "./validate-type.js"
 
 /**
  * Upgrade a property based on its configuration. If accessors are detected in

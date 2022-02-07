@@ -1,7 +1,7 @@
 import { setRenderer } from "./renderers"
 import { createScheduler } from "./scheduler"
-import { upgradeProperty } from "./properties"
-import { Internal, External, Attributes, AttributeValues } from "./enums"
+import { upgradeProperty } from "./properties/index.js"
+import { Internal, External, Attributes, AttributeValues } from "./enums.js"
 import {
   isEmptyObject,
   isString,
@@ -10,7 +10,7 @@ import {
   createUUID,
   kebabToCamel,
   isUndefined,
-} from "./utilities"
+} from "./utilities/index.js"
 
 const SHADOW_ROOT_MODE = "open"
 

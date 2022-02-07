@@ -1,5 +1,5 @@
-import { isFunction } from "../utilities"
-import { Internal, External } from "../enums"
+import { isFunction } from "../utilities/index.js"
+import { Internal, External } from "../enums.js"
 
 /**
  * Sets up render methods for given renderer.

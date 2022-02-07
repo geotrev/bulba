@@ -1,12 +1,12 @@
-import { validateType } from "./validate-type"
 import {
   isFunction,
   isUndefined,
   isString,
   camelToKebab,
   sanitizeString,
-} from "../utilities"
-import { validateRequired } from "./validate-required"
+} from "../utilities/index.js"
+import { validateType } from "./validate-type.js"
+import { validateRequired } from "./validate-required.js"
 
 export function setDefaultvalue(
   Cls,
