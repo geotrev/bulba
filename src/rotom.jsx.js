@@ -6,4 +6,4 @@ createDirectionObserver()
 
 export const RotomElement = rotomFactory(jsxRenderer)
 export { register } from "./register"
-export { validateType } from "./properties"
+export { validateType, validateRequired } from "./properties"
