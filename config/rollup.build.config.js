@@ -7,7 +7,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve"
 
 const currentDir = process.cwd()
 const year = new Date().getFullYear()
-const RenderTypes = {
+const LibType = {
   TEMPLATE: "template",
   JSX: "jsx",
 }
@@ -15,7 +15,6 @@ const Environments = {
   PRODUCTION: "production",
   DEVELOPMENT: "development",
 }
-const Formats = ["esm", "cjs"]
 const GLOBAL_NAME = "Rotom"
 const external = ["snabbdom", "omdomdom"]
 
@@ -40,6 +39,7 @@ const terserPlugin = terser({
     },
   },
 })
+
 const plugins = [
   babel({
     babelHelpers: "bundled",
@@ -57,66 +57,56 @@ function replacePlugin(value) {
   })
 }
 
-function baseOutput(format) {
-  return {
-    banner,
-    format,
-    name: GLOBAL_NAME,
-  }
+const baseOutput = {
+  banner,
+  format: "cjs",
+  name: GLOBAL_NAME,
 }
 
 function createDevOutputs(type) {
-  return Formats.reduce(
-    (outputs, format) => [
-      ...outputs,
-      {
-        ...baseOutput(format),
-        file: path.resolve(currentDir, `lib/rotom.${type}.${format}.js`),
-        sourcemap: true,
-      },
-    ],
-    []
-  )
+  return [
+    {
+      ...baseOutput,
+      file: path.resolve(currentDir, `lib/rotom.${type}.js`),
+      sourcemap: true,
+    },
+  ]
 }
 
 function createProdOutputs(type) {
-  return Formats.reduce(
-    (outputs, format) => [
-      ...outputs,
-      {
-        ...baseOutput(format),
-        file: path.resolve(currentDir, `lib/rotom.${type}.${format}.min.js`),
-        sourcemap: true,
-        plugins: [terserPlugin],
-      },
-    ],
-    []
-  )
+  return [
+    {
+      ...baseOutput,
+      file: path.resolve(currentDir, `lib/rotom.${type}.min.js`),
+      sourcemap: true,
+      plugins: [terserPlugin],
+    },
+  ]
 }
 
 function createLibConfigs() {
   return [
     {
       input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: createDevOutputs(RenderTypes.JSX),
+      output: createDevOutputs(LibType.JSX),
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
       input: path.resolve(currentDir, "src/rotom.jsx.js"),
-      output: createProdOutputs(RenderTypes.JSX),
+      output: createProdOutputs(LibType.JSX),
       external,
       plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
     },
     {
       input: path.resolve(currentDir, "src/rotom.template.js"),
-      output: createDevOutputs(RenderTypes.TEMPLATE),
+      output: createDevOutputs(LibType.TEMPLATE),
       external,
       plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
     },
     {
       input: path.resolve(currentDir, "src/rotom.template.js"),
-      output: createProdOutputs(RenderTypes.TEMPLATE),
+      output: createProdOutputs(LibType.TEMPLATE),
       external,
       plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
     },
