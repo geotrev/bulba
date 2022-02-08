@@ -1,0 +1,76 @@
+{
+  "name": "@rotom/element",
+  "version": "0.13.0-rc.0",
+  "description": "An intuitive, deterministic, and extendable web component base class",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.es.js",
+  "browser": "dist/index.min.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "rollup -c",
+    "watch:template": "ENTRY=template rollup -c rollup.serve.config.js -w",
+    "watch:cdn:template": "CDN=true ENTRY=template rollup -c rollup.serve.config.js -w",
+    "watch:jsx": "ENTRY=jsx rollup -c rollup.serve.config.js -w",
+    "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c rollup.serve.config.js -w",
+    "release:dry": "dotenv release-it -- --ci --dry-run",
+    "release": "dotenv release-it -- --ci",
+    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
+    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
+  },
+  "optionalDependencies": {
+    "@rotom/jsx": "^0.13.0-rc.0",
+    "@rotom/template": "^0.13.0-rc.0",
+    "@rotom/utils": "^0.13.0-rc.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/rotom.git"
+  },
+  "keywords": [
+    "component",
+    "html",
+    "web",
+    "rotom",
+    "element",
+    "snabbdom",
+    "jsx",
+    "template",
+    "string",
+    "rotom element",
+    "web component",
+    "virtual dom",
+    "custom element"
+  ],
+  "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geotrev/rotom/issues"
+  },
+  "homepage": "https://github.com/geotrev/rotom#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "dist": "dist",
+    "lib": "lib",
+    "src": "src"
+  },
+  "files": [
+    "dist/*.{js,map}",
+    "lib/*.{js,map}",
+    "src/**/*.js"
+  ],
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release @rotom/element v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "hooks": {
+      "before:init": "npm test",
+      "after:bump": "rm -rf lib dist && npm run build && paopu"
+    }
+  }
+}

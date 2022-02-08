@@ -1,0 +1,50 @@
+{
+  "name": "@rotom/utils",
+  "version": "0.13.0-rc.0",
+  "description": "Utility helpers for @rotom/* packages.",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.es.js",
+  "browser": "dist/index.min.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "rollup -c",
+    "release:dry": "dotenv release-it -- --ci --dry-run",
+    "release": "dotenv release-it -- --ci",
+    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
+    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/rotom.git"
+  },
+  "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geotrev/rotom/issues"
+  },
+  "homepage": "https://github.com/geotrev/rotom#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "lib",
+    "src": "src"
+  },
+  "files": [
+    "lib/*.{js,map}",
+    "src/**/*.js"
+  ],
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release @rotom/utils v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "hooks": {
+      "before:init": "npm test",
+      "after:bump": "rm -rf lib dist && npm run build"
+    }
+  }
+}

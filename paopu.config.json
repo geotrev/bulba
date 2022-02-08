@@ -1,20 +1,16 @@
 {
-  "omdomdom": {
-    "module": true,
-    "resources": ["dist/omdomdom.js", "dist/omdomdom.min.js"],
-    "targets": ["README.md", "test/template/index.html"]
-  },
-  "snabbdom": {
-    "resources": ["dist/snabbdom.js", "dist/snabbdom.min.js"],
-    "targets": ["README.md", "test/jsx/index.html"]
-  },
-  "rotom": {
+  "@rotom/element": {
+    "resourceBasePath": "packages/element",
     "resources": [
-      "dist/rotom.jsx.js",
-      "dist/rotom.jsx.min.js",
-      "dist/rotom.template.js",
-      "dist/rotom.template.min.js"
+      "dist/rotom-jsx.js",
+      "dist/rotom-jsx.min.js",
+      "dist/rotom-template.js",
+      "dist/rotom-template.min.js"
     ],
-    "targets": ["README.md", "test/jsx/index.html", "test/template/index.html"]
+    "targets": [
+      "README.md",
+      "packages/element/smoke-test/template/index.html",
+      "packages/element/smoke-test/jsx/index.html"
+    ]
   }
 }

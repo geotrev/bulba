@@ -1,43 +1,21 @@
 {
   "name": "rotom",
-  "version": "0.13.0-rc.0",
-  "description": "A base class for using Web Components",
-  "main": "lib/rotom.template.cjs.js",
-  "module": "lib/rotom.template.esm.js",
-  "browser": "dist/rotom.template.min.js",
-  "exports": {
-    ".": {
-      "require": "./lib/rotom.template.cjs.js",
-      "import": "./lib/rotom.template.esm.js"
-    },
-    "./jsx": {
-      "require": "./lib/rotom.jsx.cjs.js",
-      "import": "./lib/rotom.jsx.esm.js"
-    }
-  },
+  "private": true,
   "scripts": {
     "prepare": "husky install",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "build": "rollup -c config/rollup.build.config.js",
-    "watch:template": "ENTRY=template rollup -c config/rollup.serve.config.js -w",
-    "watch:cdn:template": "CDN=true ENTRY=template rollup -c config/rollup.serve.config.js -w",
-    "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
-    "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
+    "build": "rm -rf packages/*/lib packages/*/dist && npm run build -ws",
+    "watch:template": "npm run watch:template -w @rotom/element",
+    "watch:cdn:template": "npm run watch:cdn:template -w @rotom/element",
+    "watch:jsx": "npm run watch:jsx -w @rotom/element",
+    "watch:cdn:jsx": "npm run watch:cdn:jsx -w @rotom/element",
+    "release:dry": "npm run release:dry -ws",
+    "release": "npm run release -ws",
+    "pre:release": "npm run pre:release -ws",
+    "pre:release:next": "npm run pre:release:next -ws",
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
-    "eslint:check": "eslint -c .eslintrc.json",
-    "release": "dotenv release-it -- --ci",
-    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
-    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
-  },
-  "optionalDependencies": {
-    "omdomdom": "^0.3.0",
-    "snabbdom": "^3.3.0"
-  },
-  "dependencies": {
-    "snabbdom-signature": "^0.0.3",
-    "snabbdom-transform-jsx-props": "^0.1.5"
+    "eslint:check": "eslint -c .eslintrc.json"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -67,26 +45,6 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-unused": "^0.1.1"
   },
-  "keywords": [
-    "component",
-    "web component",
-    "html",
-    "web",
-    "rotom",
-    "element",
-    "snabbdom",
-    "jsx"
-  ],
-  "directories": {
-    "dist": "dist",
-    "lib": "lib",
-    "src": "src"
-  },
-  "files": [
-    "dist/*.{js,map}",
-    "lib/*.{js,map}",
-    "src/**/*.js"
-  ],
   "author": "George Treviranus <geowtrev@gmail.com>",
   "homepage": "https://github.com/geotrev/rotom#readme",
   "repository": {
@@ -118,16 +76,7 @@
       "test"
     ]
   },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release v${version}"
-    },
-    "github": {
-      "release": true
-    },
-    "hooks": {
-      "before:init": "npm test",
-      "after:bump": "rm -rf lib dist && npm run build && paopu"
-    }
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

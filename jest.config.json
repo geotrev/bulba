@@ -1,15 +1,21 @@
 {
+  "roots": ["<rootDir>"],
   "clearMocks": true,
   "restoreMocks": true,
-  "testMatch": ["<rootDir>/src/__tests__/**/*.spec.js"],
-  "testURL": "http://localhost/",
-  "modulePaths": ["src/"],
   "verbose": true,
+  "testMatch": ["<rootDir>/packages/*/src/__tests__/**/*.spec.js"],
+  "testURL": "http://localhost/",
   "transform": {
     "\\.js$": "babel-jest"
   },
   "testEnvironment": "jsdom",
   "globals": {
     "BUILD_ENV": "development"
+  },
+  "moduleNameMapper": {
+    "^@rotom/element$": "<rootDir>/packages/element/src",
+    "^@rotom/jsx$": "<rootDir>/packages/jsx/src",
+    "^@rotom/template$": "<rootDir>/packages/template/src",
+    "^@rotom/utils$": "<rootDir>/packages/utils/src"
   }
 }

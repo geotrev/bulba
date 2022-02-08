@@ -1,0 +1,68 @@
+{
+  "name": "@rotom/template",
+  "version": "0.13.0-rc.0",
+  "description": "A string-based renderer used by @rotom/element",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.es.js",
+  "browser": "dist/index.min.js",
+  "scripts": {
+    "test": "echo 'No tests'; exit 0",
+    "build": "rollup -c",
+    "release:dry": "dotenv release-it -- --ci --dry-run",
+    "release": "dotenv release-it -- --ci",
+    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
+    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
+  },
+  "optionalDependencies": {
+    "@rotom/utils": "^0.13.0-rc.0"
+  },
+  "dependencies": {
+    "omdomdom": "^0.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geotrev/rotom.git"
+  },
+  "keywords": [
+    "component",
+    "html",
+    "web",
+    "rotom",
+    "element",
+    "string",
+    "template",
+    "web component",
+    "custom element",
+    "virtual dom",
+    "rotom element"
+  ],
+  "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geotrev/rotom/issues"
+  },
+  "homepage": "https://github.com/geotrev/rotom#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "lib": "lib",
+    "src": "src"
+  },
+  "files": [
+    "lib/*.{js,map}",
+    "src/**/*.js"
+  ],
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release @rotom/template v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "hooks": {
+      "before:init": "npm test",
+      "after:bump": "rm -rf lib dist && npm run build"
+    }
+  }
+}

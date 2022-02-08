@@ -15,13 +15,8 @@
 
 - 🎮 [Getting Started](#getting-started)
   - [Install](#install)
-    - [CDN](#cdn)
-    - [Write with Template Strings](#write-with-template-strings)
-    - [Write with JSX](#write-with-jsx)
-  - [Default and Custom Renderer Versions](#default-and-custom-renderer-versions)
-  - [Type Checking and Debugging](#type-checking-and-debugging)
+  - [CDN](#cdn)
 - 🌍 [Browser Support](#browser-support)
-- 📈 [Performance](#performance)
 - 🤝 [Contribute](#contribute)
 
 ## Getting Started
@@ -38,176 +33,92 @@ So you're ready to take the dive? Awesome! Check out the wiki articles below on 
 - [DOM events](https://github.com/geotrev/rotom/wiki/DOM-events)
 - [Methods & utilities](https://github.com/geotrev/rotom/wiki/Methods-&-Utilities)
 
-### Install
+## Install
+
+With NPM:
 
 ```sh
-$ npm i rotom
+$ npm i @rotom/element
 ```
 
-#### **CDN**
+Rotom will include needed packages alongside it: `@rotom/utils`, `@rotom/jsx`, `@rotom/template`. You can optionally install them explicitly.
 
-Use the CDN to skip packaging and use the library from the cloud.
+---
 
-You can use Rotom with string or jsx renderers. Make sure to use the right version of Rotom for your renderer as shown below.
+Using Rotom is then as simple as this for the Template flavor:
 
-**Omdomdom**:
+```jsx
+import { RotomElement, register} from "@rotom/element"
+import { Renderer } from "@rotom/template"
+
+class MyComponent extends RotomElement(Renderer) { ... }
+```
+
+And for the JSX flavor:
+
+```jsx
+import { RotomElement, register} from "@rotom/element"
+import { Renderer, jsx } from "@rotom/jsx"
+
+class MyComponent extends RotomElement(Renderer) { ... }
+```
+
+Note that the `jsx` is the pragma for the internal JSX library, `snabbdom`, and should be included in any file with JSX.
+
+Learn more about the Snabbdom JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation. Rotom uses a [syntax modifier](https://github.com/geotrev/snabbdom-transform-jsx-props) internally for JSX to enable a more user-friendly prop signature.
+
+## CDN
+
+You can specify the JSX or Template flavors using CDN. RotomElement, the renderer, and utilities will be bundled together in this scenario.
 
 ```html
-<!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.3.0/dist/omdomdom.js"
-  integrity="sha256-BpjOyF5QNlVmvIoAucFkb4hr+8+5r0qctp12U3J9cmM="
+  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.13.0-rc.0/dist/rotom-template.js"
+  integrity="sha256-NOPDTZUvhuF3LtdAf1dsBhpzqP+zL3oRJMqmgSAU7tM="
   crossorigin="anonymous"
 ></script>
-
-<!-- OR production build-->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/omdomdom@0.3.0/dist/omdomdomm.min.js"
-  integrity="sha256-BpjOyF5QNlVmvIoAucFkb4hr+8+5r0qctp12U3J9cmM="
+  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.13.0-rc.0/dist/rotom-template.min.js"
+  integrity="sha256-JDd8b1tRpur+ISBUQXqyZgSI1wWgCZZSnD4Z2oiDjTA="
   crossorigin="anonymous"
 ></script>
 ```
 
 ```html
-<!-- Development build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/rotom.template.js"
-  integrity="sha256-Yhtssu93zNSWKvW2f9WM00YSIbqIEpmzq5Jewh38/vU="
+  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.js"
+  integrity="sha256-3UdUQviMqG6LV58JjAW0tSy+eeM2ym422hxtqTvpRNs="
   crossorigin="anonymous"
 ></script>
-
-<!-- OR production build -->
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/rotom.template.min.js"
-  integrity="sha256-sHfR3OQjwLDu0GVft1r4gabLitU80D/7lNHUWHeQ0/Y="
+  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.min.js"
+  integrity="sha256-sQ9n1YiZd1ml+OWlhUqW2qTh0mGBvCkxoc/5GbJJvvc="
   crossorigin="anonymous"
 ></script>
 ```
 
-**Snabbdom**:
+Note that if you use the CDN bundles, you should set all `"@rotom/*"` package **external** names to `"Rotom"` in your app bundler of choice.
 
-```html
-<!-- Development build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/snabbdom.js"
-  integrity="sha256-0xccUJ0Wrf3QnJXGrV4onKUkgI92mpyy+48H4jIN4Ho="
-  crossorigin="anonymous"
-></script>
-
-<!-- OR production build-->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/snabbdom.min.js"
-  integrity="sha256-2ocqbM/5Lp2mPUeOc5EYrFGf8tFXkpRM3hg0PIU5m8k="
-  crossorigin="anonymous"
-></script>
-```
-
-Note that Snabbdom doesn't build its own browser bundle so Rotom provides it.
-
-```html
-<!-- Development build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/rotom.jsx.js"
-  integrity="sha256-IfAdi0iE59+vRMeMJBuoXPGRxMoQ+ZHOoI7joBzU5ZA="
-  crossorigin="anonymous"
-></script>
-
-<!-- OR production build -->
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/rotom@0.13.0-rc.0/dist/rotom.jsx.min.js"
-  integrity="sha256-FMmjJGICZmmbIybvtVzIqs3KmFb1ni7H5ct5DPIjCPM="
-  crossorigin="anonymous"
-></script>
-```
-
-#### **Write with Template Strings**
-
-This is the default configuration and easiest way to use Rotom. It enables you to write HTML in your components as string templates.
-
-Write your component with HTML strings:
+Here's a rollup example:
 
 ```js
-import { RotomElement, register } from "rotom"
-
-class FirstComponent extends RotomElement {
-  constructor() {
-    super()
-    this.handleMouseEnter = this.handleMouseEnter.bind(this)
-  }
-
-  onMount() {
-    this.target = this.shadowRoot.querySelector("#foo")
-    this.target.addEventListener("mouseenter", this.handleMouseEnter)
-  }
-
-  onUnmount() {
-    this.target.removeEventListener("mouseenter", this.handleMouseEnter)
-  }
-
-  handleMouseEnter(e) {
-    console.log(e.target.innerText)
-  }
-
-  render() {
-    return "<p class='bar'>What a cool component!</p>"
-  }
-}
-
-register("first-component", FirstComponent)
-```
-
-Learn more about [Omdomdom](https://github.com/geotrev/omdomdom).
-
-#### **Write with JSX**
-
-JSX is an industry standard for writing views, and it's fully supported in Rotom. [Snabbdom](https://github.com/snabbdom/snabbdom), a popular and performant JSX library, is used.
-
-When importing from `rotom`, ensure you specify `rotom/jsx` as the import path and import the `jsx` pragma from `snabbdom` directly (you might need to whitelist `jsx` as an unused variable in linters):
-
-```js
-import { RotomElement, register } from "rotom/jsx"
-import { jsx } from "snabbdom"
-
-class FirstComponent extends RotomElement {
-  render() {
-    return (
-      <p className="bar" on-mouseenter={(e) => console.log(e.target.innerText)}>
-        What a cool component!
-      </p>
-    )
-  }
-}
-
-register("first-component", FirstComponent)
-```
-
-Next, you're going to need some way of transforming the JSX at build time. The easiest way is transpiling your code with Babel using `@babel/plugin-transform-react-jsx` with Snabbdom's pragma.
-
-Add the plugin to your `babel.config.json`. Example:
-
-```json
 {
-  "plugins": [["@babel/plugin-transform-react-jsx", { "pragma": "jsx" }]]
+  // ...
+  external: ["@rotom/element", "@rotom/jsx", "@rotom/template", "@rotom/utils"]
+  output: {
+    // ...
+    globals: {
+      "@rotom/element": "Rotom",
+      "@rotom/jsx": "Rotom", // or... @rotom/template
+      "@rotom/utils": "Rotom",
+    }
+  }
 }
 ```
-
-Learn more about Snabbdom's JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation.
-
-### Default and Custom Renderer Versions
-
-If you want to use a specific version of Omdomdom or Snabbdom, you can do so by explicitly installing it alongside Rotom. See Rotom's `optionalDependencies` field in its [`package.json` file](https://github.com/geotrev/rotom/blob/main/package.json#L35) for the default version you will get.
-
-### Type Checking and Debugging
-
-The development (unminified) build of Rotom will include component property type checking. This feature is omitted in the production build.
 
 ## Browser Support
 
@@ -219,12 +130,6 @@ Use the below polyfills to achieve IE11 support. Include them once in your app (
 - [Web Components](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs)
 
 You will also need to run the bundle through ES5 transpilation for things like arrow functions.
-
-## Performance
-
-Both the string and JSX libraries use performant reconciliation algorithms to change content on a page.
-
-However, as good as the performance is, it isn't perfect, so changes are always welcome!
 
 ## Contribute
 

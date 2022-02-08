@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Rotom with jsx</title>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  </head>
+  <body style="max-width: 800px">
+    <h1>Rotom demo</h1>
+    <h2>Slotted content test</h2>
+    <slot-test>Foo bar</slot-test>
+    <hr />
+    <h2>Render schedule test (should start at 1)</h2>
+    <render-schedule-test></render-schedule-test>
+    <hr />
+    <h2>Kitchen sink</h2>
+    <kitchen-sink-test
+      attribute-default="it works!"
+      first-name="Silver"
+      description="This is my favorite group of people."
+    ></kitchen-sink-test>
+    <hr />
+    <h2>Lifecycles (see console)</h2>
+    <lifecycle-test attribute-default="it works!" first-name="Amy" description="Testing lifecycles..."></lifecycle-test>
+    <br />
+    <button class="change-btn">Remove above element</button>
+    <p>(this button will remove the component, cause a disconnect/unmount, then on append, re-call connect/mount)</p>
+    <hr />
+    <h2>Custom accessor test</h2>
+    <custom-accessor-test></custom-accessor-test>
+    <hr />
+    <h2>Nested components</h2>
+    <nested-element-test>
+      <p>This is forwarded slot content</p>
+    </nested-element-test>
+
+    <!-- Test DOM clean and component state after appending: -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const testElement = document.querySelector("lifecycle-test")
+        const changeBtn = document.querySelector(".change-btn")
+        let rendered = true
+        let triggerText = () => (rendered ? "Remove" : "Add")
+
+        changeBtn.addEventListener("click", () => {
+          if (rendered) {
+            testElement.parentNode.removeChild(testElement)
+            rendered = false
+            changeBtn.innerText = triggerText()
+          } else {
+            document.body.insertBefore(testElement, changeBtn.previousElementSibling)
+            rendered = true
+            changeBtn.innerText = triggerText()
+          }
+        })
+      })
+    </script>
+
+    <!-- <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.js"
+      integrity="sha256-3UdUQviMqG6LV58JjAW0tSy+eeM2ym422hxtqTvpRNs="
+      crossorigin="anonymous"
+    ></script> -->
+    <!-- <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.min.js"
+      integrity="sha256-sQ9n1YiZd1ml+OWlhUqW2qTh0mGBvCkxoc/5GbJJvvc="
+      crossorigin="anonymous"
+    ></script> -->
+
+    <script src="bundle.js"></script>
+  </body>
+</html>
