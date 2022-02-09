@@ -74,13 +74,13 @@ You can specify the JSX or Template flavors using CDN. RotomElement, the rendere
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.13.0-rc.0/dist/rotom-template.js"
+  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.12.0/dist/rotom-template.js"
   integrity="sha256-NOPDTZUvhuF3LtdAf1dsBhpzqP+zL3oRJMqmgSAU7tM="
   crossorigin="anonymous"
 ></script>
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.13.0-rc.0/dist/rotom-template.min.js"
+  src="https://cdn.jsdelivr.net/npm/@rotom/utils@0.12.0/dist/rotom-template.min.js"
   integrity="sha256-JDd8b1tRpur+ISBUQXqyZgSI1wWgCZZSnD4Z2oiDjTA="
   crossorigin="anonymous"
 ></script>
@@ -89,13 +89,13 @@ You can specify the JSX or Template flavors using CDN. RotomElement, the rendere
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.js"
+  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.12.0/dist/rotom-jsx.js"
   integrity="sha256-3UdUQviMqG6LV58JjAW0tSy+eeM2ym422hxtqTvpRNs="
   crossorigin="anonymous"
 ></script>
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.13.0-rc.0/dist/rotom-jsx.min.js"
+  src="https://cdn.jsdelivr.net/npm/@rotom/element@0.12.0/dist/rotom-jsx.min.js"
   integrity="sha256-sQ9n1YiZd1ml+OWlhUqW2qTh0mGBvCkxoc/5GbJJvvc="
   crossorigin="anonymous"
 ></script>
