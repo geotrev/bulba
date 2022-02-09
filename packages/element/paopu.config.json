@@ -1,6 +1,5 @@
 {
   "@rotom/element": {
-    "resourceBasePath": "packages/element",
     "resources": [
       "dist/rotom-jsx.js",
       "dist/rotom-jsx.min.js",
@@ -9,8 +8,8 @@
     ],
     "targets": [
       "README.md",
-      "packages/element/smoke-test/template/index.html",
-      "packages/element/smoke-test/jsx/index.html"
+      "smoke-test/template/index.html",
+      "smoke-test/jsx/index.html"
     ]
   }
 }
