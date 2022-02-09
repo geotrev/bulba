@@ -69,7 +69,7 @@
       "release": true
     },
     "hooks": {
-      "after:bump": "rm -rf lib dist && npm run build && paopu"
+      "after:bump": "npm run build && paopu"
     }
   }
 }
