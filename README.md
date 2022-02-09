@@ -63,7 +63,7 @@ import { Renderer, jsx } from "@rotom/jsx"
 class MyComponent extends RotomElement(Renderer) { ... }
 ```
 
-Note that the `jsx` is the pragma for the internal JSX library, `snabbdom`, and should be included in any file with JSX.
+Note that the `jsx` is the pragma for the internal JSX library, `snabbdom`, and should be included in any file with JSX. You'll also need to [configure your environment](https://github.com/snabbdom/snabbdom#jsx) to transform JSX.
 
 Learn more about the Snabbdom JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation. Rotom uses a [syntax modifier](https://github.com/geotrev/snabbdom-transform-jsx-props) internally for JSX to enable a more user-friendly prop signature.
 
