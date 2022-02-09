@@ -1,7 +1,7 @@
-import { RotomElement, register } from "@rotom/element"
-import { renderer, jsx } from "@rotom/jsx"
+import { RotomElement, register } from "../rotom.js"
+import { Renderer, jsx } from "@rotom/jsx"
 
-class SlotTest extends RotomElement(renderer) {
+class SlotTest extends RotomElement(Renderer) {
   static get styles() {
     return `
       p { 

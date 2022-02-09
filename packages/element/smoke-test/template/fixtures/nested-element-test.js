@@ -1,8 +1,8 @@
 import "./kitchen-sink-test.js"
-import { RotomElement, register } from "@rotom/element"
-import { renderer } from "@rotom/template"
+import { RotomElement, register } from "../rotom.js"
+import { Renderer } from "@rotom/template"
 
-class NestedElementTest extends RotomElement(renderer) {
+class NestedElementTest extends RotomElement(Renderer) {
   static get properties() {
     return {
       borderColor: {

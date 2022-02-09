@@ -1,7 +1,7 @@
-import { RotomElement, register } from "@rotom/element"
-import { renderer } from "@rotom/template"
+import { RotomElement, register } from "../rotom.js"
+import { Renderer } from "@rotom/template"
 
-export class RenderScheduleTest extends RotomElement(renderer) {
+export class RenderScheduleTest extends RotomElement(Renderer) {
   static get properties() {
     return {
       containerBorderColor: { default: "blue", type: "string" },

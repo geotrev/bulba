@@ -1,7 +1,7 @@
-import { RotomElement, register } from "@rotom/element"
-import { renderer, jsx } from "@rotom/jsx"
+import { RotomElement, register } from "../rotom.js"
+import { Renderer, jsx } from "@rotom/jsx"
 
-class CustomAccessorTest extends RotomElement(renderer) {
+class CustomAccessorTest extends RotomElement(Renderer) {
   static get properties() {
     return {
       text: { type: "string", default: "THIS SHOULD NOT APPEAR" },

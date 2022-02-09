@@ -1,7 +1,7 @@
-import { RotomElement, register } from "@rotom/element"
-import { renderer, jsx } from "@rotom/jsx"
+import { RotomElement, register } from "../rotom.js"
+import { Renderer, jsx } from "@rotom/jsx"
 
-export class KitchenSinkTest extends RotomElement(renderer) {
+export class KitchenSinkTest extends RotomElement(Renderer) {
   static get properties() {
     return {
       firstName: {
