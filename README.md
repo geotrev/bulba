@@ -58,7 +58,7 @@ And for the JSX flavor:
 
 ```jsx
 import { RotomElement, register} from "@rotom/element"
-import { Renderer, jsx } from "@rotom/jsx"
+import { Renderer, jsx, Fragment } from "@rotom/jsx"
 
 class MyComponent extends RotomElement(Renderer) { ... }
 ```

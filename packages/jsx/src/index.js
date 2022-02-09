@@ -1,2 +1,2 @@
-export { jsx } from "snabbdom"
+export { jsx, Fragment } from "snabbdom"
 export * from "./renderer"

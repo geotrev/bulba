@@ -1,2 +1,2 @@
 export * from "./"
-export { Renderer, jsx } from "@rotom/jsx"
+export { Renderer, jsx, Fragment } from "@rotom/jsx"
