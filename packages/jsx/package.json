@@ -62,7 +62,6 @@
       "release": true
     },
     "hooks": {
-      "before:init": "npm test",
       "after:bump": "rm -rf lib dist && npm run build"
     }
   }
