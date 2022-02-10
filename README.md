@@ -41,7 +41,7 @@ With NPM:
 $ npm i @rotom/element
 ```
 
-Rotom will include needed packages alongside it: `@rotom/utils`, `@rotom/jsx`, `@rotom/template`. You can optionally install them explicitly.
+Rotom will include needed packages alongside itself: `@rotom/utils`, `@rotom/jsx`, `@rotom/template`.
 
 ---
 
@@ -63,7 +63,7 @@ import { Renderer, jsx, Fragment } from "@rotom/jsx"
 class MyComponent extends RotomElement(Renderer) { ... }
 ```
 
-Note that the `jsx` is the pragma for the internal JSX library, `snabbdom`, and should be included in any file with JSX. You'll also need to [configure your environment](https://github.com/snabbdom/snabbdom#jsx) to transform JSX.
+Note that the `jsx` and `Fragment` are pragmas for the internal JSX library, `snabbdom`, and should be included in any file with JSX. You'll also need to [configure your environment](https://github.com/snabbdom/snabbdom#jsx) to transform JSX.
 
 Learn more about the Snabbdom JSX API in the [modules section](https://github.com/snabbdom/snabbdom#modules-documentation) of their documentation. Rotom uses a [syntax modifier](https://github.com/geotrev/snabbdom-transform-jsx-props) internally for JSX to enable a more user-friendly prop signature.
 
@@ -106,16 +106,20 @@ Note that if you use the CDN bundles, you should set all `"@rotom/*"` package **
 Here's a rollup example:
 
 ```js
-{
+const globals = {
+  "@rotom/element": "Rotom",
+  "@rotom/jsx": "Rotom",
+  "@rotom/template": "Rotom",
+  "@rotom/utils": "Rotom",
+}
+
+// export config
+export default {
   // ...
-  external: ["@rotom/element", "@rotom/jsx", "@rotom/template", "@rotom/utils"]
+  external: Object.keys(globals),
   output: {
-    // ...
-    globals: {
-      "@rotom/element": "Rotom",
-      "@rotom/jsx": "Rotom", // or... @rotom/template
-      "@rotom/utils": "Rotom",
-    }
+    // ...,
+    globals
   }
 }
 ```
