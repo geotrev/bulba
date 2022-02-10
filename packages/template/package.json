@@ -13,10 +13,8 @@
     "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
-  "optionalDependencies": {
-    "@rotom/utils": "^0.12.0"
-  },
   "dependencies": {
+    "@rotom/utils": "^0.12.0",
     "omdomdom": "^0.3.0"
   },
   "repository": {
