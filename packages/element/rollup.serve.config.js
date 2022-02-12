@@ -40,11 +40,15 @@ export default {
         }
       : {},
   },
-  external: isCdnMode ? [BULBA_EXTERNAL_ID, Object.keys(CDN_GLOBALS)] : [],
+  external: isCdnMode ? [BULBA_EXTERNAL_ID, ...Object.keys(CDN_GLOBALS)] : [],
   plugins: [
-    alias({ entries: moduleAliases }),
     findUnused(),
+    alias({ entries: moduleAliases }),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),
+    replace({
+      preventAssignment: true,
+      values: { BUILD_ENV: JSON.stringify("development") },
+    }),
     nodeResolve(),
     commonjs(),
     livereload({ watch: TEST_PATH }),
@@ -54,10 +58,6 @@ export default {
       historyApiFallback: true,
       host: "localhost",
       port: 3000,
-    }),
-    replace({
-      preventAssignment: true,
-      values: { BUILD_ENV: JSON.stringify("development") },
     }),
   ],
 }
