@@ -40,7 +40,7 @@
       "commitMessage": "chore: release @bulba/utils v${version}"
     },
     "github": {
-      "release": true
+      "release": false
     },
     "hooks": {
       "after:bump": "npm run build"

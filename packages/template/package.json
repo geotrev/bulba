@@ -56,7 +56,7 @@
       "commitMessage": "chore: release @bulba/template v${version}"
     },
     "github": {
-      "release": true
+      "release": false
     },
     "hooks": {
       "after:bump": "npm run build"

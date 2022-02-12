@@ -57,7 +57,7 @@
       "commitMessage": "chore: release @bulba/jsx v${version}"
     },
     "github": {
-      "release": true
+      "release": false
     },
     "hooks": {
       "after:bump": "npm run build"
