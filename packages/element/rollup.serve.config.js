@@ -15,16 +15,16 @@ const dirname = process.cwd()
 const TEST_PATH = path.resolve(dirname, `smoke-test/${ENTRY}`)
 const INPUT_PATH = TEST_PATH + "/examples.js"
 const OUTPUT_PATH = TEST_PATH + "/bundle.js"
-const ROTOM_EXTERNAL_ID = path.resolve(dirname, `smoke-test/${ENTRY}/rotom.js`)
+const BULBA_EXTERNAL_ID = path.resolve(dirname, `smoke-test/${ENTRY}/bulba.js`)
 const CDN_GLOBALS = {
-  "@rotom/jsx": "Rotom",
-  "@rotom/template": "Rotom",
-  "@rotom/utils": "Rotom",
+  "@bulba/jsx": "Bulba",
+  "@bulba/template": "Bulba",
+  "@bulba/utils": "Bulba",
 }
 const moduleAliases = {
-  "@rotom/jsx": "../jsx/src/index.js",
-  "@rotom/template": "../template/src/index.js",
-  "@rotom/utils": "../utils/src/index.js",
+  "@bulba/jsx": "../jsx/src/index.js",
+  "@bulba/template": "../template/src/index.js",
+  "@bulba/utils": "../utils/src/index.js",
 }
 
 export default {
@@ -35,12 +35,12 @@ export default {
     format: "iife",
     globals: isCdnMode
       ? {
-          [ROTOM_EXTERNAL_ID]: "Rotom",
+          [BULBA_EXTERNAL_ID]: "Bulba",
           ...CDN_GLOBALS,
         }
       : {},
   },
-  external: isCdnMode ? [ROTOM_EXTERNAL_ID, Object.keys(CDN_GLOBALS)] : [],
+  external: isCdnMode ? [BULBA_EXTERNAL_ID, Object.keys(CDN_GLOBALS)] : [],
   plugins: [
     alias({ entries: moduleAliases }),
     findUnused(),

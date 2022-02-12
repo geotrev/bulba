@@ -1,7 +1,7 @@
-import { RotomElement, register } from "../rotom.js"
-import { Renderer } from "@rotom/template"
+import { BulbaElement, register } from "../bulba.js"
+import { Renderer } from "@bulba/template"
 
-export class RenderScheduleTest extends RotomElement(Renderer) {
+export class RenderScheduleTest extends BulbaElement(Renderer) {
   static get properties() {
     return {
       containerBorderColor: { default: "blue", type: "string" },

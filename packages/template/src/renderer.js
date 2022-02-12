@@ -1,5 +1,5 @@
 import { patch, render, create } from "omdomdom"
-import { isString, Internal, External } from "@rotom/utils"
+import { isString, Internal, External } from "@bulba/utils"
 
 const emptyVNode = {
   type: "comment",
@@ -14,7 +14,7 @@ function getRenderState(element) {
 
   if (!isString(domString)) {
     throw new Error(
-      `[RotomElement]: You attempted to render a non-string template in element: '${element.constructor.name}'.`
+      `[BulbaElement]: You attempted to render a non-string template in element: '${element.constructor.name}'.`
     )
   }
 

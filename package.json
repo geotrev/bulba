@@ -1,15 +1,15 @@
 {
-  "name": "rotom",
+  "name": "bulba",
   "private": true,
   "scripts": {
     "prepare": "husky install",
     "test": "jest",
     "clean": "rm -rf packages/*/lib packages/*/dist",
     "build": "npm run clean && npm run build -ws",
-    "watch:template": "npm run watch:template -w @rotom/element",
-    "watch:cdn:template": "npm run watch:cdn:template -w @rotom/element",
-    "watch:jsx": "npm run watch:jsx -w @rotom/element",
-    "watch:cdn:jsx": "npm run watch:cdn:jsx -w @rotom/element",
+    "watch:template": "npm run watch:template -w @bulba/element",
+    "watch:cdn:template": "npm run watch:cdn:template -w @bulba/element",
+    "watch:jsx": "npm run watch:jsx -w @bulba/element",
+    "watch:cdn:jsx": "npm run watch:cdn:jsx -w @bulba/element",
     "release:dry": "npm test && npm run clean && npm run release:dry -ws",
     "release": "npm test && npm run clean && npm run release -ws",
     "pre:release": "npm test && npm run clean && npm run pre:release -ws",
@@ -48,14 +48,14 @@
     "rollup-plugin-unused": "^0.1.1"
   },
   "author": "George Treviranus <geowtrev@gmail.com>",
-  "homepage": "https://github.com/geotrev/rotom#readme",
+  "homepage": "https://github.com/geotrev/bulba#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/bulba.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/bulba/issues"
   },
   "lint-staged": {
     "*.js": [

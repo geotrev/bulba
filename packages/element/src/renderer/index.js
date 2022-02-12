@@ -1,4 +1,4 @@
-import { Internal, External, isFunction } from "@rotom/utils"
+import { Internal, External, isFunction } from "@bulba/utils"
 
 /**
  * Sets up render methods for given renderer.
@@ -12,7 +12,7 @@ export function setRenderer(renderer) {
 
       if (!isFunction(element[External.render])) {
         throw new Error(
-          `[RotomElement]: You must include a render method in element: '${element.constructor.name}'`
+          `[BulbaElement]: You must include a render method in element: '${element.constructor.name}'`
         )
       }
 

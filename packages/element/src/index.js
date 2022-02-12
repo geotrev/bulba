@@ -1,6 +1,6 @@
 import { createDirectionObserver } from "./observers"
 createDirectionObserver()
 
-export { RotomElement } from "./rotom"
+export { BulbaElement } from "./element"
 export { register } from "./register"
 export { validateType, validateRequired } from "./properties"

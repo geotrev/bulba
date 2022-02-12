@@ -1,7 +1,7 @@
 {
-  "name": "@rotom/jsx",
+  "name": "@bulba/jsx",
   "version": "0.13.0-rc.0",
-  "description": "A JSX-based renderer used by @rotom/element",
+  "description": "A JSX-based renderer used by @bulba/element",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
   "browser": "dist/index.min.js",
@@ -14,33 +14,33 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@rotom/utils": "^0.13.0-rc.0",
+    "@bulba/utils": "^0.13.0-rc.0",
     "snabbdom": "^3.3.1",
     "snabbdom-signature": "^0.0.3",
     "snabbdom-transform-jsx-props": "^0.1.5"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/bulba.git"
   },
   "keywords": [
     "component",
     "html",
     "web",
-    "rotom",
+    "bulba",
     "element",
     "jsx",
     "snabbdom",
     "custom element",
     "virtual dom",
-    "rotom element"
+    "bulba element"
   ],
   "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/bulba/issues"
   },
-  "homepage": "https://github.com/geotrev/rotom#readme",
+  "homepage": "https://github.com/geotrev/bulba#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -54,7 +54,7 @@
   ],
   "release-it": {
     "git": {
-      "commitMessage": "chore: release @rotom/jsx v${version}"
+      "commitMessage": "chore: release @bulba/jsx v${version}"
     },
     "github": {
       "release": true

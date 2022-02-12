@@ -5,7 +5,7 @@ import {
   isString,
   Internal,
   External,
-} from "@rotom/utils"
+} from "@bulba/utils"
 import { setDefaultvalue } from "./set-default-value"
 import { validateRequired } from "./validate-required"
 import { validateType } from "./validate-type"

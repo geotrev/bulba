@@ -4,7 +4,7 @@ import {
   isString,
   camelToKebab,
   sanitizeString,
-} from "@rotom/utils"
+} from "@bulba/utils"
 import { validateType } from "./validate-type"
 import { validateRequired } from "./validate-required"
 

@@ -10,7 +10,7 @@ const Environments = {
   DEVELOPMENT: "development",
 }
 const Formats = ["es", "cjs"]
-const external = ["@rotom/utils"]
+const external = ["@bulba/utils"]
 const terserPlugin = terser()
 const plugins = [
   babel({

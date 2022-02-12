@@ -1,5 +1,5 @@
 import { KitchenSinkTest } from "./kitchen-sink-test"
-import { register } from "../rotom.js"
+import { register } from "../bulba.js"
 
 /* eslint-disable no-console */
 
@@ -23,9 +23,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   connectedCallback() {
-    console.log("connectedCallback, before RotomElement callback")
+    console.log("connectedCallback, before BulbaElement callback")
     super.connectedCallback()
-    console.log("connectedCallback, after RotomElement callback")
+    console.log("connectedCallback, after BulbaElement callback")
   }
 
   /**
@@ -33,9 +33,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   disconnectedCallback() {
-    console.log("disconnectedCallback, before RotomElement callback")
+    console.log("disconnectedCallback, before BulbaElement callback")
     super.disconnectedCallback()
-    console.log("disconnectedCallback, after RotomElement callback")
+    console.log("disconnectedCallback, after BulbaElement callback")
   }
 
   /**
@@ -43,9 +43,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log("attributeChangedCallback, before RotomElement callback")
+    console.log("attributeChangedCallback, before BulbaElement callback")
     super.attributeChangedCallback(name, oldValue, newValue)
-    console.log("attributeChangedCallback, after RotomElement callback")
+    console.log("attributeChangedCallback, after BulbaElement callback")
   }
 
   /**

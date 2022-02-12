@@ -1,4 +1,4 @@
-import { isFunction } from "@rotom/utils"
+import { isFunction } from "@bulba/utils"
 
 /**
  * This scheduler uses either requestAnimationFrame or setTimeout

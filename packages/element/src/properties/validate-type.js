@@ -1,4 +1,4 @@
-import { log, getTypeTag, isUndefined } from "@rotom/utils"
+import { log, getTypeTag, isUndefined } from "@bulba/utils"
 
 /**
  * Checks that a prop name matches its intended type in development.

@@ -5,5 +5,5 @@
  */
 export function log(msg, type = "warn") {
   // eslint-disable-next-line no-console
-  console[type](`[RotomElement]: ${msg}`)
+  console[type](`[BulbaElement]: ${msg}`)
 }

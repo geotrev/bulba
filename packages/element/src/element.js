@@ -10,14 +10,14 @@ import {
   External,
   Attributes,
   AttributeValues,
-} from "@rotom/utils"
+} from "@bulba/utils"
 import { setRenderer } from "./renderer"
 import { createScheduler } from "./scheduler"
 import { upgradeProperty } from "./properties"
 
 const SHADOW_ROOT_MODE = "open"
 
-export function RotomElement(renderer) {
+export function BulbaElement(renderer) {
   return class extends HTMLElement {
     constructor() {
       super()
@@ -31,7 +31,7 @@ export function RotomElement(renderer) {
       this[Internal.patch] = this[Internal.patch].bind(this)
       this[Internal.isFirstRender] = true
       this[Internal.vnode] = null
-      this[Internal.rotomId] = createUUID()
+      this[Internal.bulbaId] = createUUID()
 
       this[Internal.reflectMap] = {}
     }
@@ -96,8 +96,8 @@ export function RotomElement(renderer) {
      * Returns the Internal element id.
      * @returns {string}
      */
-    get [External.rotomIdProperty]() {
-      return this[Internal.rotomId]
+    get [External.bulbaIdProperty]() {
+      return this[Internal.bulbaId]
     }
 
     /**
@@ -123,8 +123,8 @@ export function RotomElement(renderer) {
     [Internal.upgrade]() {
       // Set element id prop as an attribute
       this.setAttribute(
-        External.rotomIdAttribute,
-        this[External.rotomIdProperty]
+        External.bulbaIdAttribute,
+        this[External.bulbaIdProperty]
       )
 
       // Set document direction for reflow support in shadow roots

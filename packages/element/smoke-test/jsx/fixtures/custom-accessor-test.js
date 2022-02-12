@@ -1,7 +1,7 @@
-import { RotomElement, register } from "../rotom.js"
-import { Renderer, jsx } from "@rotom/jsx"
+import { BulbaElement, register } from "../bulba.js"
+import { Renderer, jsx } from "@bulba/jsx"
 
-class CustomAccessorTest extends RotomElement(Renderer) {
+class CustomAccessorTest extends BulbaElement(Renderer) {
   static get properties() {
     return {
       text: { type: "string", default: "THIS SHOULD NOT APPEAR" },

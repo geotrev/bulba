@@ -1,14 +1,14 @@
-import { RotomElement } from "../../"
-import { Renderer as JsxRenderer } from "@rotom/jsx"
-import { Renderer as TemplateRenderer } from "@rotom/template"
+import { BulbaElement } from "../../"
+import { Renderer as JsxRenderer } from "@bulba/jsx"
+import { Renderer as TemplateRenderer } from "@bulba/template"
 import { register } from "../../register"
 import { createElement } from "./create-element"
 
 let id = 0
 
 const Modes = {
-  TEMPLATE: RotomElement(TemplateRenderer),
-  JSX: RotomElement(JsxRenderer),
+  TEMPLATE: BulbaElement(TemplateRenderer),
+  JSX: BulbaElement(JsxRenderer),
 }
 
 export function mount(options = {}) {

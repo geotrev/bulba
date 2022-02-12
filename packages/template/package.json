@@ -1,7 +1,7 @@
 {
-  "name": "@rotom/template",
+  "name": "@bulba/template",
   "version": "0.13.0-rc.0",
-  "description": "A string-based renderer used by @rotom/element",
+  "description": "A string-based renderer used by @bulba/element",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
   "browser": "dist/index.min.js",
@@ -14,32 +14,32 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@rotom/utils": "^0.13.0-rc.0",
+    "@bulba/utils": "^0.13.0-rc.0",
     "omdomdom": "^0.3.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/bulba.git"
   },
   "keywords": [
     "component",
     "html",
     "web",
-    "rotom",
+    "bulba",
     "element",
     "string",
     "template",
     "web component",
     "custom element",
     "virtual dom",
-    "rotom element"
+    "bulba element"
   ],
   "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/bulba/issues"
   },
-  "homepage": "https://github.com/geotrev/rotom#readme",
+  "homepage": "https://github.com/geotrev/bulba#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -53,7 +53,7 @@
   ],
   "release-it": {
     "git": {
-      "commitMessage": "chore: release @rotom/template v${version}"
+      "commitMessage": "chore: release @bulba/template v${version}"
     },
     "github": {
       "release": true

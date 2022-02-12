@@ -1,19 +1,19 @@
-import { jsx } from "@rotom/jsx"
-import { External } from "@rotom/utils"
+import { jsx } from "@bulba/jsx"
+import { External } from "@bulba/utils"
 import { mount } from "./helpers/mount"
 import { jest } from "@jest/globals"
 
 window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
 
-describe("RotomElement", () => {
+describe("BulbaElement", () => {
   afterEach(() => (document.body.innerHTML = ""))
 
   it("upgrades the element", () => {
     // Given
     const fixture = mount({ view: "<div></div>" })
     // Then
-    expect(fixture.hasAttribute("rotom-id")).toBe(true)
-    expect(fixture.rotomId).toEqual(fixture.getAttribute("rotom-id"))
+    expect(fixture.hasAttribute("bulba-id")).toBe(true)
+    expect(fixture.bulbaId).toEqual(fixture.getAttribute("bulba-id"))
   })
 
   it("creates a shadow root", () => {
@@ -315,10 +315,10 @@ describe("RotomElement", () => {
       })
 
       const typeWarning =
-        "[RotomElement]: Property 'testProp' is type 'string', expected 'boolean'."
+        "[BulbaElement]: Property 'testProp' is type 'string', expected 'boolean'."
       const requiredWithTypeWarning =
-        "[RotomElement]: Property 'testProp' of type 'string' is required."
-      const requiredWarning = "[RotomElement]: Property 'testProp' is required."
+        "[BulbaElement]: Property 'testProp' of type 'string' is required."
+      const requiredWarning = "[BulbaElement]: Property 'testProp' is required."
 
       it("will print warning on upgrade if assigned type doesn't match", () => {
         // Given

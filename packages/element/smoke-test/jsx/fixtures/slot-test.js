@@ -1,7 +1,7 @@
-import { RotomElement, register } from "../rotom.js"
-import { Renderer, jsx } from "@rotom/jsx"
+import { BulbaElement, register } from "../bulba.js"
+import { Renderer, jsx } from "@bulba/jsx"
 
-class SlotTest extends RotomElement(Renderer) {
+class SlotTest extends BulbaElement(Renderer) {
   static get styles() {
     return `
       p { 

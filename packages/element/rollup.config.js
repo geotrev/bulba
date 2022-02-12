@@ -2,25 +2,25 @@ import getBaseConfig from "../../config/rollup.base.config"
 import path from "path"
 
 const { baseConfig, terserPlugin, replacePlugin, Environments, plugins } =
-  getBaseConfig(process.cwd(), "Rotom")
+  getBaseConfig(process.cwd(), "Bulba")
 
-const GLOBAL_NAME = "Rotom"
+const GLOBAL_NAME = "Bulba"
 
 function createDistConfigs() {
   const external = [
-    "@rotom/element",
-    "@rotom/jsx",
-    "@rotom/template",
-    "@rotom/utils",
+    "@bulba/element",
+    "@bulba/jsx",
+    "@bulba/template",
+    "@bulba/utils",
   ]
   const baseDistOutput = {
     format: "umd",
     name: GLOBAL_NAME,
     globals: {
-      "@rotom/element": GLOBAL_NAME,
-      "@rotom/jsx": GLOBAL_NAME,
-      "@rotom/template": GLOBAL_NAME,
-      "@rotom/utils": GLOBAL_NAME,
+      "@bulba/element": GLOBAL_NAME,
+      "@bulba/jsx": GLOBAL_NAME,
+      "@bulba/template": GLOBAL_NAME,
+      "@bulba/utils": GLOBAL_NAME,
     },
   }
 
@@ -29,7 +29,7 @@ function createDistConfigs() {
       input: path.resolve(process.cwd(), "src/bundle-jsx.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(process.cwd(), "dist/rotom-jsx.js"),
+        file: path.resolve(process.cwd(), "dist/bulba-jsx.js"),
         sourcemap: true,
       },
       external,
@@ -39,7 +39,7 @@ function createDistConfigs() {
       input: path.resolve(process.cwd(), "src/bundle-jsx.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(process.cwd(), "dist/rotom-jsx.min.js"),
+        file: path.resolve(process.cwd(), "dist/bulba-jsx.min.js"),
         sourcemap: true,
         plugins: [terserPlugin],
       },
@@ -50,7 +50,7 @@ function createDistConfigs() {
       input: path.resolve(process.cwd(), "src/bundle-template.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(process.cwd(), "dist/rotom-template.js"),
+        file: path.resolve(process.cwd(), "dist/bulba-template.js"),
         sourcemap: true,
       },
       external,
@@ -60,7 +60,7 @@ function createDistConfigs() {
       input: path.resolve(process.cwd(), "src/bundle-template.js"),
       output: {
         ...baseDistOutput,
-        file: path.resolve(process.cwd(), "dist/rotom-template.min.js"),
+        file: path.resolve(process.cwd(), "dist/bulba-template.min.js"),
         sourcemap: true,
         plugins: [terserPlugin],
       },

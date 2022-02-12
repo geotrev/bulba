@@ -8,14 +8,14 @@ export const AttributeValues = {
 
 export const External = {
   // Properties & methods
-  rotomIdProperty: "rotomId",
+  bulbaIdProperty: "bulbaId",
   requestRender: "requestRender",
   render: "render",
   staticProperties: "properties",
   staticStyles: "styles",
 
   // Attributes
-  rotomIdAttribute: "rotom-id",
+  bulbaIdAttribute: "bulba-id",
 
   // Lifecycle
   onConnect: "onConnect",
@@ -28,7 +28,7 @@ export const External = {
 
 export const Internal = {
   // Properties
-  rotomId: Symbol("#rotomId"),
+  bulbaId: Symbol("#bulbaId"),
   vnode: Symbol("#vnode"),
   isFirstRender: Symbol("#isFirstRender"),
   reflectMap: Symbol("#reflectMap"),

@@ -1,2 +1,2 @@
 export * from "./"
-export { Renderer } from "@rotom/template"
+export { Renderer } from "@bulba/template"

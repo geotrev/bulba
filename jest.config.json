@@ -13,9 +13,9 @@
     "BUILD_ENV": "development"
   },
   "moduleNameMapper": {
-    "^@rotom/element$": "<rootDir>/packages/element/src",
-    "^@rotom/jsx$": "<rootDir>/packages/jsx/src",
-    "^@rotom/template$": "<rootDir>/packages/template/src",
-    "^@rotom/utils$": "<rootDir>/packages/utils/src"
+    "^@bulba/element$": "<rootDir>/packages/element/src",
+    "^@bulba/jsx$": "<rootDir>/packages/jsx/src",
+    "^@bulba/template$": "<rootDir>/packages/template/src",
+    "^@bulba/utils$": "<rootDir>/packages/utils/src"
   }
 }

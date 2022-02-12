@@ -1,5 +1,5 @@
 {
-  "name": "@rotom/element",
+  "name": "@bulba/element",
   "version": "0.13.0-rc.0",
   "description": "An intuitive, deterministic, and extendable web component base class",
   "main": "lib/index.cjs.js",
@@ -19,25 +19,25 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@rotom/jsx": "^0.13.0-rc.0",
-    "@rotom/template": "^0.13.0-rc.0",
-    "@rotom/utils": "^0.13.0-rc.0"
+    "@bulba/jsx": "^0.13.0-rc.0",
+    "@bulba/template": "^0.13.0-rc.0",
+    "@bulba/utils": "^0.13.0-rc.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/bulba.git"
   },
   "keywords": [
     "component",
     "html",
     "web",
-    "rotom",
+    "bulba",
     "element",
     "snabbdom",
     "jsx",
     "template",
     "string",
-    "rotom element",
+    "bulba element",
     "web component",
     "virtual dom",
     "custom element"
@@ -45,9 +45,9 @@
   "author": "George Treviranus <geowtrev@gmail.com> (https://geotrev.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/bulba/issues"
   },
-  "homepage": "https://github.com/geotrev/rotom#readme",
+  "homepage": "https://github.com/geotrev/bulba#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -63,7 +63,7 @@
   ],
   "release-it": {
     "git": {
-      "commitMessage": "chore: release @rotom/element v${version}"
+      "commitMessage": "chore: release @bulba/element v${version}"
     },
     "github": {
       "release": true

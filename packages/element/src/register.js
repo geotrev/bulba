@@ -1,10 +1,10 @@
 /**
  * Adds custom element to the global registry.
  * @param {string} tag
- * @param {module} RotomInstance
+ * @param {module} BulbaInstance
  */
-export const register = (tag, RotomInstance) => {
+export const register = (tag, BulbaInstance) => {
   if (!customElements.get(tag)) {
-    customElements.define(tag, RotomInstance)
+    customElements.define(tag, BulbaInstance)
   }
 }

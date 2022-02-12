@@ -1,10 +1,10 @@
 {
-  "@rotom/element": {
+  "@bulba/element": {
     "resources": [
-      "dist/rotom-jsx.js",
-      "dist/rotom-jsx.min.js",
-      "dist/rotom-template.js",
-      "dist/rotom-template.min.js"
+      "dist/bulba-jsx.js",
+      "dist/bulba-jsx.min.js",
+      "dist/bulba-template.js",
+      "dist/bulba-template.min.js"
     ],
     "targets": [
       "../../README.md",

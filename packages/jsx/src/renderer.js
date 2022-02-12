@@ -11,7 +11,7 @@ import {
   attributesModule,
   datasetModule,
 } from "snabbdom"
-import { Internal, External } from "@rotom/utils"
+import { Internal, External } from "@bulba/utils"
 
 const createEmptyVNode = (element, Internal) =>
   h("!", {
