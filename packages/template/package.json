@@ -1,6 +1,6 @@
 {
   "name": "@bulba/template",
-  "version": "0.13.0-alpha.0",
+  "version": "0.13.0-alpha.1",
   "description": "A string-based renderer used by @bulba/element",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
