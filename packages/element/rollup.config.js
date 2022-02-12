@@ -1,27 +1,21 @@
-import getBaseConfig from "../../config/rollup.base.config"
+import alias from "@rollup/plugin-alias"
 import path from "path"
+import getBaseConfig from "../../config/rollup.base.config"
 
 const { baseConfig, terserPlugin, replacePlugin, Environments, plugins } =
   getBaseConfig(process.cwd(), "Bulba")
 
 const GLOBAL_NAME = "Bulba"
+const moduleAliases = {
+  "@bulba/jsx": "../jsx/src/index.js",
+  "@bulba/template": "../template/src/index.js",
+  "@bulba/utils": "../utils/src/index.js",
+}
 
 function createDistConfigs() {
-  const external = [
-    "@bulba/element",
-    "@bulba/jsx",
-    "@bulba/template",
-    "@bulba/utils",
-  ]
   const baseDistOutput = {
     format: "umd",
     name: GLOBAL_NAME,
-    globals: {
-      "@bulba/element": GLOBAL_NAME,
-      "@bulba/jsx": GLOBAL_NAME,
-      "@bulba/template": GLOBAL_NAME,
-      "@bulba/utils": GLOBAL_NAME,
-    },
   }
 
   return [
@@ -32,8 +26,11 @@ function createDistConfigs() {
         file: path.resolve(process.cwd(), "dist/bulba-jsx.js"),
         sourcemap: true,
       },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
+      plugins: [
+        ...plugins,
+        alias({ entries: moduleAliases }),
+        replacePlugin(Environments.DEVELOPMENT),
+      ],
     },
     {
       input: path.resolve(process.cwd(), "src/bundle-jsx.js"),
@@ -43,8 +40,11 @@ function createDistConfigs() {
         sourcemap: true,
         plugins: [terserPlugin],
       },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
+      plugins: [
+        ...plugins,
+        alias({ entries: moduleAliases }),
+        replacePlugin(Environments.PRODUCTION),
+      ],
     },
     {
       input: path.resolve(process.cwd(), "src/bundle-template.js"),
@@ -53,8 +53,11 @@ function createDistConfigs() {
         file: path.resolve(process.cwd(), "dist/bulba-template.js"),
         sourcemap: true,
       },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.DEVELOPMENT)],
+      plugins: [
+        ...plugins,
+        alias({ entries: moduleAliases }),
+        replacePlugin(Environments.DEVELOPMENT),
+      ],
     },
     {
       input: path.resolve(process.cwd(), "src/bundle-template.js"),
@@ -64,8 +67,11 @@ function createDistConfigs() {
         sourcemap: true,
         plugins: [terserPlugin],
       },
-      external,
-      plugins: [...plugins, replacePlugin(Environments.PRODUCTION)],
+      plugins: [
+        ...plugins,
+        alias({ entries: moduleAliases }),
+        replacePlugin(Environments.PRODUCTION),
+      ],
     },
   ]
 }
