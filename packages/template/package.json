@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo 'No tests'; exit 0",
     "build": "rollup -c",
-    "release:inc-deps": "node ../../.bin/increment-dependency-versions.js",
+    "release:inc-deps": "node ../../.bin/increment-dependencies.js",
     "release:dry": "dotenv release-it -- --ci --dry-run",
     "release": "dotenv release-it -- --ci",
     "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
