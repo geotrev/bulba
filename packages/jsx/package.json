@@ -54,7 +54,8 @@
   ],
   "release-it": {
     "git": {
-      "commitMessage": "chore: release @bulba/jsx v${version}"
+      "commitMessage": "chore: release @bulba/jsx v${version}",
+      "tag": false
     },
     "github": {
       "release": false

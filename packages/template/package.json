@@ -53,7 +53,8 @@
   ],
   "release-it": {
     "git": {
-      "commitMessage": "chore: release @bulba/template v${version}"
+      "commitMessage": "chore: release @bulba/template v${version}",
+      "tag": false
     },
     "github": {
       "release": false
