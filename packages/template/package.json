@@ -1,6 +1,6 @@
 {
   "name": "@bulba/template",
-  "version": "0.13.0-alpha.3",
+  "version": "0.13.0-alpha.4",
   "description": "A string-based renderer used by @bulba/element",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
@@ -15,7 +15,7 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@bulba/utils": "^0.13.0-alpha.3",
+    "@bulba/utils": "^0.13.0-alpha.4",
     "omdomdom": "^0.3.0"
   },
   "repository": {
