@@ -79,6 +79,9 @@
     ]
   },
   "workspaces": [
-    "packages/*"
+    "packages/utils",
+    "packages/jsx",
+    "packages/template",
+    "packages/element"
   ]
 }
