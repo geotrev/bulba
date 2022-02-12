@@ -1,6 +1,6 @@
 {
   "name": "@bulba/element",
-  "version": "0.13.0-alpha.0",
+  "version": "0.13.0-alpha.1",
   "description": "An intuitive, deterministic, and extendable web component base class",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
