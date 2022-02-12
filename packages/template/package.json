@@ -14,7 +14,7 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@bulba/utils": "^0.13.0-rc.0",
+    "@bulba/utils": "^0.13.0-alpha.3",
     "omdomdom": "^0.3.0"
   },
   "repository": {
