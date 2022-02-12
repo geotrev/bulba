@@ -1,2 +1,3 @@
 export * from "./"
-export { Renderer } from "@bulba/template"
+export * from "@bulba/template"
+export * from "@rotom/utils"

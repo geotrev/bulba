@@ -7,7 +7,7 @@
       "dist/bulba-template.min.js"
     ],
     "targets": [
-      "../../README.md",
+      "README.md",
       "smoke-test/template/index.html",
       "smoke-test/jsx/index.html"
     ]
