@@ -1,6 +1,6 @@
 {
   "name": "@rotom/utils",
-  "version": "0.12.0",
+  "version": "0.13.0-rc.0",
   "description": "Utility helpers for @rotom/* packages.",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",

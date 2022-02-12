@@ -1,6 +1,6 @@
 {
   "name": "@rotom/element",
-  "version": "0.12.0",
+  "version": "0.13.0-rc.0",
   "description": "An intuitive, deterministic, and extendable web component base class",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
@@ -19,9 +19,9 @@
     "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
   },
   "dependencies": {
-    "@rotom/jsx": "^0.12.0",
-    "@rotom/template": "^0.12.0",
-    "@rotom/utils": "^0.12.0"
+    "@rotom/jsx": "^0.13.0-rc.0",
+    "@rotom/template": "^0.13.0-rc.0",
+    "@rotom/utils": "^0.13.0-rc.0"
   },
   "repository": {
     "type": "git",
