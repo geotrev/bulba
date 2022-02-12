@@ -1,6 +1,7 @@
 {
   "name": "bulba",
   "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "test": "jest",

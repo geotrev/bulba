@@ -13,6 +13,7 @@
     "watch:cdn:template": "CDN=true ENTRY=template rollup -c rollup.serve.config.js -w",
     "watch:jsx": "ENTRY=jsx rollup -c rollup.serve.config.js -w",
     "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c rollup.serve.config.js -w",
+    "release:inc-deps": "node ../../.bin/increment-dependency-versions.js",
     "release:dry": "dotenv release-it -- --ci --dry-run",
     "release": "dotenv release-it -- --ci",
     "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
@@ -69,7 +70,7 @@
       "release": true
     },
     "hooks": {
-      "after:bump": "npm run build && paopu"
+      "after:bump": "npm run build && paopu && npm run release:inc-deps"
     }
   }
 }
