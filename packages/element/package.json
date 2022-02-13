@@ -13,11 +13,7 @@
     "watch:cdn:template": "CDN=true ENTRY=template rollup -c rollup.serve.config.js -w",
     "watch:jsx": "ENTRY=jsx rollup -c rollup.serve.config.js -w",
     "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c rollup.serve.config.js -w",
-    "release:inc-deps": "node ../../.bin/increment-dependencies.js",
-    "release:dry": "dotenv release-it -- --ci --dry-run",
-    "release": "dotenv release-it -- --ci",
-    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
-    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
+    "postversion": "npm run build && paopu"
   },
   "dependencies": {
     "@bulba/jsx": "^0.13.0-alpha.4",
@@ -61,16 +57,5 @@
     "dist/*.{js,map}",
     "lib/*.{js,map}",
     "src/**/*.js"
-  ],
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release @bulba/element v${version}"
-    },
-    "github": {
-      "release": true
-    },
-    "hooks": {
-      "after:bump": "npm run build && paopu && npm run release:inc-deps"
-    }
-  }
+  ]
 }

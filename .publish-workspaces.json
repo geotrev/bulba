@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "prepublish": "npm test && npm run clean"
+  },
+  "codependencies": {
+    "bump": true
+  },
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagMessage": "Release v${version}"
+  }
+}

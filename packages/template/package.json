@@ -6,13 +6,8 @@
   "module": "lib/index.es.js",
   "browser": "dist/index.min.js",
   "scripts": {
-    "test": "echo 'No tests'; exit 0",
     "build": "rollup -c",
-    "release:inc-deps": "node ../../.bin/increment-dependencies.js",
-    "release:dry": "dotenv release-it -- --ci --dry-run",
-    "release": "dotenv release-it -- --ci",
-    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
-    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
+    "postversion": "npm run build"
   },
   "dependencies": {
     "@bulba/utils": "^0.13.0-alpha.4",
@@ -51,17 +46,5 @@
   "files": [
     "lib/*.{js,map}",
     "src/**/*.js"
-  ],
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release @bulba/template v${version}",
-      "tag": false
-    },
-    "github": {
-      "release": false
-    },
-    "hooks": {
-      "after:bump": "npm run build && npm run release:inc-deps"
-    }
-  }
+  ]
 }
