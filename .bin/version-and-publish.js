@@ -35,10 +35,15 @@ export async function versionAndPublish(args, config) {
     })
 
     const versioned = await bumpVersion(args, config, entry, newVersion)
+    let published
 
     if (versioned) {
-      await publishPackage(args, entry)
+      published = await publishPackage(args, entry)
     } else {
+      failures = true
+    }
+
+    if (!published) {
       failures = true
     }
   }

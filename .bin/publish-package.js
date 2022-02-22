@@ -26,7 +26,9 @@ export async function publishPackage(args, entry) {
 
   if (failures) {
     reporter.fail(`Something went wrong releasing ${entry.name}`)
+    return false
   } else {
     pkgReporter.succeed("Publish successful")
+    return true
   }
 }
