@@ -1,6 +1,6 @@
 {
   "name": "@bulba/utils",
-  "version": "0.13.0-alpha.4",
+  "version": "0.13.0-alpha.5",
   "description": "Utility helpers for @bulba/* packages.",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
