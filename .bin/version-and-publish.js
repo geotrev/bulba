@@ -48,9 +48,15 @@ export async function versionAndPublish(args, config) {
     }
   }
 
+  console.log("")
+
   if (!failures) {
-    console.log("")
+    reporter.warn(
+      "Some packages weren't published. You might need to fix something and run another release"
+    )
+  } else {
     reporter.succeed("All packages published without errors")
-    console.log("")
   }
+
+  console.log("")
 }

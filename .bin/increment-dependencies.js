@@ -6,7 +6,7 @@ import { reporter, pkgReporter } from "./reporter.js"
 import { ROOT_PACKAGE_FILE } from "./constants.js"
 
 export function incrementDependencies(args, config, entry) {
-  pkgReporter.start("Increment relative dependencies")
+  pkgReporter.start("Increment co-dependencies")
 
   let failures = null
   const { getPackage, dir } = entry
@@ -65,8 +65,8 @@ export function incrementDependencies(args, config, entry) {
       "package.json missing: " + path.resolve(dir, ROOT_PACKAGE_FILE)
     )
   } else if (failures === false) {
-    pkgReporter.succeed("Dependencies updated")
+    pkgReporter.succeed("Co-dependencies updated")
   } else {
-    pkgReporter.succeed("No relative dependencies detected")
+    pkgReporter.succeed("No co-dependencies detected")
   }
 }
