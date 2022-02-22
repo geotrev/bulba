@@ -1,6 +1,6 @@
 export const configDefault = {
-  codependencies: {
-    bump: false,
+  increment: {
+    codependencies: false,
     rangePrefix: "^",
   },
   hooks: {
@@ -8,16 +8,13 @@ export const configDefault = {
     postpublish: "",
     precommit: "",
     postcommit: "",
-    pretag: "",
-    posttag: "",
-    prepush: "",
-    postpush: "",
+  },
+  npm: {
+    increment: true,
   },
   git: {
     commitMessage: "Release ${version}",
     tagMessage: "Release ${version}",
     commit: true,
-    tag: true,
-    push: true,
   },
 }

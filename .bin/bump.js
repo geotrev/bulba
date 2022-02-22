@@ -2,10 +2,11 @@
 
 import fs from "fs"
 import path from "path"
-import { reporter, pkgReporter } from "./reporter.js"
-import { ROOT_PACKAGE_FILE } from "./constants.js"
+import { exec } from "./helpers/exec-promise.js"
+import { pkgReporter, reporter } from "./helpers/reporter.js"
+import { ROOT_PACKAGE_FILE } from "./helpers/constants.js"
 
-export function incrementDependencies(args, config, entry) {
+function incrementDependencies(args, config, entry) {
   pkgReporter.start("Increment co-dependencies")
 
   let failures = null
@@ -13,7 +14,7 @@ export function incrementDependencies(args, config, entry) {
   const pkgContent = getPackage()
   const scope = entry.name.split("/")[0]
   const dependencies = []
-  const rangePrefix = config.codependencies.rangePrefix
+  const rangePrefix = config.increment.rangePrefix
   const types = [
     "dependencies",
     "devDependencies",
@@ -68,5 +69,37 @@ export function incrementDependencies(args, config, entry) {
     pkgReporter.succeed("Co-dependencies updated")
   } else {
     pkgReporter.succeed("No co-dependencies detected")
+  }
+}
+
+export async function bump(args, config, entry, newVersion) {
+  pkgReporter.start(`Bump ${entry.name} to v${newVersion}`)
+
+  let failures = false
+  const incCommand = `npm version -w ${entry.name} ${newVersion} --no-git-tag-version`
+
+  if (args.dryRun) {
+    pkgReporter.info(incCommand)
+  } else {
+    try {
+      await exec(incCommand)
+    } catch (e) {
+      failures = true
+      console.log("Error", e)
+    }
+  }
+
+  if (config.increment.codependencies) {
+    incrementDependencies(args, config, entry)
+  }
+
+  if (failures) {
+    reporter.fail(
+      `Something went wrong bumping ${entry.name} to v${newVersion}`
+    )
+    return false
+  } else {
+    pkgReporter.succeed("Version successful")
+    return true
   }
 }

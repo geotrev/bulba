@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { exec } from "./exec-promise.js"
-import { reporter, pkgReporter } from "./reporter.js"
+import { exec } from "./helpers/exec-promise.js"
+import { reporter, pkgReporter } from "./helpers/reporter.js"
 
-export async function publishPackage(args, entry) {
+export async function publish(args, entry) {
   pkgReporter.start(`Publish ${entry.name}`)
 
   let failures = false

@@ -30,28 +30,28 @@ function validatePackagePaths(dir) {
  * Sets default values back to the config object if config categories
  * are missing or incomplete.
  */
-function validateConfigCategory(config, category, schema) {
+function normalizeConfigCategory(config, category) {
   const keys = config[category] ? Object.keys(config[category]) : []
 
   if (keys.length) {
-    for (const key in schema) {
-      const schemaType = typeof schema[key]
+    for (const key in configDefault[category]) {
+      const configDefaultType = typeof configDefault[category][key]
       const configType = typeof config[category][key]
-      // console.log({ value: config[category][key], configType, schemaType })
-      if (configType === schemaType) continue
+
+      if (configType === configDefaultType) continue
 
       if (configType === "undefined") {
-        config[category][key] = schema[key]
+        config[category][key] = configDefault[category][key]
         continue
       }
 
       reporter.fail(
-        `Invalid value given to config.${category}.${key}, expected ${schemaType}`
+        `Invalid value given to config.${category}.${key}, expected ${configDefaultType}`
       )
       process.exit(1)
     }
   } else {
-    config[category] = schema
+    config[category] = configDefault[category]
   }
 }
 
@@ -94,20 +94,18 @@ export function normalizeConfig() {
 
   if (fs.existsSync(CONFIG_PATH)) {
     config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"))
-  } else if (rootPackage["publish-workspaces"]) {
-    config = rootPackage["publish-workspaces"]
+  } else if (rootPackage["release-workspaces"]) {
+    config = rootPackage["release-workspaces"]
   } else {
     reporter.warn(
-      "No publish-workspaces config detecting. Proceeding with defaults."
+      "No release-workspaces config detecting. Proceeding with defaults."
     )
   }
 
   // Set defaults
 
-  const configEntries = Object.keys(config)
-  configEntries.forEach((entry) =>
-    validateConfigCategory(config, entry, configDefault[entry])
-  )
+  const configCategories = Object.keys(configDefault)
+  configCategories.forEach((entry) => normalizeConfigCategory(config, entry))
 
   // Get workspaces field
 

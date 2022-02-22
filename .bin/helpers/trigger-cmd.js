@@ -6,7 +6,6 @@ export async function triggerCmd(meta, reporter = defaultReporter) {
     return
   }
 
-  if (meta.br) console.log("")
   reporter.start(meta.step)
 
   if (meta.args.dryRun) {

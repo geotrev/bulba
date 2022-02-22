@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import semver from "semver"
-import { reporter } from "./reporter.js"
-import { bumpVersion } from "./bump-version.js"
-import { publishPackage } from "./publish-package.js"
+import { reporter } from "./helpers/reporter.js"
+import { bump } from "./bump.js"
+import { publish } from "./publish.js"
 
-export async function versionAndPublish(args, config) {
+export async function increment(args, config) {
   let failures = false
   const packages = config.packages
   const length = packages.length
@@ -28,35 +28,30 @@ export async function versionAndPublish(args, config) {
 
     config.releaseVersion = newVersion
 
-    console.log("")
     reporter.stopAndPersist({
       text: `${name}@${newVersion}`,
       symbol: "📦",
     })
 
-    const versioned = await bumpVersion(args, config, entry, newVersion)
+    const versioned = await bump(args, config, entry, newVersion)
     let published
 
     if (versioned) {
-      published = await publishPackage(args, entry)
-    } else {
-      failures = true
-    }
+      published = await publish(args, entry)
 
-    if (!published) {
+      if (!published) {
+        failures = true
+      }
+    } else {
       failures = true
     }
   }
 
-  console.log("")
-
-  if (!failures) {
+  if (failures) {
     reporter.warn(
-      "Some packages weren't published. You might need to fix something and run another release"
+      "Some packages weren't published. You might need to fix something and re-release."
     )
   } else {
     reporter.succeed("All packages published without errors")
   }
-
-  console.log("")
 }

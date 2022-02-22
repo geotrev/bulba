@@ -2,8 +2,8 @@
   "hooks": {
     "prepublish": "npm test && npm run clean"
   },
-  "codependencies": {
-    "bump": true
+  "increment": {
+    "codependencies": true
   },
   "git": {
     "commitMessage": "chore: release v${version}",
