@@ -14,9 +14,7 @@
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
-    "release": "node .bin/release-workspaces.js",
-    "pre:release": "node .bin/release-workspaces.js --preid alpha",
-    "pre:release:next": "node .bin/release-workspaces.js --preid rc --npm-tag next"
+    "release": "release-workspaces"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -43,6 +41,7 @@
     "paopu": "^0.1.0",
     "prettier": "^2.5.1",
     "release-it": "^14.12.3",
+    "release-workspaces": "^0.1.2",
     "rollup": "^2.64.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^1.1.0",
