@@ -1,7 +1,6 @@
 {
   "hooks": {
-    "preincrement": "npm test && npm run clean",
-    "postpush": "dotenv release-it --no-npm --no-git --no-hooks --no-increment"
+    "prenpm": "npm test && npm run clean"
   },
   "git": {
     "commitMessage": "chore: release v${version}",
