@@ -1,6 +1,7 @@
 {
   "hooks": {
-    "prepublish": "npm test && npm run clean"
+    "prepublish": "npm test && npm run clean",
+    "postpush": "dotenv release-it --no-npm --no-git --no-hooks --no-increment"
   },
   "increment": {
     "codependencies": true
