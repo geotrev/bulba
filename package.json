@@ -1,49 +1,29 @@
 {
-  "name": "rotom",
-  "version": "0.13.0-rc.0",
-  "description": "A base class for using Web Components",
-  "main": "lib/rotom.template.cjs.js",
-  "module": "lib/rotom.template.esm.js",
-  "browser": "dist/rotom.template.min.js",
-  "exports": {
-    ".": {
-      "require": "./lib/rotom.template.cjs.js",
-      "import": "./lib/rotom.template.esm.js"
-    },
-    "./jsx": {
-      "require": "./lib/rotom.jsx.cjs.js",
-      "import": "./lib/rotom.jsx.esm.js"
-    }
-  },
+  "name": "bulba",
+  "version": "0.13.0-alpha.10",
+  "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "build": "rollup -c config/rollup.build.config.js",
-    "watch:template": "ENTRY=template rollup -c config/rollup.serve.config.js -w",
-    "watch:cdn:template": "CDN=true ENTRY=template rollup -c config/rollup.serve.config.js -w",
-    "watch:jsx": "ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
-    "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c config/rollup.serve.config.js -w",
+    "clean": "rm -rf packages/*/lib packages/*/dist",
+    "build": "npm run clean && npm run build -ws",
+    "watch:template": "npm run watch:template -w @bulba/element",
+    "watch:cdn:template": "npm run watch:cdn:template -w @bulba/element",
+    "watch:jsx": "npm run watch:jsx -w @bulba/element",
+    "watch:cdn:jsx": "npm run watch:cdn:jsx -w @bulba/element",
     "prettier:check": "prettier --config .prettierrc.json --check",
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
-    "release": "dotenv release-it -- --ci",
-    "pre:release": "dotenv release-it -- --ci --preRelease=alpha",
-    "pre:release:next": "dotenv release-it -- --ci --preRelease=rc --npm.tag=next"
-  },
-  "optionalDependencies": {
-    "omdomdom": "^0.3.0",
-    "snabbdom": "^3.3.0"
-  },
-  "dependencies": {
-    "snabbdom-signature": "^0.0.3",
-    "snabbdom-transform-jsx-props": "^0.1.5"
+    "release": "release-workspaces"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
     "@babel/plugin-transform-react-jsx": "^7.16.7",
     "@babel/preset-env": "^7.16.8",
+    "@release-it/conventional-changelog": "^4.1.0",
+    "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.1.3",
@@ -58,44 +38,27 @@
     "husky": "^7.0.4",
     "jest": "^27.4.7",
     "lint-staged": "^12.1.7",
+    "ora": "^6.0.1",
     "paopu": "^0.1.0",
     "prettier": "^2.5.1",
-    "release-it": "^14.12.3",
+    "release-workspaces": "^0.1.6",
     "rollup": "^2.64.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-unused": "^0.1.1"
+    "rollup-plugin-unused": "^0.1.1",
+    "semver": "^7.3.5",
+    "yargs": "^17.3.1"
   },
-  "keywords": [
-    "component",
-    "web component",
-    "html",
-    "web",
-    "rotom",
-    "element",
-    "snabbdom",
-    "jsx"
-  ],
-  "directories": {
-    "dist": "dist",
-    "lib": "lib",
-    "src": "src"
-  },
-  "files": [
-    "dist/*.{js,map}",
-    "lib/*.{js,map}",
-    "src/**/*.js"
-  ],
   "author": "George Treviranus <geowtrev@gmail.com>",
-  "homepage": "https://github.com/geotrev/rotom#readme",
+  "homepage": "https://github.com/geotrev/bulba#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geotrev/rotom.git"
+    "url": "git+https://github.com/geotrev/bulba.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geotrev/rotom/issues"
+    "url": "https://github.com/geotrev/bulba/issues"
   },
   "lint-staged": {
     "*.js": [
@@ -118,16 +81,10 @@
       "test"
     ]
   },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release v${version}"
-    },
-    "github": {
-      "release": true
-    },
-    "hooks": {
-      "before:init": "npm test",
-      "after:bump": "rm -rf lib dist && npm run build && paopu"
-    }
-  }
+  "workspaces": [
+    "packages/utils",
+    "packages/jsx",
+    "packages/template",
+    "packages/element"
+  ]
 }

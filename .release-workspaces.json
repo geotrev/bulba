@@ -1,0 +1,9 @@
+{
+  "hooks": {
+    "prenpm": "npm test && npm run clean"
+  },
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagMessage": "Release v${version}"
+  }
+}

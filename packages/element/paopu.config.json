@@ -1,0 +1,15 @@
+{
+  "@bulba/element": {
+    "resources": [
+      "dist/bulba-jsx.js",
+      "dist/bulba-jsx.min.js",
+      "dist/bulba-template.js",
+      "dist/bulba-template.min.js"
+    ],
+    "targets": [
+      "README.md",
+      "smoke-test/template/index.html",
+      "smoke-test/jsx/index.html"
+    ]
+  }
+}
