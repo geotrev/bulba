@@ -1,6 +1,6 @@
 {
   "name": "bulba",
-  "version": "0.13.0-alpha.10",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
   "scripts": {
