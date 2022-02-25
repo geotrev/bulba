@@ -1,6 +1,6 @@
 {
   "name": "@bulba/element",
-  "version": "0.13.0-alpha.8",
+  "version": "0.13.0-alpha.9",
   "description": "An intuitive, deterministic, and extendable web component base class",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
@@ -16,9 +16,9 @@
     "postversion": "npm run build && paopu"
   },
   "dependencies": {
-    "@bulba/jsx": "^0.13.0-alpha.8",
-    "@bulba/template": "^0.13.0-alpha.8",
-    "@bulba/utils": "^0.13.0-alpha.8"
+    "@bulba/jsx": "^0.13.0-alpha.9",
+    "@bulba/template": "^0.13.0-alpha.9",
+    "@bulba/utils": "^0.13.0-alpha.9"
   },
   "repository": {
     "type": "git",

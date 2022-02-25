@@ -41,7 +41,7 @@
     "ora": "^6.0.1",
     "paopu": "^0.1.0",
     "prettier": "^2.5.1",
-    "release-workspaces": "^0.1.4",
+    "release-workspaces": "^0.1.6",
     "rollup": "^2.64.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^1.1.0",
