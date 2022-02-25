@@ -1,8 +1,8 @@
 ## Bulba
 
-Bulba is a set of packages enabling a powerful web component base class.
+Bulba is a set of packages enabling a web component base class.
 
-List of packages maintained for this project:
+List of packages:
 
 - [@bulba/element](https://github.com/geotrev/bulba/packages/element)
 - [@bulba/jsx](https://github.com/geotrev/bulba/packages/jsx)
