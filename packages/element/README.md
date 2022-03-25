@@ -5,7 +5,7 @@
   <a href="https://www.npmjs.com/package/@bulba%2Felement"><img src="https://img.shields.io/npm/v/@bulba%2Felement.svg?sanitize=true&style=flat-square" alt="Version"></a>
   <a href="https://github.com/geotrev/bulba/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@bulba%2Felement.svg?sanitize=true&style=flat-square" alt="License"></a>
   <a href="https://github.com/geotrev/bulba/actions/workflows/test.yml?query=branch%3Amain"><img src="https://badgen.net/github/checks/geotrev/bulba/main?style=flat-square" alt="CI status" /></a>
-  <a href="https://bundlephobia.com/package/@bulba%2Felement"><img src="https://badgen.net/bundlephobia/minzip/@bulba%2Felement?style=flat-square" alt="bundle size" /></a>
+  <a href="https://bundlephobia.com/package/@bulba/element"><img src="https://badgen.net/bundlephobia/minzip/@bulba/element?style=flat-square" alt="bundle size" /></a>
   <a href="https://www.libraries.io/npm/@bulba%2Felement"><img src="https://img.shields.io/librariesio/release/npm/@bulba%2Felement" alt="dependency status" /></a>
 </p>
 
