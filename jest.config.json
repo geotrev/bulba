@@ -4,11 +4,13 @@
   "restoreMocks": true,
   "verbose": true,
   "testMatch": ["<rootDir>/packages/*/src/__tests__/**/*.spec.js"],
-  "testURL": "http://localhost/",
+  "testEnvironmentOptions": {
+    "url": "http://localhost/"
+  },
+  "testEnvironment": "jsdom",
   "transform": {
     "\\.js$": "babel-jest"
   },
-  "testEnvironment": "jsdom",
   "globals": {
     "BUILD_ENV": "development"
   },
