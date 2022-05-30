@@ -3,9 +3,7 @@ import alias from "@rollup/plugin-alias"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 import replace from "@rollup/plugin-replace"
 import babel from "@rollup/plugin-babel"
-import serve from "rollup-plugin-serve"
-import livereload from "rollup-plugin-livereload"
-import findUnused from "rollup-plugin-unused"
+import server from "rollup-plugin-dev"
 import commonjs from "@rollup/plugin-commonjs"
 
 const { ENTRY, CDN } = process.env
@@ -42,7 +40,6 @@ export default {
   },
   external: isCdnMode ? [BULBA_EXTERNAL_ID, ...Object.keys(CDN_GLOBALS)] : [],
   plugins: [
-    findUnused(),
     alias({ entries: moduleAliases }),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),
     replace({
@@ -51,13 +48,6 @@ export default {
     }),
     nodeResolve(),
     commonjs(),
-    livereload({ watch: TEST_PATH }),
-    serve({
-      open: true,
-      contentBase: TEST_PATH,
-      historyApiFallback: true,
-      host: "localhost",
-      port: 3000,
-    }),
+    server({ dirs: [TEST_PATH], port: 3000 }),
   ],
 }
