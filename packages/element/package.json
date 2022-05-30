@@ -6,14 +6,8 @@
   "module": "lib/index.es.js",
   "browser": "dist/index.min.js",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
     "build": "rollup -c",
-    "watch:template": "ENTRY=template rollup -c rollup.serve.config.js -w",
-    "watch:cdn:template": "CDN=true ENTRY=template rollup -c rollup.serve.config.js -w",
-    "watch:jsx": "ENTRY=jsx rollup -c rollup.serve.config.js -w",
-    "watch:cdn:jsx": "CDN=true ENTRY=jsx rollup -c rollup.serve.config.js -w",
-    "postversion": "npm run build && paopu"
+    "postversion": "npm run build"
   },
   "dependencies": {
     "@bulba/jsx": "^0.13.0",

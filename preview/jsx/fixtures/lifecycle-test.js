@@ -1,5 +1,6 @@
 import { KitchenSinkTest } from "./kitchen-sink-test"
-import { register } from "../bulba.js"
+import { register } from "@bulba/element"
+import { jsx } from "@bulba/jsx"
 
 /* eslint-disable no-console */
 
@@ -90,7 +91,9 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   onMount() {
-    super.onMount()
+    if (typeof super.onMount === "function") {
+      super.onMount()
+    }
     console.log("onMount")
     this.count = this.count + 1
     console.log("====================")
@@ -102,7 +105,6 @@ class LifecycleTest extends KitchenSinkTest {
    */
 
   onUnmount() {
-    super.onUnmount()
     console.log("onUnmount")
   }
 

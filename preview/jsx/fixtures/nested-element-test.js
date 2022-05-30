@@ -1,6 +1,6 @@
-import "./kitchen-sink-test.js"
-import { BulbaElement, register } from "../bulba.js"
-import { Renderer } from "@bulba/template"
+import { BulbaElement, register } from "@bulba/element"
+import { Renderer, jsx } from "@bulba/jsx"
+import "./kitchen-sink-test"
 
 class NestedElementTest extends BulbaElement(Renderer) {
   static get properties() {
@@ -34,15 +34,6 @@ class NestedElementTest extends BulbaElement(Renderer) {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  onMount() {
-    this.label = this.shadowRoot.querySelector("#clicker")
-    this.label.addEventListener("click", this.handleClick)
-  }
-
-  onUnmount() {
-    this.label.removeEventListener("click", this.handleClick)
-  }
-
   getRandom(current, items) {
     const newValue = items[Math.floor(Math.random() * items.length)]
     if (newValue === current) return this.getRandom(current, items)
@@ -66,17 +57,28 @@ class NestedElementTest extends BulbaElement(Renderer) {
   }
 
   render() {
-    return `
+    return (
       <div>
-        <p data-key="lede">This one is nested with inline styles.</p>
-        <button data-key="updater" id="clicker">Click to update</button>
-        <div data-key="nested" class="border" style="border-color: ${this.borderColor}">
-          <kitchen-sink-test attribute-default="it works!" first-name="${this.name}" description="I'm nested!">
+        <p>This one is nested with inline styles.</p>
+        <button on-click={this.handleClick}>Click to update</button>
+        <div
+          className="border"
+          style={{
+            borderWidth: "4px",
+            borderStyle: "solid",
+            borderColor: this.borderColor,
+          }}
+        >
+          <kitchen-sink-test
+            attribute-default="it works!"
+            first-name={this.name}
+            description="I'm nested!"
+          >
             <slot></slot>
           </kitchen-sink-test>
         </div>
       </div>
-    `
+    )
   }
 }
 

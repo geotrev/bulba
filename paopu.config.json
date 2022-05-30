@@ -1,5 +1,6 @@
 {
-  "@bulba/element": {
+  "bulba": {
+    "resourceBasePath": "packages/element",
     "resources": [
       "dist/bulba-jsx.js",
       "dist/bulba-jsx.min.js",
@@ -7,9 +8,9 @@
       "dist/bulba-template.min.js"
     ],
     "targets": [
-      "README.md",
-      "smoke-test/template/index.html",
-      "smoke-test/jsx/index.html"
+      "packages/element/README.md",
+      "preview/template/index.html",
+      "preview/jsx/index.html"
     ]
   }
 }

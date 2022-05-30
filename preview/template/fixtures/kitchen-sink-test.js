@@ -1,4 +1,4 @@
-import { BulbaElement, register } from "../bulba.js"
+import { BulbaElement, register } from "@bulba/element"
 import { Renderer } from "@bulba/template"
 
 export class KitchenSinkTest extends BulbaElement(Renderer) {

@@ -10,19 +10,23 @@ const { ENTRY, CDN } = process.env
 const isCdnMode = CDN === "true"
 const dirname = process.cwd()
 
-const TEST_PATH = path.resolve(dirname, `smoke-test/${ENTRY}`)
+const TEST_PATH = path.resolve(dirname, `preview/${ENTRY}`)
 const INPUT_PATH = TEST_PATH + "/examples.js"
 const OUTPUT_PATH = TEST_PATH + "/bundle.js"
-const BULBA_EXTERNAL_ID = path.resolve(dirname, `smoke-test/${ENTRY}/bulba.js`)
 const CDN_GLOBALS = {
+  "@bulba/element": "Bulba",
   "@bulba/jsx": "Bulba",
   "@bulba/template": "Bulba",
   "@bulba/utils": "Bulba",
 }
+
+// Use aliases in development to allow sourcecode
+// changes to trigger rebuilds
 const moduleAliases = {
-  "@bulba/jsx": "../jsx/src/index.js",
-  "@bulba/template": "../template/src/index.js",
-  "@bulba/utils": "../utils/src/index.js",
+  "@bulba/element": path.resolve(dirname, "packages/element/src/index.js"),
+  "@bulba/jsx": path.resolve(dirname, "packages/jsx/src/index.js"),
+  "@bulba/template": path.resolve(dirname, "packages/template/src/index.js"),
+  "@bulba/utils": path.resolve(dirname, "packages/utils/src/index.js"),
 }
 
 export default {
@@ -31,14 +35,9 @@ export default {
     file: OUTPUT_PATH,
 
     format: "iife",
-    globals: isCdnMode
-      ? {
-          [BULBA_EXTERNAL_ID]: "Bulba",
-          ...CDN_GLOBALS,
-        }
-      : {},
+    globals: isCdnMode ? CDN_GLOBALS : {},
   },
-  external: isCdnMode ? [BULBA_EXTERNAL_ID, ...Object.keys(CDN_GLOBALS)] : [],
+  external: isCdnMode ? Object.keys(CDN_GLOBALS) : [],
   plugins: [
     alias({ entries: moduleAliases }),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),

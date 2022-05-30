@@ -1,4 +1,4 @@
-import { BulbaElement, register } from "../bulba.js"
+import { BulbaElement, register } from "@bulba/element"
 import { Renderer } from "@bulba/template"
 
 class SlotTest extends BulbaElement(Renderer) {

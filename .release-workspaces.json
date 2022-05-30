@@ -1,6 +1,7 @@
 {
   "hooks": {
-    "prenpm": "npm test && npm run clean"
+    "preincrement": "npm test && npm run clean",
+    "prepublish": "paopu"
   },
   "git": {
     "commitMessage": "chore: release v${version}",
