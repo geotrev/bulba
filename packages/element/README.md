@@ -116,7 +116,7 @@ const globals = {
 // export config
 export default {
   // ...
-  external: Object.keys(globals),
+  external: (id) => /@bulba\/./.test(id),
   output: {
     // ...,
     globals,
