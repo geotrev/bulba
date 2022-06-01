@@ -4,7 +4,7 @@ A set of packages enabling an intuitive, deterministic, and extendable web compo
 
 Base class (the main package):
 
-- [@bulba/element](https://github.com/geotrev/bulba/tree/main/packages/element).
+- [@bulba/element](https://github.com/geotrev/bulba/tree/main/packages/element)
 
 Renderers:
 
