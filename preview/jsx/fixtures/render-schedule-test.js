@@ -1,5 +1,5 @@
 import { BulbaElement, register } from "@bulba/element"
-import { Renderer, jsx } from "@bulba/jsx"
+import { Renderer, jsx, Fragment } from "@bulba/jsx"
 
 export class RenderScheduleTest extends BulbaElement(Renderer) {
   static get properties() {
@@ -47,13 +47,15 @@ export class RenderScheduleTest extends BulbaElement(Renderer) {
           borderColor: this.borderColor,
         }}
       >
-        <p>Render count: {this.count}</p>
-        <p className="label" style={{ color: this.labelColor }}>
-          This is a scheduling test.
-          <br />
-          It should have one render per button press, despite having multiple
-          property updates.
-        </p>
+        <>
+          <p>Render count: {this.count}</p>
+          <p className="label" style={{ color: this.labelColor }}>
+            This is a scheduling test.
+            <br />
+            It should have one render per button press, despite having multiple
+            property updates.
+          </p>
+        </>
         <button on-click={this.handleClick}>Click to update</button>
       </div>
     )

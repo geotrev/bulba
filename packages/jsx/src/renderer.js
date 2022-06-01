@@ -22,15 +22,19 @@ const createEmptyVNode = (element, Internal) =>
     },
   })
 
-const patch = init([
-  classModule,
-  propsModule,
-  styleModule,
-  eventListenersModule,
-  attributesModule,
-  datasetModule,
-  denyUnlessSigned,
-])
+const patch = init(
+  [
+    classModule,
+    propsModule,
+    styleModule,
+    eventListenersModule,
+    attributesModule,
+    datasetModule,
+    denyUnlessSigned,
+  ],
+  undefined,
+  { experimental: { fragments: true } }
+)
 
 function getRenderState(element) {
   return sign(transform(element[External.render]()))

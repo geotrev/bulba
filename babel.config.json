@@ -1,5 +1,10 @@
 {
   "babelrcRoots": [".", "packages/*"],
-  "plugins": [["@babel/plugin-transform-react-jsx", { "pragma": "jsx" }]],
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      { "pragma": "jsx", "pragmaFrag": "Fragment" }
+    ]
+  ],
   "presets": ["@babel/preset-env"]
 }
