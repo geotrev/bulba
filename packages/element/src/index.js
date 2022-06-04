@@ -3,4 +3,4 @@ createDirectionObserver()
 
 export { BulbaElement } from "./element"
 export { register } from "./register"
-export { validateType, validateRequired } from "./properties"
+export { validateType, validateRequired, bindMethods } from "./properties"
