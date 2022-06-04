@@ -37,7 +37,7 @@ export default {
     format: "iife",
     globals: isCdnMode ? CDN_GLOBALS : {},
   },
-  external: isCdnMode ? Object.keys(CDN_GLOBALS) : [],
+  external: isCdnMode ? (id) => /@bulba\/./.test(id) : [],
   plugins: [
     alias({ entries: moduleAliases }),
     babel({ babelHelpers: "bundled", exclude: "node_modules" }),
