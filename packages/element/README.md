@@ -74,14 +74,14 @@ You can specify the JSX or Template flavors using CDN. BulbaElement, the rendere
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@bulba/utils@0.14.0/dist/bulba-template.js"
-  integrity="sha256-dzF067k9kE7x9R8RgQB99krIFIf2P5xkHT6HOmJY84o="
+  src="https://cdn.jsdelivr.net/npm/@bulba/utils@0.14.1/dist/bulba-template.js"
+  integrity="sha256-9GdM8qMy2bu2/8Zfg2mZ9cUr1FHnfLvb6UvMcDxSiV8="
   crossorigin="anonymous"
 ></script>
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@bulba/utils@0.14.0/dist/bulba-template.min.js"
-  integrity="sha256-cDlX+PbUk05TvWm/setAxPFxrOL/feFJkAbzVysplVs="
+  src="https://cdn.jsdelivr.net/npm/@bulba/utils@0.14.1/dist/bulba-template.min.js"
+  integrity="sha256-/8PWDOnV0ml1m4aFdv481tW2vglWmzdVXHIzL+Ph/Mo="
   crossorigin="anonymous"
 ></script>
 ```
@@ -89,14 +89,14 @@ You can specify the JSX or Template flavors using CDN. BulbaElement, the rendere
 ```html
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@bulba/element@0.14.0/dist/bulba-jsx.js"
-  integrity="sha256-TldcNOXw/QmCq+BZIgNTfxcd3ThXHUlbiAMCPKBIq2w="
+  src="https://cdn.jsdelivr.net/npm/@bulba/element@0.14.1/dist/bulba-jsx.js"
+  integrity="sha256-hqPJq58KeawN5KCRnIqzRKNMQS30bVmHalbYKFdX73o="
   crossorigin="anonymous"
 ></script>
 <script
   type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@bulba/element@0.14.0/dist/bulba-jsx.min.js"
-  integrity="sha256-xiM3o49X102Vd5BPfdUmMA4HFrr5HWw483JOWGGpgDE="
+  src="https://cdn.jsdelivr.net/npm/@bulba/element@0.14.1/dist/bulba-jsx.min.js"
+  integrity="sha256-Fi/echt4SiYJVUnjvH2sKzKrpz2+nmYoCxWZoa2pOW4="
   crossorigin="anonymous"
 ></script>
 ```
