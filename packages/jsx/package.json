@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@bulba/utils": "^0.14.1",
-    "snabbdom": "^3.3.1",
+    "snabbdom": "^3.5.1",
     "snabbdom-signature": "^0.0.3",
-    "snabbdom-transform-jsx-props": "^0.1.5"
+    "snabbdom-transform-jsx-props": "^0.2.1"
   },
   "repository": {
     "type": "git",

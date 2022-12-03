@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@bulba/utils": "^0.14.1",
-    "omdomdom": "^0.3.0"
+    "omdomdom": "^0.3.1"
   },
   "repository": {
     "type": "git",
