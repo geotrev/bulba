@@ -1,6 +1,6 @@
 {
   "name": "@bulba/jsx",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "description": "A JSX-based renderer used by @bulba/element",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
@@ -10,7 +10,7 @@
     "postversion": "npm run build"
   },
   "dependencies": {
-    "@bulba/utils": "^0.14.1",
+    "@bulba/utils": "^0.14.2",
     "snabbdom": "^3.5.1",
     "snabbdom-signature": "^0.0.3",
     "snabbdom-transform-jsx-props": "^0.2.1"
