@@ -3,10 +3,15 @@ import { External } from "@bulba/utils"
 import { mount } from "./helpers/mount"
 import { jest } from "@jest/globals"
 
-window.requestAnimationFrame = jest.fn().mockImplementation((fn) => fn())
-
 describe("BulbaElement", () => {
-  afterEach(() => (document.body.innerHTML = ""))
+  beforeEach(() => {
+    jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => cb())
+  })
+
+  afterEach(() => {
+    window.requestAnimationFrame.mockRestore()
+    document.body.innerHTML = ""
+  })
 
   it("upgrades the element", () => {
     // Given
@@ -333,7 +338,7 @@ describe("BulbaElement", () => {
           properties,
         })
         // Then
-        expect(console.warn).toBeCalledWith(typeWarning)
+        expect(console.warn).toHaveBeenCalledWith(typeWarning)
       })
 
       it("will print warning on value change if assigned type doesn't match", () => {
@@ -351,7 +356,7 @@ describe("BulbaElement", () => {
         // When
         fixture.testProp = "foo"
         // Then
-        expect(console.warn).toBeCalledWith(typeWarning)
+        expect(console.warn).toHaveBeenCalledWith(typeWarning)
       })
 
       it("will print error on upgrade if required prop has no default", () => {
@@ -366,7 +371,7 @@ describe("BulbaElement", () => {
           properties,
         })
         // Then
-        expect(console.error).toBeCalledWith(requiredWarning)
+        expect(console.error).toHaveBeenCalledWith(requiredWarning)
       })
 
       it("will print error on upgrade if required, typed prop has no default", () => {
@@ -382,7 +387,7 @@ describe("BulbaElement", () => {
           properties,
         })
         // Then
-        expect(console.error).toBeCalledWith(requiredWithTypeWarning)
+        expect(console.error).toHaveBeenCalledWith(requiredWithTypeWarning)
       })
 
       it("will print error on value change if required prop is undefined", () => {
@@ -399,7 +404,7 @@ describe("BulbaElement", () => {
         })
         fixture.testProp = undefined
         // Then
-        expect(console.error).toBeCalledWith(requiredWarning)
+        expect(console.error).toHaveBeenCalledWith(requiredWarning)
       })
 
       it("will print error on value change if required, typed prop is undefined", () => {
@@ -417,7 +422,7 @@ describe("BulbaElement", () => {
         })
         fixture.testProp = undefined
         // Then
-        expect(console.error).toBeCalledWith(requiredWithTypeWarning)
+        expect(console.error).toHaveBeenCalledWith(requiredWithTypeWarning)
       })
 
       it("will not print error on upgrade if required, reflected prop has attribute", () => {
@@ -437,7 +442,7 @@ describe("BulbaElement", () => {
           attributes,
         })
         // Then
-        expect(console.error).not.toBeCalledWith(requiredWarning)
+        expect(console.error).not.toHaveBeenCalledWith(requiredWarning)
       })
     })
 
@@ -458,7 +463,7 @@ describe("BulbaElement", () => {
         // When
         render()
         // Then
-        expect(TestElement.prototype[External.onConnect]).toBeCalled()
+        expect(TestElement.prototype[External.onConnect]).toHaveBeenCalled()
       })
 
       it("calls onMount", () => {
@@ -468,7 +473,7 @@ describe("BulbaElement", () => {
         // When
         render()
         // Then
-        expect(TestElement.prototype[External.onMount]).toBeCalled()
+        expect(TestElement.prototype[External.onMount]).toHaveBeenCalled()
       })
 
       it("calls onPropertyChange", () => {
@@ -484,11 +489,9 @@ describe("BulbaElement", () => {
         // When
         fixture.testProp = true
         // Then
-        expect(TestElement.prototype[External.onPropertyChange]).toBeCalledWith(
-          "testProp",
-          undefined,
-          true
-        )
+        expect(
+          TestElement.prototype[External.onPropertyChange]
+        ).toHaveBeenCalledWith("testProp", undefined, true)
       })
 
       it("calls onAttributeChange", () => {
@@ -506,7 +509,7 @@ describe("BulbaElement", () => {
         // Then
         expect(
           TestElement.prototype[External.onAttributeChange]
-        ).toBeCalledWith("test-prop", "", "true")
+        ).toHaveBeenCalledWith("test-prop", "", "true")
       })
 
       it("calls onUpdate", () => {
@@ -522,7 +525,7 @@ describe("BulbaElement", () => {
         // When
         fixture.testProp = true
         // Then
-        expect(TestElement.prototype[External.onUpdate]).toBeCalled()
+        expect(TestElement.prototype[External.onUpdate]).toHaveBeenCalled()
       })
 
       it("calls onUpdate if property updates in onMount", async () => {
@@ -542,7 +545,7 @@ describe("BulbaElement", () => {
         // When
         render()
         // Then
-        expect(TestElement.prototype[External.onUpdate]).toBeCalled()
+        expect(TestElement.prototype[External.onUpdate]).toHaveBeenCalled()
       })
 
       it("calls onUnmount", () => {
@@ -553,7 +556,7 @@ describe("BulbaElement", () => {
         // When
         document.body.removeChild(fixture)
         // Then
-        expect(TestElement.prototype[External.onUnmount]).toBeCalled()
+        expect(TestElement.prototype[External.onUnmount]).toHaveBeenCalled()
       })
 
       it("recalls onMount if the component is disconnected and then reconnected", () => {
@@ -565,7 +568,7 @@ describe("BulbaElement", () => {
         document.body.removeChild(fixture)
         document.body.appendChild(fixture)
         // Then
-        expect(TestElement.prototype[External.onMount]).toBeCalledTimes(2)
+        expect(TestElement.prototype[External.onMount]).toHaveBeenCalledTimes(2)
       })
     })
   })

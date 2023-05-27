@@ -20,7 +20,7 @@ describe("scheduler", () => {
       schedule(testFnFirst)
       await nextFrame()
       // Then
-      expect(console.info).toBeCalledWith("nice")
+      expect(console.info).toHaveBeenCalledWith("nice")
     })
 
     it("cancels scheduled function if another is called before the end of frame", async () => {
@@ -31,8 +31,8 @@ describe("scheduler", () => {
       schedule(testFnSecond)
       await nextFrame()
       // Then
-      expect(console.info).toBeCalledTimes(1)
-      expect(console.info).toBeCalledWith("nice")
+      expect(console.info).toHaveBeenCalledTimes(1)
+      expect(console.info).toHaveBeenCalledWith("nice")
     })
   })
 
@@ -48,7 +48,7 @@ describe("scheduler", () => {
       schedule(testFnFirst)
       await timeout()
       // Then
-      expect(console.info).toBeCalledWith("nice")
+      expect(console.info).toHaveBeenCalledWith("nice")
     })
 
     it("cancels scheduled function if another is called before the end of frame", async () => {
@@ -59,8 +59,8 @@ describe("scheduler", () => {
       schedule(testFnSecond)
       await timeout()
       // Then
-      expect(console.info).toBeCalledTimes(1)
-      expect(console.info).toBeCalledWith("nice")
+      expect(console.info).toHaveBeenCalledTimes(1)
+      expect(console.info).toHaveBeenCalledWith("nice")
     })
   })
 })

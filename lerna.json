@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "useWorkspaces": true,
+  "version": "0.14.2",
+  "command": {
+    "version": {
+      "allowBranch": "main",
+      "message": "chore(release): publish"
+    },
+    "publish": {
+      "allowBranch": "main",
+      "registry": "https://registry.npmjs.org/"
+    }
+  }
+}
