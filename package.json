@@ -1,10 +1,11 @@
 {
   "name": "bulba-web-components",
-  "version": "0.14.2",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "lerna bootstrap && husky install",
+    "prepare": "husky install",
+    "postinstall": "lerna bootstrap",
     "test": "jest",
     "build": "lerna run build",
     "watch:template": "ENTRY=template rollup -c rollup.serve.config.js -w",
@@ -15,8 +16,8 @@
     "prettier:write": "prettier --config .prettierrc.json --write",
     "eslint:check": "eslint -c .eslintrc.json",
     "preversion": "npm test && npm run build && paopu && git add .",
-    "lerna:version": "lerna version --no-private",
-    "lerna:publish": "lerna publish --no-private",
+    "lerna:version": "dotenv -- lerna version --no-private --force-publish",
+    "lerna:publish": "dotenv -- lerna publish from-git --yes --force-publish",
     "release": "npm run lerna:version && npm run lerna:publish"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-replace": "^5.0.2",
     "babel-jest": "^29.5.0",
+    "conventional-changelog-cli": "^2.2.2",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",

@@ -1,0 +1,58 @@
+## [0.14.2](https://github.com/geotrev/bulba/compare/v0.14.1...v0.14.2) (2022-12-03)
+
+
+
+## [0.14.1](https://github.com/geotrev/bulba/compare/v0.14.0...v0.14.1) (2022-06-04)
+
+
+
+# [0.14.0](https://github.com/geotrev/bulba/compare/v0.14.0-alpha.2...v0.14.0) (2022-06-01)
+
+
+
+# [0.14.0-alpha.2](https://github.com/geotrev/bulba/compare/v0.14.0-alpha.1...v0.14.0-alpha.2) (2022-06-01)
+
+
+### Features
+
+* enables jsx fragments using pragmaFrag option and Fragment import ([08cecc8](https://github.com/geotrev/bulba/commit/08cecc86026db5b1884483b31c7f842ee75b197c))
+
+
+
+# [0.14.0-alpha.1](https://github.com/geotrev/bulba/compare/v0.14.0-alpha.0...v0.14.0-alpha.1) (2022-05-30)
+
+
+
+# [0.14.0-alpha.0](https://github.com/geotrev/bulba/compare/v0.13.0...v0.14.0-alpha.0) (2022-05-30)
+
+
+
+# [0.13.0](https://github.com/geotrev/bulba/compare/v0.13.0-alpha.10...v0.13.0) (2022-02-25)
+
+
+
+# [0.13.0-alpha.10](https://github.com/geotrev/bulba/compare/v0.13.0-alpha.8...v0.13.0-alpha.10) (2022-02-25)
+
+
+
+# [0.13.0-alpha.8](https://github.com/geotrev/bulba/compare/0.13.0-alpha.7...v0.13.0-alpha.8) (2022-02-24)
+
+
+
+# [0.13.0-alpha.7](https://github.com/geotrev/bulba/compare/0.13.0-alpha.6...0.13.0-alpha.7) (2022-02-22)
+
+
+
+# [0.13.0-alpha.6](https://github.com/geotrev/bulba/compare/0.13.0-alpha.5...0.13.0-alpha.6) (2022-02-22)
+
+
+
+# [0.13.0-alpha.5](https://github.com/geotrev/bulba/compare/0.13.0-alpha.4...0.13.0-alpha.5) (2022-02-22)
+
+
+### Features
+
+* adds snabbdom fragment to exports ([9a5a7da](https://github.com/geotrev/bulba/commit/9a5a7da381c76854ea8f1cf121a80b1b01145117))
+
+
+

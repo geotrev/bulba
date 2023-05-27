@@ -8,6 +8,8 @@
       "message": "chore(release): publish"
     },
     "publish": {
+      "conventionalCommits": true,
+      "createRelease": "github",
       "allowBranch": "main",
       "registry": "https://registry.npmjs.org/"
     }
