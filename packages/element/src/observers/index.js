@@ -1,5 +1,6 @@
 export function createDirectionObserver() {
-  if (window.__BULBA_ELEMENT__DIR_OBSERVER__) return
+  if (!window || window.__BULBA_ELEMENT__DIR_OBSERVER__) return
+
   window.__BULBA_ELEMENT__DIR_OBSERVER__ = true
 
   /**

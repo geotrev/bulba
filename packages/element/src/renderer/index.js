@@ -8,7 +8,7 @@ import { Internal, External, isFunction } from "@bulba/utils"
 export function setRenderer(renderer) {
   return {
     patch(element) {
-      if (!window || !window.document) return
+      if (!window?.document) return
 
       if (!isFunction(element[External.render])) {
         throw new Error(
@@ -26,7 +26,7 @@ export function setRenderer(renderer) {
       }
     },
     destroy(element) {
-      if (!window || !window.document) return
+      if (!window?.document) return
 
       element[Internal.isFirstRender] = true
       element[Internal.runLifecycle](External.onUnmount)
