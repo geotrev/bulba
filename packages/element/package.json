@@ -1,6 +1,6 @@
 {
   "name": "@bulba/element",
-  "version": "0.14.3",
+  "version": "0.14.4",
   "description": "An intuitive, deterministic, and extendable web component base class",
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
@@ -9,9 +9,9 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@bulba/jsx": "^0.14.3",
-    "@bulba/template": "^0.14.3",
-    "@bulba/utils": "^0.14.3"
+    "@bulba/jsx": "^0.14.4",
+    "@bulba/template": "^0.14.4",
+    "@bulba/utils": "^0.14.4"
   },
   "repository": {
     "type": "git",

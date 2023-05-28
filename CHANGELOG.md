@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.4](https://github.com/geotrev/bulba/compare/v0.14.3...v0.14.4) (2023-05-28)
+
+**Note:** Version bump only for package bulba-web-components
+
 ## [0.14.3](https://github.com/geotrev/bulba/compare/v0.14.2...v0.14.3) (2023-05-27)
 
 ### Bug Fixes
