@@ -40,11 +40,9 @@
     "access": "public"
   },
   "directories": {
-    "lib": "lib",
-    "src": "src"
+    "lib": "lib"
   },
   "files": [
-    "lib/*.{js,map}",
-    "src/**/*.js"
+    "lib/*.{js,map}"
   ]
 }

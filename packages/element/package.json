@@ -43,12 +43,10 @@
   },
   "directories": {
     "dist": "dist",
-    "lib": "lib",
-    "src": "src"
+    "lib": "lib"
   },
   "files": [
     "dist/*.{js,map}",
-    "lib/*.{js,map}",
-    "src/**/*.js"
+    "lib/*.{js,map}"
   ]
 }
