@@ -33,7 +33,7 @@
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-replace": "^5.0.2",
     "babel-jest": "^29.5.0",
-    "conventional-changelog-cli": "^2.2.2",
+    "conventional-changelog-cli": "^3.0.0",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
