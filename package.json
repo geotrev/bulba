@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "lerna bootstrap",
     "test": "jest",
     "build": "lerna run build",
     "watch:template": "ENTRY=template rollup -c rollup.serve.config.js -w",
@@ -42,7 +41,7 @@
     "husky": "^8.0.3",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
-    "lerna": "^6.6.2",
+    "lerna": "^7.1.4",
     "lint-staged": "^13.2.2",
     "paopu": "^0.1.2",
     "prettier": "^3.0.0",
