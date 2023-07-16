@@ -5,6 +5,7 @@
   "main": "lib/index.cjs.js",
   "module": "lib/index.es.js",
   "browser": "dist/index.min.js",
+  "type": "module",
   "scripts": {
     "build": "rollup -c"
   },

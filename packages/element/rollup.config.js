@@ -1,6 +1,6 @@
 import alias from "@rollup/plugin-alias"
 import path from "path"
-import getBaseConfig from "../../config/rollup.base.config"
+import getBaseConfig from "../../config/rollup.base.config.js"
 
 const { baseConfig, terserPlugin, replacePlugin, Environments, plugins } =
   getBaseConfig(process.cwd(), "Bulba")
