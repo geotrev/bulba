@@ -13,7 +13,7 @@
     "@bulba/utils": "^0.14.4",
     "snabbdom": "^3.5.1",
     "snabbdom-signature": "^0.0.3",
-    "snabbdom-transform-jsx-props": "^0.2.1"
+    "snabbdom-transform-jsx-props": "^0.3.0"
   },
   "repository": {
     "type": "git",
